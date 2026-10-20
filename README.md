@@ -1,4 +1,3 @@
-**简体中文** | [English](README-EN.md) | [繁體中文](README-ZH_TW.md)
 
 <div align="center">
 
@@ -32,7 +31,6 @@ PCL XH 是基于 PCL 开源代码二次开发的社区版本，包括了主线�
 
 欢迎大家来用用看！
 
-**开发群:** [599620549](https://qm.qq.com/q/PNQA4Md8wc)[✦](https://t.me/+78XW2bUOvKJjMTZl) | **用户 1 群:** [1028074835](https://qm.qq.com/q/qrMGJo8BQQ) | **用户 2 群:** [1070029541](https://qm.qq.com/q/lBywbDMWhG)
 
 ## 💻 支持平台
 
@@ -61,13 +59,3 @@ PCL XH 始终建议使用最新版本的操作系统以获得最佳体验。
 
 - `Plain Craft Launcher 2/` 使用 [自定义许可证](https://github.com/NoSetViolin/PCL-XH/blob/dev/Plain%20Craft%20Launcher%202/LICENCE)
 - `其余所有目录` 使用 [Apache License 2.0](https://github.com/NoSetViolin/PCL-XH/blob/dev/LICENSE)
-
-## 🌟 统计数据
-![Alt](https://repobeats.axiom.co/api/embed/3e46296e6e3a134991a783480fd2f62723bb0353.svg "Repobeats analytics image")
-
-[![Star History Chart](https://api.star-history.com/chart?repos=NoSetViolin/PCL-XH&type=date&legend=top-left&sealed_token=Ts-GaAXJ5nb9fJERusrXneo05pfZ83tMhReHJ98nmmlemBTqHS5Ozocdep1MTMdsX-6CRiQH9TqiS1Kk7SxjTfk02eUOxnm25oHff6TLLvrY7pGujOkU1IwjVFQLE-5GJYogutJAyI78jujBlOnpk3J2OKAY1PBhmkyUOzW1C1sdz5BzPbj2eBbJGvDx)](https://www.star-history.com/?repos=NoSetViolin%2FPCL-XH&type=date&legend=top-left)
-
-**此页浏览量**（总计 / 今日）：[![Hits](https://hits.zkitefly.eu.org/?tag=https://github.com/NoSetViolin/PCL-XH)](https://hits.zkitefly.eu.org/?tag=https://github.com/NoSetViolin/PCL-XH&web=true)
-## ❤️ 贡献者
-
-[![](https://contrib.rocks/image?repo=NoSetViolin/PCL-XH)](https://github.com/NoSetViolin/PCL-XH/graphs/contributors)
