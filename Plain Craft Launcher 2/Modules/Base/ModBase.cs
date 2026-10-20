@@ -3560,7 +3560,7 @@ public static class ModBase
                                  Lang.Text("Common.Action.OpenFolder"),
                                  Lang.Text("Setup.Feedback.Reminder.NotNeeded")) ==
                              1)) OpenExplorer(exePath + @"PCL\Log\");
-        OpenWebsite("https://github.com/PCL-Community/PCL2-CE/issues/");
+        OpenWebsite("https://github.com/NoSetViolin/PCL-XH/issues/");
     }
 
     public static bool CanFeedback(bool showHint)
