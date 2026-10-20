@@ -636,7 +636,7 @@ public partial class PageInstanceSetup
         LabServerAuthServer.Visibility = type == 2 || type == 3 ? Visibility.Visible : Visibility.Collapsed;
         TextServerAuthServer.Visibility = type == 2 || type == 3 ? Visibility.Visible : Visibility.Collapsed;
         BtnServerAuthLittle.Visibility = type == 2 || type == 3 ? Visibility.Visible : Visibility.Collapsed;
-        BtnServerNewProfile.Visibility = (type == 2 || type == 3) && ProfileUi.CanCreateOtherProfile()
+        BtnServerNewProfile.Visibility = type == 2 || type == 3
             ? Visibility.Visible
             : Visibility.Collapsed;
         if (type == 0 || type == 1)
@@ -715,9 +715,6 @@ public partial class PageInstanceSetup
     // 跳转新建档案
     private void BtnServerNewProfile_Click(object sender, MouseButtonEventArgs e)
     {
-        if (!ProfileUi.CanCreateOtherProfile())
-            return;
-
         ModMain.frmMain.PageChange(new FormMain.PageStackData { page = FormMain.PageType.Launch });
         PageLoginAuth.draggedAuthServer = TextServerAuthServer.Text;
         ModBase.RunInNewThread(() =>

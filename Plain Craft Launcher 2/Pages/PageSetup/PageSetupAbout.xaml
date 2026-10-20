@@ -181,21 +181,6 @@
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.SpecialThanks.OpenWebsite}" />
                     <local:MyListItem
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Grid.ColumnSpan="2"
-                        Margin="-5,0,0,0"
-                        Info="{DynamicResource Setup.About.SpecialThanks.Info.LinkModule}"
-                        IsHitTestVisible="False"
-                        Title="{DynamicResource Setup.About.SpecialThanks.Name.EasyTier}" />
-                    <local:MyButton
-                        Grid.Row="4"
-                        Grid.Column="2"
-                        Height="35"
-                        local:CustomEventService.EventData="https://easytier.cn"
-                        local:CustomEventService.EventType="OpenUrl"
-                        Text="{DynamicResource Setup.About.SpecialThanks.OpenWebsite}" />
-                    <local:MyListItem
                         Grid.Row="5"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
@@ -249,17 +234,6 @@
                         Grid.Row="3"
                         Margin="3"
                         Source="/Plain Craft Launcher 2;component/Images/Heads/Yunmoan.jpg">
-                        <Image.Clip>
-                            <EllipseGeometry
-                                Center="17 17"
-                                RadiusX="17"
-                                RadiusY="17" />
-                        </Image.Clip>
-                    </Image>
-                    <Image
-                        Grid.Row="4"
-                        Margin="3"
-                        Source="/Plain Craft Launcher 2;component/Images/Heads/EasyTier.png">
                         <Image.Clip>
                             <EllipseGeometry
                                 Center="17 17"
@@ -379,18 +353,6 @@
                             local:CustomEventService.EventType="OpenUrl"
                             Padding="13,0"
                             Text="{DynamicResource Setup.About.Legal.CommunitySource}" />
-                        <local:MyButton
-                            Margin="0,0,20,0"
-                            local:CustomEventService.EventData="https://www.pclc.cc/privacy/personal-info-brief.html"
-                            local:CustomEventService.EventType="OpenUrl"
-                            Padding="13,0"
-                            Text="{DynamicResource Setup.About.Legal.CommunityLobbyPrivacy}" />
-                        <local:MyButton
-                            Margin="0,0,20,0"
-                            local:CustomEventService.EventData="https://account.naids.com/policy"
-                            local:CustomEventService.EventType="OpenUrl"
-                            Padding="13,0"
-                            Text="{DynamicResource Setup.About.Legal.NatayarkTerms}" />
                     </StackPanel>
                 </StackPanel>
             </local:MyCard>

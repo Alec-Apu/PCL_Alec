@@ -179,22 +179,12 @@ public static class ProfileUi
         return uuid;
     }
 
-    public static bool CanCreateOtherProfile()
-    {
-#if DEBUG || DEBUGCI
-        return true;
-#else
-        return ProfileService.HasMicrosoftProfile || (Lang.IsFeaturesUnrestricted && ProfileService.Profiles.Count > 0) || NetworkHelper.IsNetworkAvailable() is false;
-#endif
-    }
-
     public static void CreateProfile()
     {
         int? selected = null;
         ModBase.RunInUiWait(() =>
         {
-            var includeOthers = CanCreateOtherProfile();
-            selected = ModMain.MyMsgBoxSelect(_GetAvailableProfileSelection(includeOthers),
+            selected = ModMain.MyMsgBoxSelect(_GetAvailableProfileSelection(),
                 Lang.Text("Launch.Account.Profile.Create.SelectAuthType.Title"), Lang.Text("Common.Action.Continue"), Lang.Text("Common.Action.Cancel"));
         });
         if (selected is null) return;
@@ -222,13 +212,12 @@ public static class ProfileUi
         ModBase.RunInUi(() => ModMain.frmLaunchLeft.RefreshPage(true, type));
     }
 
-    private static List<IMyRadio> _GetAvailableProfileSelection(bool includeOthers) => includeOthers
-        ? [
+    private static List<IMyRadio> _GetAvailableProfileSelection() =>
+        [
             new MyListItem { Title = Lang.Text("Launch.Account.Type.Microsoft"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/shield-check" },
             new MyListItem { Title = Lang.Text("Launch.Account.Type.ThirdParty"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/network" },
             new MyListItem { Title = Lang.Text("Launch.Account.Type.Offline"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/link-2-off" }
-        ]
-        : [new MyListItem { Title = Lang.Text("Launch.Account.Type.Microsoft"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/shield-check" }];
+        ];
 
     public static void EditProfileId()
     {

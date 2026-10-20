@@ -218,61 +218,14 @@ public partial class FormMain
         // Timer 启动
         ModAnimation.AniStart();
         ModMain.TimerMainStart();
-        // 特殊版本提示
+        // 后台启动初始化
         ModBase.RunInNewThread(() =>
         {
-            // 特殊版本提示
             try
             {
-
-
-#if DEBUG || DEBUGCI
-
-                if (Environment.GetEnvironmentVariable("PCL_DISABLE_DEBUG_HINT") is null)
-                {
-
-#if DEBUG
-                    var hint = Lang.Text("Main.SpecialVersion.DebugHint");
-#else
-                    var hint = Lang.Text("Main.SpecialVersion.CiHint");
-#endif
-
-                    ModMain.MyMsgBox(
-                        $"{hint}{"\r\n"}{"\r\n"}{Lang.Text("Main.SpecialVersion.HideHintNotice")}",
-                        Lang.Text("Main.SpecialVersion.Title"), Lang.Text("Main.SpecialVersion.IUnderstand"), Lang.Text("Main.SpecialVersion.OpenDownloadPageAndExit"), isWarn: true, button2Action: () =>
-                        {
-                            ModBase.OpenWebsite("https://github.com/PCL-Community/PCL2-CE/releases/latest");
-                            EndProgram(false);
-                        });
-                }
-
-
-#endif
-                // EULA 提示
-                if (!States.System.LauncherEula)
-                    switch (ModMain.MyMsgBox(Lang.Text("Main.Eula.Message"), Lang.Text("Main.Eula.Title"), Lang.Text("Common.Action.Agree"), Lang.Text("Common.Action.Decline"), Lang.Text("Main.Eula.View"),
-                                button3Action: () => ModBase.OpenWebsite("https://shimo.im/docs/rGrd8pY8xWkt6ryW")))
-                    {
-                        case 1:
-                            {
-                                States.System.LauncherEula = true;
-                                break;
-                            }
-                        case 2:
-                            {
-                                EndProgram(false);
-                                break;
-                            }
-                    }
-
-                // 遥测提示
+                // 个人版本不显示首次启动授权弹窗，未配置遥测时保持关闭。
                 if (Config.System.TelemetryConfig.IsDefault())
-                {
-                    var selection = ModMain.MyMsgBox(
-                                Lang.Text("Main.Telemetry.Message"),
-                                Lang.Text("Main.Telemetry.Title"), Lang.Text("Common.Action.Agree"), Lang.Text("Common.Action.Decline"));
-                    Config.System.TelemetryConfig.SetValue(selection == 1, forceNewValue: true);
-                }
+                    Config.System.TelemetryConfig.SetValue(false, forceNewValue: true);
                 // 启动加载器池
                 try
                 {
@@ -296,7 +249,7 @@ public partial class FormMain
             {
                 ModBase.Log(
                     ex,
-                    "初始弹窗提示运行失败",
+                    "启动初始化失败",
                     ModBase.LogLevel.Feedback,
                     userSummary: Lang.Text("Main.Error.OperationFailed"));
             }
@@ -337,8 +290,6 @@ public partial class FormMain
         if ((int)Config.Launch.GameWindowMode == 5)
             Config.Launch.GameWindowMode = GameWindowSizeMode.Default;
 
-        // 更新后展示社区版提示
-        UpdateManager.ShowCEAnnounce();
         // 输出更新日志
         if (lastVersionCode <= 0)
             return;
@@ -516,8 +467,6 @@ public partial class FormMain
                 return;
         }
 
-        // 关闭联机大厅
-        // Await LobbyController.CloseAsync().ConfigureAwait(False)
         // 关闭
         ModBase.RunInUiWait(() =>
         {
@@ -574,8 +523,6 @@ public partial class FormMain
         bool force = true, bool isUpdating = false)
     {
         // On Error Resume Next
-        // 关闭联机大厅
-        // Await LobbyController.CloseAsync().ConfigureAwait(False)
         ModBase.isProgramEnded = true;
         ModAnimation.AniControlEnabled += 1;
         if (UpdateManager.isUpdateWaitingRestart && !isUpdating)
@@ -1446,13 +1393,11 @@ public partial class FormMain
         SetupAbout = 4,
         SetupLog = 5,
         SetupFeedback = 6,
-        SetupGameLink = 7,
         SetupUpdate = 8,
         SetupJava = 9,
         SetupLauncherMisc = 10,
         SetupLauncherLanguage = 11,
 
-        ToolsGameLink = 1,
         ToolsTest = 3,
 
         VersionOverall = 0,
@@ -1858,7 +1803,7 @@ public partial class FormMain
                         PageChangeAnim(ModMain.frmDownloadLeft, (FrameworkElement)ModMain.frmDownloadLeft.PageGet(subType));
                         break;
                     }
-                case PageType.Tools: // 联机
+                case PageType.Tools: // 工具
                     {
                         ModMain.frmToolsLeft ??= new PageToolsLeft();
                         subType = ModMain.frmToolsLeft.pageID;
