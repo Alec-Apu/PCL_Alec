@@ -1,4 +1,4 @@
-using PCL.Core.App.Configuration;
+﻿using PCL.Core.App.Configuration;
 
 namespace PCL.Core.App;
 
@@ -34,9 +34,9 @@ public static partial class Config
         [ConfigItem<int>("SystemMaxLog", 13)] public partial int MaxGameLog { get; set; }
 
         /// <summary>
-        /// 动画帧率上限。
+        /// 动画帧率上限：0–239 对应 1–240 FPS，240 为跟随 WPF 呈现节奏。
         /// </summary>
-        [ConfigItem<int>("UiAniFPS", 59)] public partial int AnimationFpsLimit { get; set; }
+        [ConfigItem<int>("UiAniFPS", 240)] public partial int AnimationFpsLimit { get; set; }
 
         [ConfigItem<string>("Profile", "{\"lastUsed\":-1,\"profiles\":[]}", ConfigSource.SharedEncrypt)] public partial string Profiles { get; set; }
 
@@ -95,7 +95,6 @@ public static partial class Config
             [ConfigItem<bool>("ToolDownloadIgnoreQuilt", true)] public partial bool IgnoreQuilt { get; set; }
             [ConfigItem<bool>("ToolDownloadAutoInstallDependencies", true)] public partial bool AutoInstallDependencies { get; set; }
             [ConfigItem<bool>("ToolDownloadClipboard", false)] public partial bool ReadClipboard { get; set; }
-            [ConfigItem<int>("ToolDownloadMod", 1)] public partial int CompSourceSolution { get; set; }
             [ConfigItem<int>("ToolModLocalNameStyle", 0)] public partial int UiCompNameSolution { get; set; }
             [ConfigItem<int>("ToolDownloadQuickBehavior", 0)] public partial int QuickDownloadBehavior { get; set; }
         }
@@ -110,27 +109,6 @@ public static partial class Config
         // [ConfigItem<int>("ToolUpdateAlpha", 0, ConfigSource.SharedEncrypt)] public partial int Alpha { get; set; }
         [ConfigItem<bool>("ToolUpdateRelease", false)] public partial bool ReleaseNotification { get; set; }
         [ConfigItem<bool>("ToolUpdateSnapshot", false)] public partial bool SnapshotNotification { get; set; }
-    }
-
-    /// <summary>
-    /// 更新配置。
-    /// </summary>
-    [ConfigGroup("Update")] partial class UpdateConfigGroup
-    {
-        /// <summary>
-        /// 自动更新行为。
-        /// </summary>
-        [ConfigItem<LauncherAutoUpdateBehavior>("SystemSystemUpdate", LauncherAutoUpdateBehavior.DownloadAndAnnounce, ConfigSource.Local)] public partial LauncherAutoUpdateBehavior UpdateMode { get; set; }
-
-        /// <summary>
-        /// 更新分支。
-        /// </summary>
-        [ConfigItem<UpdateChannel>("SystemUpdateChannel", UpdateChannel.Release, ConfigSource.Local)] public partial UpdateChannel UpdateChannel { get; set; }
-            
-        /// <summary>
-        /// Mirror 酱 CDK。
-        /// </summary>
-        [ConfigItem<string>("SystemMirrorChyanKey", "", ConfigSource.SharedEncrypt)] public partial string MirrorChyanKey { get; set; }
     }
 
     /// <summary>
@@ -220,9 +198,12 @@ public static partial class Config
             [ConfigItem<ColorTheme>("UiDarkColor", ColorTheme.CatBlue)] public partial ColorTheme DarkColor { get; set; }
 
             /// <summary>
-            /// 亮色配色主题。
+            /// 浅色和深色模式共用的配色主题（保留原配置键）。
             /// </summary>
             [ConfigItem<ColorTheme>("UiLightColor", ColorTheme.CatBlue)] public partial ColorTheme LightColor { get; set; }
+
+            /// <summary>浅色和深色模式共用的自定义 RGB 重点色。</summary>
+            [ConfigItem<int>("UiLightAccentRgb", 0x3478D4)] public partial int LightAccentRgb { get; set; }
 
             /// <summary>
             /// 窗口透明度。
@@ -260,6 +241,9 @@ public static partial class Config
         /// </summary>
         [ConfigGroup("Background")] partial class BackgroundConfigGroup
         {
+            /// <summary>0: original theme, 1: landscape, 2: anime, 3: local images/video.</summary>
+            [ConfigItem<int>("UiBackgroundSource", 2, ConfigSource.Local)] public partial int WallpaperSource { get; set; }
+
             /// <summary>
             /// 彩色底部填充。
             /// </summary>
@@ -299,7 +283,7 @@ public static partial class Config
             /// <summary>
             /// 是否启用。
             /// </summary>
-            [ConfigItem<bool>("UiBlur", false, ConfigSource.Local)] public partial bool IsEnabled { get; set; }
+            [ConfigItem<bool>("UiBlur", true, ConfigSource.Local)] public partial bool IsEnabled { get; set; }
 
             /// <summary>
             /// 模糊半径。
@@ -392,7 +376,6 @@ public static partial class Config
             [ConfigItem<bool>("UiHiddenSetupLauncherMisc", false, ConfigSource.Local)] public partial bool SetupLauncherMisc { get; set; }
             [ConfigItem<bool>("UiHiddenSetupGameManage", false, ConfigSource.Local)] public partial bool SetupGameManage { get; set; }
             [ConfigItem<bool>("UiHiddenSetupJava", false, ConfigSource.Local)] public partial bool SetupJava { get; set; }
-            [ConfigItem<bool>("UiHiddenSetupUpdate", false, ConfigSource.Local)] public partial bool SetupUpdate { get; set; }
             [ConfigItem<bool>("UiHiddenSetupAbout", false, ConfigSource.Local)] public partial bool SetupAbout { get; set; } // 修正名称
             [ConfigItem<bool>("UiHiddenSetupFeedback", false, ConfigSource.Local)] public partial bool SetupFeedback { get; set; } // 修正名称
             [ConfigItem<bool>("UiHiddenSetupLog", false, ConfigSource.Local)] public partial bool SetupLog { get; set; } // 修正名称

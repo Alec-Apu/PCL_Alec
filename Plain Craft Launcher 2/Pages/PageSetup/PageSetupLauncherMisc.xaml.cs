@@ -45,7 +45,6 @@ public partial class PageSetupLauncherMisc
     public void Reload()
     {
         // 系统设置
-        ComboSystemActivity.SelectedIndex = States.System.AnnounceSolution;
         CheckSystemDisableHardwareAcceleration.Checked = Config.System.DisableHardwareAcceleration;
         SliderAniFPS.Value = Config.System.AnimationFpsLimit;
         SliderMaxLog.Value = Config.System.MaxGameLog;
@@ -137,7 +136,7 @@ public partial class PageSetupLauncherMisc
             (int)v > 29
                 ? Lang.Text("Common.Action.Close")
                 : Lang.Number(Math.Round(Convert.ToDouble(v) / 10 + 0.1d, 1), "N1") + "x");
-        SliderAniFPS.getHintText = new Func<object, string>(v => Lang.Number(Convert.ToInt32(v) + 1, "N0") + " FPS");
+        SliderAniFPS.getHintText = new Func<object, string>(v => Convert.ToInt32(v) >= 240 ? Lang.Text("Setup.Misc.System.MaxFps.Automatic") : Lang.Number(Convert.ToInt32(v) + 1, "N0") + " FPS");
         // y = 10x + 50 (0 <= x <= 5, 50 <= y <= 100)
         // y = 50x - 150 (5 < x <= 13, 100 < y <= 500)
         // y = 100x - 800 (13 < x <= 28, 500 < y <= 2000)
@@ -167,21 +166,6 @@ public partial class PageSetupLauncherMisc
             HintService.Hint(Lang.Text("Setup.Misc.Debug.Mode.Hint"), log: false);
     }
 
-    // 自动更新
-    private void ComboSystemActivity_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (ModAnimation.AniControlEnabled != 0)
-            return;
-        if (ComboSystemActivity.SelectedIndex != 2)
-            return;
-        if (ModMain.MyMsgBox(
-                Lang.Text("Setup.Misc.System.Announcement.Disabled.Warning.Message"),
-                Lang.Text("Common.Dialog.Warning"),
-                Lang.Text("Setup.Misc.System.Announcement.Disabled.Warning.Confirm"),
-                Lang.Text("Common.Action.Cancel"), isWarn: true) ==
-            2) ComboSystemActivity.SelectedItem = e.RemovedItems[0];
-    }
-
     private void CheckDebugMode_OnChange(object sender, bool user)
     {
         CheckBoxChange(sender, user);
@@ -192,12 +176,6 @@ public partial class PageSetupLauncherMisc
     {
         CheckBoxChange(sender, user);
         Check_DisableHardwareAcceleration(sender, user);
-    }
-
-    private void ComboSystemActivity_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ComboChange(sender, e);
-        ComboSystemActivity_SelectionChanged(sender, e);
     }
 
     #region 导出 / 导入设置

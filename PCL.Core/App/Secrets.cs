@@ -14,7 +14,6 @@ public static class Secrets
     /// <summary>
     /// CurseForge API 的 Client ID
     /// </summary>
-    public static string CurseForgeAPIKey { get; } = EnvironmentInterop.GetSecret("CURSEFORGE_API_KEY", readEnvDebugOnly: true).ReplaceNullOrEmpty();
 
     /// <summary>
     /// 遥测密钥

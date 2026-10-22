@@ -1,9 +1,29 @@
-<local:MyPageRight x:Class="PCL.PageLaunchRight"
+﻿<local:MyPageRight x:Class="PCL.PageLaunchRight"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:local="clr-namespace:PCL"> <!-- 不知道为啥只有这个文件不能在 XAML 设置 PanScroll -->
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
-        <StackPanel Name="PanMain" Margin="25,25,25,10" Grid.IsSharedSizeScope="True">
+        <StackPanel Name="PanMain" MaxWidth="1120" Margin="16,16,16,16" Grid.IsSharedSizeScope="True">
+            <local:ResponsiveColumnsPanel MinimumColumnWidth="300" Margin="0,0,0,16">
+            <local:MyCard Title="{DynamicResource Main.Fluent.Recent}" Margin="0" x:Name="RecentCard">
+                <StackPanel Margin="20,44,20,20">
+                    <StackPanel x:Name="RecentInstances" />
+                    <TextBlock x:Name="RecentEmpty" Text="{DynamicResource Main.Fluent.NoRecent}" Margin="0,0,0,12" Foreground="{DynamicResource ColorBrushGray2}" TextWrapping="Wrap"/>
+                    <local:MyButton Text="{DynamicResource Main.Fluent.AllInstances}" HorizontalAlignment="Left" Height="40" Click="FluentInstances_Click" />
+                </StackPanel>
+            </local:MyCard>
+            <local:MyCard Title="{DynamicResource Main.Fluent.Tasks}" Margin="0">
+                <Grid Margin="20,44,20,20">
+                    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+
+                    <StackPanel VerticalAlignment="Top" Margin="0,0,0,16">
+                        <TextBlock x:Name="TaskSummary" TextWrapping="Wrap"/>
+                        <ProgressBar x:Name="TaskProgress" Height="4" Maximum="1" Margin="0,12,0,0" Foreground="{DynamicResource ColorBrush3}"/>
+                    </StackPanel>
+                    <local:MyButton Grid.Row="1" Text="{DynamicResource Main.Fluent.Tasks}" Height="40" Click="FluentTasks_Click"/>
+                </Grid>
+            </local:MyCard>
+            </local:ResponsiveColumnsPanel>
             <StackPanel x:Name="PanCustom" />
             <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Launch.Right.CommunityHint.Title}" x:Name="PanHint">
                 <local:MyIconButton LogoScale="1.1"

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
@@ -24,6 +24,11 @@ public partial class PageDownloadCompFavorites
         Loaded += PageDownloadCompFavorites_Loaded;
         KeyDown += Page_KeyDown;
         InitializeComponent();
+        CardSelect.SizeChanged += (_, _) =>
+        {
+            if (CardSelect.Visibility == Visibility.Visible && CardSelect.ActualHeight > 0)
+                PanContentList.Margin = new Thickness(0, 0, 0, CardSelect.ActualHeight + 24);
+        };
         {
 
             // 这是选择收藏夹旁边那个图标按钮
@@ -226,7 +231,7 @@ public partial class PageDownloadCompFavorites
             PanSearchBox.Text = string.Empty;
             allowSearch = true;
             compItemList.Clear();
-            var someGetFail = loader.input.Count != loader.output.Count;
+            var someGetFail = loader.input.Count(id => !ModComp.CompRequest.IsFromCurseForge(id)) != loader.output.Count;
             HintGetFail.Visibility = someGetFail ? Visibility.Visible : Visibility.Collapsed;
             foreach (var item in loader.output)
             {
@@ -340,7 +345,7 @@ public partial class PageDownloadCompFavorites
         // 更新显示状态
         if (ModAnimation.AniControlEnabled == 0)
         {
-            PanContentList.Margin = new Thickness(0d, 0d, 0d, selected ? 80 : 0);
+            PanContentList.Margin = new Thickness(0d, 0d, 0d, selected ? Math.Max(80, CardSelect.ActualHeight + 24) : 0);
             if (selected)
             {
                 // 仅在数量增加时播放出现/跳跃动画

@@ -11,9 +11,9 @@
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Style}" IsEnabled="False" />
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.VanillaLike}" Tag="403/vanilla-like" />
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Realistic}" Tag="400/realistic" />
-        <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Modern}" Tag="401/" />
-        <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Medieval}" Tag="402/" />
-        <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Steampunk}" Tag="399/" />
+
+
+
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Themed}" Tag="/themed" />
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Simplistic}" Tag="/simplistic" />
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Decoration}" Tag="/decoration" />
@@ -30,7 +30,7 @@
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Locale}" Tag="/locale" />
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Gui}" Tag="/gui" />
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.CoreShaders}" Tag="/core-shaders" />
-        <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.Animated}" Tag="404/" />
+
         <local:MyComboBoxItem Margin="15,0,0,0" Content="{DynamicResource Download.Comp.Category.ModSupport}" Tag="4465/modded" />
 
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Resolution}" IsEnabled="False" />

@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using System.Windows.Input;
 using PCL.Core.App.Localization;
 
@@ -108,20 +108,6 @@ public partial class PageDownloadLeft : IRefreshable
                 ItemShader.Checked = true;
                 break;
             }
-            case FormMain.PageSubType.DownloadWorld:
-            {
-                ModComp.compProjectCache.Clear();
-                ModComp.compFilesCache.Clear();
-                if (ModMain.frmDownloadWorld is not null)
-                {
-                    ModMain.frmDownloadWorld.Content.storage = new ModComp.CompProjectStorage();
-                    ModMain.frmDownloadWorld.Content.page = 0;
-                    ModMain.frmDownloadWorld.PageLoaderRestart();
-                }
-
-                ItemWorld.Checked = true;
-                break;
-            }
             case FormMain.PageSubType.DownloadClient:
             {
                 ModDownload.dlClientListLoader.Start(isForceRestart: true);
@@ -212,7 +198,6 @@ public partial class PageDownloadLeft : IRefreshable
         ItemDataPack.Check += PageCheck;
         ItemResourcePack.Check += PageCheck;
         ItemShader.Check += PageCheck;
-        ItemWorld.Check += PageCheck;
         ItemFavorites.Check += PageCheck;
         ItemClient.Check += PageCheck;
         ItemOptiFine.Check += PageCheck;
@@ -278,11 +263,7 @@ public partial class PageDownloadLeft : IRefreshable
                 return ModMain.frmDownloadShader;
             }
             case FormMain.PageSubType.DownloadWorld:
-            {
-                if (ModMain.frmDownloadWorld is null)
-                    ModMain.frmDownloadWorld = new PageDownloadWorld();
-                return ModMain.frmDownloadWorld;
-            }
+                return PageGet(FormMain.PageSubType.DownloadInstall);
             case FormMain.PageSubType.DownloadCompFavorites:
             {
                 if (ModMain.frmDownloadCompFavorites is null)

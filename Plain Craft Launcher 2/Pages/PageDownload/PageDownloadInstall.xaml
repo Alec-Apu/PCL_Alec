@@ -1,4 +1,4 @@
-<local:MyPageRight
+﻿<local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,21 +15,35 @@
                         </StackPanel.RenderTransform>
                     </StackPanel>
                     <StackPanel Grid.Row="1" x:Name="PanSelect" Visibility="Collapsed" Opacity="0"
-                                IsHitTestVisible="False" Margin="0,0,0,45">
+                                IsHitTestVisible="False">
                         <StackPanel.RenderTransform>
                             <TranslateTransform X="40" />
                         </StackPanel.RenderTransform>
                         <local:MyCard Margin="0,15,0,3" UseAnimation="False" Height="62">
-                            <local:MyIconButton HorizontalAlignment="Left" Theme="Black" Opacity="0.6" x:Name="BtnBack"
-                                                Margin="13,0,0,0" Height="26" Width="26"
+                            <Grid x:Name="PanInstallHeader" Margin="13,0,16,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="26" />
+                                    <ColumnDefinition Width="13" />
+                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="9" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                            <local:MyIconButton Grid.Column="0" HorizontalAlignment="Left" Theme="Black" Opacity="0.6" x:Name="BtnBack"
+                                                Height="26" Width="26"
                                                 LogoScale="0.87"
                                                 SvgIcon="lucide/arrow-left" />
-                            <local:MyImage x:Name="ImgLogo" Margin="52,0,0,0" VerticalAlignment="Center"
+                            <local:MyImage Grid.Column="2" x:Name="ImgLogo" VerticalAlignment="Center"
                                            HorizontalAlignment="Left" Height="32"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
-                            <local:MyTextBox Margin="93,0,16,0" Padding="-1,0" MinHeight="30" FontSize="15"
+                            <local:MyTextBox Grid.Column="4" Padding="-1,0" MinHeight="30" FontSize="15"
                                              VerticalAlignment="Center" x:Name="TextSelectName" MaxLength="70"
                                              HasBackground="False" />
+                            <local:MyButton Grid.Column="6" x:Name="BtnStart"
+                                            Text="{DynamicResource Download.Install.StartDownload}"
+                                            ColorType="Highlight" VerticalAlignment="Center" Margin="0" />
+                            </Grid>
                         </local:MyCard>
                         <local:MyHint Text="{DynamicResource Download.Install.Warning.FabricApi}" Margin="0,10,0,0" x:Name="HintFabricAPI"
                                       Theme="Red" />
@@ -345,10 +359,6 @@
                     </StackPanel>
                 </Grid>
             </local:MyScrollViewer>
-            <local:MyExtraTextButton x:Name="BtnStart" Text="{DynamicResource Download.Install.StartDownload}"
-                                     HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                                     LogoScale="0.95"
-                                     SvgIcon="lucide/download" />
         </Grid>
         <local:MyCard HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40,0" SnapsToDevicePixels="True"
                       x:Name="PanLoad" UseAnimation="False">

@@ -34,14 +34,11 @@ public sealed partial class ThemeService
 
     [RegisterConfigEvent]
     public static ConfigEventRegistry OnColorThemeConfigChanged => new(
-        scope: [Config.Preference.Theme.DarkColorConfig, Config.Preference.Theme.LightColorConfig],
+        scope: [Config.Preference.Theme.LightColorConfig, Config.Preference.Theme.LightAccentRgbConfig],
         trigger: ConfigEvent.Update,
         handler: e =>
         {
-            // ignore no change or non-current color theme change
             if (e.OldValue == e.Value) return;
-            if (IsDarkMode) { if (e.Item == Config.Preference.Theme.LightColorConfig) return; }
-            else { if (e.Item == Config.Preference.Theme.DarkColorConfig) return; }
             // trigger color refresh
             if (Lifecycle.CurrentState > LifecycleState.Loading)
             {
@@ -135,12 +132,12 @@ public sealed partial class ThemeService
         get
         {
             var theme = Config.Preference.Theme;
-            return IsDarkMode ? theme.DarkColor : theme.LightColor;
+            return theme.LightColor;
         }
         set
         {
             var theme = Config.Preference.Theme;
-            var config = IsDarkMode ? theme.DarkColorConfig : theme.LightColorConfig;
+            var config = theme.LightColorConfig;
             config.SetValue(value);
         }
     }
@@ -157,12 +154,27 @@ public sealed partial class ThemeService
             ColorTheme.CatBlue => (255, 0, -0.2),
             ColorTheme.DeathBlue => (268, -0.05, -0.1),
             ColorTheme.HmclBlue => (275, -0.03, -0.35),
+            ColorTheme.Custom => GetCustomThemeArgs(),
 #if DEBUG
             _ => ((int)theme, 0, 0)
 #else
             _ => throw new IndexOutOfRangeException($"Invalid theme index: {(int)theme}")
 #endif
         };
+    }
+
+    private static (int Hue, double LightAdjust, double ChromaAdjust) GetCustomThemeArgs()
+    {
+        var rgb = Config.Preference.Theme.LightAccentRgb;
+        var color = LabColor.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
+        var tone = CurrentTone;
+        var chroma = Math.Sqrt(color.A * color.A + color.B * color.B);
+        var hue = (int)((Math.Atan2(color.B, color.A) * 180 / Math.PI + 360) % 360);
+        static double Adjustment(double value, double target) => target >= value
+            ? (target - value) / Math.Max(1 - value, 0.0001)
+            : (target - value) / Math.Max(value, 0.0001);
+        // Preserve contrast across the theme palette, including very dark or light RGB inputs.
+        return (hue, Math.Clamp(Adjustment(tone.L4, color.L), -0.25, 0.25), Adjustment(tone.C4, chroma));
     }
 
     private static double _AdjustLinear(double value, double adjustment)

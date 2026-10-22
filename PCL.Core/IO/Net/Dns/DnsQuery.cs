@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Caching;
@@ -24,44 +25,55 @@ public class DnsQuery : IDisposable
 
     private DnsQuery()
     {
-        var proxyHandler = new HttpClientHandler()
-        {
-            Proxy = HttpProxyManager.Instance
-        };
         // 使用Ae.Dns创建DoH客户端，支持多个DoH服务器
         _httpClients =
         [
-            new HttpClient(proxyHandler)
-            {
-                BaseAddress = new Uri("https://doh.pub/")
-            },
-            new HttpClient(proxyHandler)
-            {
-                BaseAddress = new Uri("https://doh.pysio.online/")
-            },
-            new HttpClient(proxyHandler)
-            {
-                BaseAddress = new Uri("https://cloudflare-dns.com/")
-            }
+            CreateClient("https://dns.alidns.com/")
         ];
         _resolver = new DnsCachingClient(
-            new WeightedDnsRacerClient(2, _httpClients.Select(static x => new DnsHttpClient(x)).ToArray<IDnsClient>()),
+            new WeightedDnsRacerClient(1, _httpClients.Select(static x => new DnsHttpClient(x)).ToArray<IDnsClient>()),
             new MemoryCache("DoH Query Cache"));
+    }
+
+    private static HttpClient CreateClient(string address) => new(new DiagnosticHandler(
+        new HttpClientHandler { Proxy = HttpProxyManager.Instance })) { BaseAddress = new Uri(address) };
+
+    private sealed class DiagnosticHandler(HttpMessageHandler inner) : DelegatingHandler(inner)
+    {
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var elapsed = Stopwatch.StartNew();
+            try
+            {
+                var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                LogWrapper.Debug(ModuleName, $"DoH transport; provider={request.RequestUri?.Host}; status={(int)response.StatusCode}; elapsed={elapsed.ElapsedMilliseconds}ms");
+                return response;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+            catch (Exception ex)
+            {
+                LogWrapper.Debug(ex, ModuleName, $"DoH transport failed; provider={request.RequestUri?.Host}; elapsed={elapsed.ElapsedMilliseconds}ms");
+                throw;
+            }
+        }
     }
 
     public async Task<DnsMessage?> QueryAsync(string host, DnsQueryType qType, CancellationToken cts = default)
     {
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cts);
+        timeout.CancelAfter(TimeSpan.FromSeconds(5));
         try
         {
-            return await _resolver.Query(DnsQueryFactory.CreateQuery(host, qType), cts);
+            return await _resolver.Query(DnsQueryFactory.CreateQuery(host, qType), timeout.Token)
+                .WaitAsync(timeout.Token).ConfigureAwait(false);
         }
-        catch (TaskCanceledException)
+        catch (OperationCanceledException) when (cts.IsCancellationRequested)
         {
             throw;
         }
         catch (Exception ex)
         {
-            LogWrapper.Warn(ModuleName, $"Failed to resolve DNS for {host}: {ex.Message}, use system default DNS");
+            LogWrapper.Debug(ex, ModuleName, $"DoH query failed; host={host}; type={qType}");
         }
 
         return null;
@@ -69,26 +81,24 @@ public class DnsQuery : IDisposable
 
     public async Task<IPAddress[]?> QueryForIpAsync(string host, CancellationToken cts = default)
     {
-        var queryResponse = await Task.WhenAll(
-            [
-                QueryAsync(host, DnsQueryType.A, cts),
-                QueryAsync(host, DnsQueryType.AAAA, cts)
-            ]
-        );
-
-        if (queryResponse.All(static x => x is null))
+        async Task<IPAddress[]?> QueryAddresses(DnsQueryType type, CancellationToken token)
         {
-            LogWrapper.Warn(ModuleName, $"Failed to query IP for host {host} using DoH, use system default DNS");
-            return await System.Net.Dns.GetHostAddressesAsync(host, cts);
+            var answer = await QueryAsync(host, type, token).ConfigureAwait(false);
+            if (answer is not null && answer.Header.ResponseCode != DnsResponseCode.NoError)
+            {
+                LogWrapper.Debug(ModuleName, $"DNS answer failed; host={host}; type={type}; code={answer.Header.ResponseCode}");
+                return null;
+            }
+            return answer?.Answers.Where(a => a.Type == type)
+                .Select(a => a.Resource).OfType<DnsIpAddressResource>()
+                .Select(a => a.IPAddress).Distinct().ToArray();
         }
-
-        return queryResponse.Where(static x => x is not null)
-            .SelectMany(static x => x!.Answers)
-            .Where(static x => x.Type is DnsQueryType.A or DnsQueryType.AAAA)
-            .Select(static x => x.Resource as DnsIpAddressResource)
-            .Where(static x => x is not null)
-            .Select(static x => x!.IPAddress)
-            .ToArray();
+        var addresses = await DnsAddressResolver.ResolveAsync(host,
+            token => QueryAddresses(DnsQueryType.A, token),
+            token => QueryAddresses(DnsQueryType.AAAA, token),
+            token => System.Net.Dns.GetHostAddressesAsync(host, token), cts).ConfigureAwait(false);
+        LogWrapper.Debug(ModuleName, $"Resolved; host={host}; addresses={string.Join(",", addresses.Select(ip => ip.ToString()))}");
+        return addresses;
     }
 
     public void Dispose()

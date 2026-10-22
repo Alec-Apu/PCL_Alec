@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -45,6 +45,7 @@ public partial class MyLoading
         Loaded += (_, _) => InitState();
         Loaded += (_, _) => RefreshState();
         Unloaded += (_, _) => RefreshState();
+        IsVisibleChanged += (_, _) => RefreshState();
         MouseLeftButtonUp += Button_MouseUp;
         MouseLeftButtonDown += Button_MouseDown;
         MouseLeave += Button_MouseLeave;
@@ -197,9 +198,15 @@ public partial class MyLoading
 
     private void RefreshState()
     {
-        if (_State.LoadingState == MyLoadingState.Run && !IsLoaded)
-            InnerState = MyLoadingState.Stop;
-        InnerState = _State.LoadingState;
+        if (_State is null) return;
+        if (!IsLoaded || !IsVisible)
+        {
+            ModAnimation.AniStop("MyLoader Loop " + uuid);
+            isLooping = false;
+            errorAnimationWaiting = false;
+        }
+        InnerState = _State.LoadingState == MyLoadingState.Run && (!IsLoaded || !IsVisible)
+            ? MyLoadingState.Stop : _State.LoadingState;
         OuterState = _State.LoadingState;
         AniLoop();
     }
@@ -261,7 +268,7 @@ public partial class MyLoading
     {
         // 这坨循环代码也是老屎坑了，救救.jpg
         if (!HasAnimation || isLooping || !(InnerState == MyLoadingState.Run) || ModAnimation.aniSpeed > 10d ||
-            !IsLoaded)
+            !IsLoaded || !IsVisible)
             return;
         isLooping = true;
         errorAnimationWaiting = true;
@@ -292,7 +299,7 @@ public partial class MyLoading
                 isLooping = false;
                 AniLoop();
             }, after: true)
-        }, "MyLoader Loop " + uuid + "/" + ModBase.GetUuid());
+        }, "MyLoader Loop " + uuid);
     }
 
     /// <summary>

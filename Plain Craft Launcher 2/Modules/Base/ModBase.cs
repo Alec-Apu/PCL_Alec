@@ -3500,31 +3500,21 @@ public static class ModBase
         if (isCritical)
             isCriticalErrorTriggered = true;
 
-        if (CanFeedback(false))
-        {
-            var message = Lang.Text("Setup.Feedback.ErrorPrompt.Submit.Message", userMessage);
-            var shouldSend = isCritical
-                ? Interaction.MsgBox(
-                    message,
-                    (MsgBoxStyle)((int)MsgBoxStyle.Critical + (int)MsgBoxStyle.YesNo),
-                    title) == MsgBoxResult.Yes
-                : ModMain.MyMsgBox(
-                    message,
-                    title,
-                    Lang.Text("Setup.Feedback.ErrorPrompt.Submit.Action"),
-                    Lang.Text("Common.Action.Cancel"),
-                    isWarn: true) == 1;
+        var message = Lang.Text("Setup.Feedback.ErrorPrompt.Submit.Message", userMessage);
+        var shouldSend = isCritical
+            ? Interaction.MsgBox(
+                message,
+                (MsgBoxStyle)((int)MsgBoxStyle.Critical + (int)MsgBoxStyle.YesNo),
+                title) == MsgBoxResult.Yes
+            : ModMain.MyMsgBox(
+                message,
+                title,
+                Lang.Text("Setup.Feedback.ErrorPrompt.Submit.Action"),
+                Lang.Text("Common.Action.Cancel"),
+                isWarn: true) == 1;
 
-            if (shouldSend)
-                Feedback(false, true);
-            return;
-        }
-
-        var updateMessage = Lang.Text("Setup.Feedback.ErrorPrompt.Update.Message", userMessage);
-        if (isCritical)
-            Interaction.MsgBox(updateMessage, MsgBoxStyle.Critical, title);
-        else
-            ModMain.MyMsgBox(updateMessage, title, isWarn: true);
+        if (shouldSend)
+            Feedback(false, true);
     }
 
     public static string Base64Decode(string text)
@@ -3561,27 +3551,6 @@ public static class ModBase
                                  Lang.Text("Setup.Feedback.Reminder.NotNeeded")) ==
                              1)) OpenExplorer(exePath + @"PCL\Log\");
         OpenWebsite("https://github.com/NoSetViolin/PCL-XH/issues/");
-    }
-
-    public static bool CanFeedback(bool showHint)
-    {
-        var stat = UpdateManager.GetVersionStatus();
-        if (stat == UpdateEnums.VersionStatus.Latest) return true;
-
-        if (!showHint) return false;
-
-        if (ModMain.MyMsgBox(
-                stat == UpdateEnums.VersionStatus.NotLatest
-                    ? Lang.Text("Setup.Feedback.Unavailable.NotLatest.Message")
-                    : Lang.Text("Setup.Feedback.Unavailable.CheckFailed.Message"),
-                Lang.Text("Setup.Feedback.Unavailable.Title"),
-                stat == UpdateEnums.VersionStatus.NotLatest
-                    ? Lang.Text("Setup.Feedback.Unavailable.NotLatest.Action")
-                    : Lang.Text("Setup.Feedback.Unavailable.CheckFailed.Action"),
-                Lang.Text("Common.Action.Cancel")) == 1)
-            ModMain.frmMain.PageChange(FormMain.PageType.Setup, FormMain.PageSubType.SetupUpdate);
-
-        return false;
     }
 
     /// <summary>

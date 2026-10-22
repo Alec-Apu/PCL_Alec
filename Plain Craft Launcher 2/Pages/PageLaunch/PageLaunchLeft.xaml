@@ -5,52 +5,73 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:local="clr-namespace:PCL"
                   mc:Ignorable="d" x:Name="PanBack"
-                  d:DesignHeight="417.2" Width="300">
-    <Grid Name="PanInput" RenderTransformOrigin="0.5,0.5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
-        </Grid.ColumnDefinitions>
-        <Grid.RenderTransform>
-            <ScaleTransform />
-        </Grid.RenderTransform>
-        <local:MyButton Grid.Row="3" Grid.Column="2" x:Name="BtnInstance" Height="35" Margin="0,10,10,0" Text="{DynamicResource Launch.Home.SelectInstance}"
-                        IsEnabled="False" Click="BtnInstance_Click" />
-        <local:MyButton Grid.Row="3" Grid.Column="3" x:Name="BtnMore" Visibility="Collapsed" Height="35"
-                        Click="BtnMore_Click"
-                        Margin="0,10,10,0" TextPadding="36" Text="{DynamicResource Launch.Home.InstanceSettings}" />
-        <Grid Grid.ColumnSpan="5" Grid.Row="1" Margin="20,0" VerticalAlignment="Center" x:Name="PanLogin" />
-        <Grid Grid.ColumnSpan="5" Grid.Row="2" RenderTransformOrigin="0.5,0.5">
-            <Grid.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform x:Name="AprilScaleTrans" />
-                    <TranslateTransform x:Name="AprilPosTrans" />
-                </TransformGroup>
-            </Grid.RenderTransform>
-            <local:MyButton x:Name="BtnLaunch" Height="54" Margin="20,0" Text="{DynamicResource Launch.Home.Button.Loading}" ColorType="Highlight"
-                            Click="BtnLaunch_Click"
-                            Padding="30,0,30,15" IsEnabled="False" />
-            <TextBlock x:Name="LabVersion" Text="{DynamicResource Launch.Home.VersionList.Loading}" Margin="35,0,35,10" IsHitTestVisible="False"
-                       VerticalAlignment="Bottom" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"
-                       FontSize="11" Foreground="{DynamicResource ColorBrushGray3}" RenderTransformOrigin="0.5,-0.2">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform ScaleX="{Binding RealRenderTransform.ScaleX, ElementName=BtnLaunch, Mode=OneWay}"
-                                    ScaleY="{Binding RealRenderTransform.ScaleY, ElementName=BtnLaunch, Mode=OneWay}" />
-                </TextBlock.RenderTransform>
-            </TextBlock>
-        </Grid>
+                  d:DesignHeight="220"
+    xmlns:glass="clr-namespace:PCL.Core.UI.Controls;assembly=PCL.Core">
+    <Grid Name="PanInput" RenderTransformOrigin="0.5,0.5" MinHeight="104" MaxWidth="1120">
+        <Grid.RenderTransform><ScaleTransform /></Grid.RenderTransform>
+        <local:ResponsiveColumnsPanel MinimumColumnWidth="360" SecondaryWidth="192" Gap="16">
+            <glass:LiquidGlassSurface Material="Content" CornerRadius="{StaticResource Fluent.CardRadius}" Background="{DynamicResource Fluent.Card}"
+                    BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1" Padding="20">
+                <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <Button Click="HomeAccount_Click" Background="Transparent" BorderThickness="0" Padding="0"
+                            ToolTip="{DynamicResource Main.Fluent.Account}" Cursor="Hand" VerticalAlignment="Center"
+                            AutomationProperties.Name="{DynamicResource Main.Fluent.Account}">
+                        <StackPanel Width="88" Margin="0,0,20,0">
+                            <glass:LiquidGlassSurface Material="Content" Background="{DynamicResource Fluent.GlassSurface}" CornerRadius="18" Width="80" Height="80">
+                                <Grid>
+                                    <TextBlock x:Name="HomeAvatarFallback" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="32"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ColorBrushGray2}"/>
+                                    <Image x:Name="HomeSkinBack" Width="54" Height="54" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                                    <Image x:Name="HomeSkinFore" Width="63" Height="63" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                                </Grid>
+                            </glass:LiquidGlassSurface>
+                            <TextBlock x:Name="HomePlayerName" Margin="0,8,0,0" TextAlignment="Center" TextTrimming="CharacterEllipsis"
+                                       Foreground="{DynamicResource ColorBrush1}" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource Main.Fluent.PlayEyebrow}" FontSize="12" Foreground="{DynamicResource ColorBrushGray2}" Margin="0,0,0,8" />
+                        <TextBlock x:Name="LabVersion" Text="{DynamicResource Launch.Home.VersionList.Loading}" FontSize="24"
+                                   FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource ColorBrush1}" />
+                        <WrapPanel Margin="0,12,0,0">
+                            <local:MyButton x:Name="BtnInstance" Height="40" Margin="0,0,8,4"
+                                            Text="{DynamicResource Launch.Home.SelectInstance}" IsEnabled="False" />
+                            <local:MyButton x:Name="BtnMore" Visibility="Collapsed" Height="40" Margin="0,0,0,4"
+                                            Text="{DynamicResource Launch.Home.InstanceSettings}" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Grid>
+            </glass:LiquidGlassSurface>
+            <glass:LiquidGlassSurface Material="Chrome" CornerRadius="{StaticResource Fluent.CardRadius}" Background="{DynamicResource Fluent.Card}"
+                    BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1" Padding="24,16" MinWidth="164">
+                <Grid VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform><TransformGroup><ScaleTransform x:Name="AprilScaleTrans"/><TranslateTransform x:Name="AprilPosTrans"/></TransformGroup></Grid.RenderTransform>
+                    <StackPanel>
+                        <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="28" HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource ColorBrush3}" Margin="0,0,0,16"/>
+                        <local:MyButton x:Name="BtnLaunch" Height="52" HorizontalAlignment="Stretch" Text="{DynamicResource Launch.Home.Button.Loading}"
+                                        ColorType="Highlight" IsEnabled="False" />
+                    </StackPanel>
+                </Grid>
+            </glass:LiquidGlassSurface>
+        </local:ResponsiveColumnsPanel>
     </Grid>
-    <Grid Name="PanLaunching" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed" Opacity="0">
+    <Popup x:Name="AccountPopup" Placement="Center" PlacementTarget="{Binding ElementName=PanInput}"
+           AllowsTransparency="True" StaysOpen="False" PopupAnimation="Fade">
+        <glass:LiquidGlassSurface Material="Floating" Background="{DynamicResource Fluent.Surface}" BorderBrush="{DynamicResource Fluent.Stroke}"
+                BorderThickness="1" CornerRadius="24" Padding="24" Width="350" MaxHeight="360"
+                glass:LiquidGlassSurface.UseLightweightMaterial="False">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="{DynamicResource Main.Fluent.Account}" FontSize="20" FontWeight="SemiBold"
+                               Foreground="{DynamicResource ColorBrush1}" Margin="0,0,0,18" />
+                    <Grid x:Name="PanLogin" />
+                </StackPanel>
+            </ScrollViewer>
+        </glass:LiquidGlassSurface>
+    </Popup>
+    <Grid Name="PanLaunching" MinHeight="190" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed" Opacity="0">
         <Grid.RenderTransform>
             <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
         </Grid.RenderTransform>
@@ -150,7 +171,7 @@
                 </Grid>
             </Grid>
         </StackPanel>
-        <local:MyButton Grid.Row="4" x:Name="BtnCancel" Height="35" Margin="20,0,20,20" VerticalAlignment="Bottom"
+        <local:MyButton Grid.Row="4" x:Name="BtnCancel" Height="40" Margin="20,0,20,20" VerticalAlignment="Bottom"
                         Click="BtnCancel_Click"
                         Text="{DynamicResource Common.Action.Cancel}" />
     </Grid>

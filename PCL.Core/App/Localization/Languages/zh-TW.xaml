@@ -1,4 +1,4 @@
-<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. -->
+﻿<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. -->
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -78,6 +78,7 @@
     <sys:String x:Key="Common.Action.OpenFolder">開啟資料夾</sys:String>
     <sys:String x:Key="Common.Action.Overwrite">覆蓋</sys:String>
     <sys:String x:Key="Common.Action.Refresh">重新整理</sys:String>
+    <sys:String x:Key="Common.Action.More">更多操作</sys:String>
     <sys:String x:Key="Common.Action.Reset">重設</sys:String>
     <sys:String x:Key="Common.Action.Search">搜尋</sys:String>
     <sys:String x:Key="Common.Action.UpdateLog">更新紀錄</sys:String>
@@ -240,7 +241,6 @@
     <sys:String x:Key="Crash.Suggestion.InvalidModFileName">移除或重新命名異常的模組檔案，使檔名僅包含英文字母、數字、短橫線、下劃線和小數點。</sys:String>
     <sys:String x:Key="Crash.Suggestion.JavaIncompatible">根據 Minecraft 版本和模組要求，在啟動設定中選擇合適的 Java。</sys:String>
     <sys:String x:Key="Crash.Suggestion.JavaTooNew">在啟動設定中改用較低版本的 Java 後再試。</sys:String>
-    <sys:String x:Key="Crash.Suggestion.LauncherOutdated">目前使用的 PCL XH 版本較舊。更新 PCL XH 可能會解決此問題：設定 → 啟動器 → 檢查更新。</sys:String>
     <sys:String x:Key="Crash.Suggestion.MissingMixinBootstrap">檢查 MixinBootstrap、模組載入器和相關前置是否已完整安裝。</sys:String>
     <sys:String x:Key="Crash.Suggestion.ModConfigCrash">嘗試刪除該模組的設定檔後重新啟動；必要時更新或停用該模組。</sys:String>
     <sys:String x:Key="Crash.Suggestion.ModLoaderIncompatible">開啟實例設定並調整或重新安裝模組載入器版本。</sys:String>
@@ -826,7 +826,6 @@
     <sys:String x:Key="Instance.Export.StartExport">開始匯出</sys:String>
     <sys:String x:Key="Instance.Export.Task.CopyContent">複製匯出內容</sys:String>
     <sys:String x:Key="Instance.Export.Task.CreateArchive">建立壓縮檔</sys:String>
-    <sys:String x:Key="Instance.Export.Task.DownloadPclRelease">下載 PCL XH 正式版</sys:String>
     <sys:String x:Key="Instance.Export.Task.FetchFileInfo">連線取得檔案資訊</sys:String>
     <sys:String x:Key="Instance.Export.ZipFilter">壓縮檔案(*.zip)|*.zip</sys:String>
 
@@ -1797,8 +1796,6 @@
     <sys:String x:Key="Main.Extra.GiveUp.ToolTip">投降</sys:String>
     <sys:String x:Key="Main.Extra.ShutdownMinecraft.ToolTip">關閉 Minecraft</sys:String>
     <sys:String x:Key="Main.Extra.TaskManager.ToolTip">任務管理</sys:String>
-    <sys:String x:Key="Main.Extra.UpdateRestart.ToolTip">重啟 PCL XH 以應用軟體更新</sys:String>
-    <sys:String x:Key="Main.Extra.UpdateRestart.ToolTipWithVersion">重啟 PCL XH 以應用軟體更新 ({0} → {1})</sys:String>
     <sys:String x:Key="Main.HiddenFeature.Disabled">功能隱藏設定已暫時關閉！</sys:String>
     <sys:String x:Key="Main.HiddenFeature.Enabled">功能隱藏設定已重新開啟！</sys:String>
     <sys:String x:Key="Main.ShutdownMinecraft.Success">已關閉執行中的 Minecraft！</sys:String>
@@ -2473,7 +2470,6 @@
 
     <sys:String x:Key="Setup.Feedback.ErrorPrompt.Submit.Action">回饋</sys:String>
     <sys:String x:Key="Setup.Feedback.ErrorPrompt.Submit.Message">{0}&#xA;&#xA;是否回饋此問題？如果不回饋，這個問題可能永遠無法得到解決！</sys:String>
-    <sys:String x:Key="Setup.Feedback.ErrorPrompt.Update.Message">{0}&#xA;&#xA;將 PCL XH 更新至最新版或許可以解決這個問題。</sys:String>
     <sys:String x:Key="Setup.Feedback.Item.Submitter">提交者：{0}（{1}）</sys:String>
     <sys:String x:Key="Setup.Feedback.Item.Type">型別：{0}</sys:String>
     <sys:String x:Key="Setup.Feedback.Item.ViewDetail">檢視詳情</sys:String>
@@ -2485,11 +2481,6 @@
     <sys:String x:Key="Setup.Feedback.Submit.Description">在提交回饋之前，先查詢一下是否存在重複回饋，如果有重複回饋，那麼請不要再次提交回饋，這樣會加劇維護者的負擔……&#xA;注意：此頁面未展示所有的回饋，如需檢視更多回饋，請前往 GitHub。</sys:String>
     <sys:String x:Key="Setup.Feedback.Submit.Open">前往回饋</sys:String>
     <sys:String x:Key="Setup.Feedback.Submit.Title">提交回饋</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.CheckFailed.Action">重新檢查更新</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.CheckFailed.Message">檢查更新失敗，因此無法提交回饋。&#xA;請連線網際網路，檢查更新後確認該問題在最新版中依然存在，再提交回饋。</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.NotLatest.Action">更新</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.NotLatest.Message">目前 PCL XH 不是最新版，因此無法提交回饋。&#xA;請更新後確認該問題在最新版中依然存在，再提交回饋。</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.Title">無法提交回饋</sys:String>
     <sys:String x:Key="Setup.Feedback.Uncategorized">未分類</sys:String>
 
     <!-- Setup.Feedback.Status -->
@@ -2762,7 +2753,6 @@
     <sys:String x:Key="Setup.Left.Item.Log">檢視日誌</sys:String>
     <sys:String x:Key="Setup.Left.Item.Misc">雜項</sys:String>
     <sys:String x:Key="Setup.Left.Item.Ui">個人化</sys:String>
-    <sys:String x:Key="Setup.Left.Item.Update">軟體更新</sys:String>
 
     <!-- Setup.Log -->
 
@@ -2821,14 +2811,6 @@
     <sys:String x:Key="Setup.Misc.Network.Proxy.Username">帳戶</sys:String>
 
     <!-- Setup.Misc.System -->
-
-    <sys:String x:Key="Setup.Misc.System.Announcement">啟動器公告</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.All">顯示所有公告</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.All.ToolTip">顯示包括啟動器功能調查、活動等在內的全部公告</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.Disabled">關閉所有公告</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.Disabled.Warning.Confirm">我知道我在做什麼</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.Disabled.Warning.Message">若選擇此選項，即使日後出現重大問題，您也將無法收到相關通知。&#xA;例如，若某個遊戲版本被發現存在嚴重錯誤，您可能因未接收到通知而導致無法預期的後果。&#xA;&#xA;一般建議選擇「僅在有重要通知時顯示公告」，這樣可在不造成干擾的情況下獲得關鍵資訊。&#xA;除非您正在製作伺服器模組包，或經常手動更新啟動器，否則強烈不建議選擇此選項！</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.ImportantOnly">僅在有重要通知時顯示公告</sys:String>
     <sys:String x:Key="Setup.Misc.System.DisableHardwareAcceleration">停用硬體加速</sys:String>
     <sys:String x:Key="Setup.Misc.System.ExportSettings">匯出設定</sys:String>
     <sys:String x:Key="Setup.Misc.System.ExportSettings.Filter">PCL XH 設定檔(*.json)|*.json</sys:String>
@@ -2838,6 +2820,7 @@
     <sys:String x:Key="Setup.Misc.System.ImportSettings.SelectTitle">選擇設定檔</sys:String>
     <sys:String x:Key="Setup.Misc.System.ImportSettings.Success.Message">設定匯入成功！請重啟 PCL XH 以應用設定……</sys:String>
     <sys:String x:Key="Setup.Misc.System.ImportSettings.Success.Restart">重啟</sys:String>
+    <sys:String x:Key="Setup.Misc.System.MaxFps.Automatic">自動（跟隨螢幕更新率）</sys:String>
     <sys:String x:Key="Setup.Misc.System.MaxFps">最高動畫幀率</sys:String>
     <sys:String x:Key="Setup.Misc.System.MaxFps.ToolTip">如果你停用了硬體加速，那麼建議你調低最高動畫幀率以防止過多的資源佔用</sys:String>
     <sys:String x:Key="Setup.Misc.System.MaxLogLines">即時日誌行數</sys:String>
@@ -2973,7 +2956,6 @@
     <sys:String x:Key="Setup.Ui.FeatureHide.Item.Toolbox">百寶箱</sys:String>
     <sys:String x:Key="Setup.Ui.FeatureHide.Item.Tools">工具</sys:String>
     <sys:String x:Key="Setup.Ui.FeatureHide.Item.Ui">個人化</sys:String>
-    <sys:String x:Key="Setup.Ui.FeatureHide.Item.Update">軟體更新</sys:String>
 
     <!-- Setup.Ui.Homepage -->
 
@@ -3010,7 +2992,6 @@
     <sys:String x:Key="Setup.Ui.Homepage.Preset.Bangumi">Bangumi 番劇首頁（作者：wzyaeu）</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.OpenBmclapi">OpenBMCLAPI 儀錶板 Lite（作者：Silverteal、Mxmilu666）</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.OpenMcim">OpenMCIM 儀錶板（作者：SALTWOOD）</sys:String>
-    <sys:String x:Key="Setup.Ui.Homepage.Preset.PclAnnouncement">PCL XH 公告</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.PclManual">PCL 新功能說明書（作者：WForst-Breeze）</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.PclMarket">PCL 首頁市場（作者：凌雲）</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.PclNews">PCL 新聞速報（作者：Joker2184）</sys:String>
@@ -3064,61 +3045,11 @@
 
     <!-- Setup.Update -->
 
-    <sys:String x:Key="Setup.Update.Changelog.Empty">開發者似乎忘記提供更新摘要了...也許你可以點擊下方看看完整更新紀錄？</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.MoreInfo">有關此更新的更多資訊...</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.Placeholder">PCL XH 2.14.0 帶來了讓人眼睛一亮的新設計和 Pigeon 智慧的多項功能，同時還帶來了令人愉快的跨實例工作方式，助你提高工作效率。</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.Title">關於此更新</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.Unavailable">沒有可用的更新紀錄...</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.View">檢視更新紀錄</sys:String>
-    <sys:String x:Key="Setup.Update.CheckAgain">再次檢查</sys:String>
-    <sys:String x:Key="Setup.Update.CheckFailed">檢查更新時出錯</sys:String>
-    <sys:String x:Key="Setup.Update.Checking">正在檢查更新...</sys:String>
-    <sys:String x:Key="Setup.Update.DotNetMissing.DownloadRuntime">下載 .NET 10 執行時</sys:String>
-    <sys:String x:Key="Setup.Update.DotNetMissing.Message">發現了啟動器更新（版本 {0}），但是新版本要求你的電腦安裝 .NET 10 才可以執行。&#xA;你需要先安裝 .NET 10 才可以繼續更新。&#xA;&#xA;點擊下方按鈕開啟網頁，然後選擇「.NET 桌面執行時」中的 {1} 選項下載。</sys:String>
-    <sys:String x:Key="Setup.Update.DotNetMissing.Title">啟動器更新 - 缺少執行環境</sys:String>
-    <sys:String x:Key="Setup.Update.Error.NetworkFailed">無法取得最新版本資訊，請檢查網路連線</sys:String>
-    <sys:String x:Key="Setup.Update.Install">下載並安裝</sys:String>
-    <sys:String x:Key="Setup.Update.Latest">已是最新版本</sys:String>
-    <sys:String x:Key="Setup.Update.MirrorChyanCdk.Get">取得 CDK</sys:String>
-    <sys:String x:Key="Setup.Update.MirrorChyanCdk.Label">Mirror 醬 CDK</sys:String>
-    <sys:String x:Key="Setup.Update.MirrorChyanCdk.ToolTip">Mirror 醬 (mirrorchyan.com) 是一個付費的第三方應用分發平台，用於提供有償高速下載源。&#xA;這是一項可選服務，不填入 CDK 不影響正常使用與更新。&#xA;如果你有 Mirror 醬的 CDK，可以提供給 PCL XH，啟動器會優先使用他們的高速下載源下載軟體更新，也能紓解社群公益更新伺服器的一些壓力……</sys:String>
-    <sys:String x:Key="Setup.Update.OtherOptions.Placeholder">AquaCL 3 是 PCL XH 的第一個主要更新，帶來了讓人眼睛一亮的新設計，使用了最新開發技術，完全重構了基礎體驗，並更支援 macOS、Linux 等其他平台。</sys:String>
-    <sys:String x:Key="Setup.Update.OtherOptions.Title">其他更新選項 - 升級到 AquaCL</sys:String>
-    <sys:String x:Key="Setup.Update.RestartInstall">重啟安裝</sys:String>
-
     <!-- Setup.Update.Auto -->
-
-    <sys:String x:Key="Setup.Update.Auto.Disabled">不自動檢查更新（不推薦）</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.Disabled.ToolTip">關閉自動更新檢查。這可能導致你無法及時獲得更新。</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndInstall">自動下載並安裝更新</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndInstall.ToolTip">啟動器將會自動檢查並下載可用更新，並在關閉啟動器後自動安裝更新。</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndNotify">自動下載並提示更新</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndNotify.ToolTip">啟動器將會自動檢查並下載可用更新，並在完成後提示你安裝更新。</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.NotifyOnly">提示更新</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.NotifyOnly.ToolTip">啟動器將會自動檢查可用更新，然後提示你下載並安裝更新。</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.Title">自動更新設定</sys:String>
 
     <!-- Setup.Update.Channel -->
 
-    <sys:String x:Key="Setup.Update.Channel.Beta">測試版 / Beta</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Beta.ToolTip">可能不穩定的測試版本，將會進行功能的早期測試，適合希望幫助測試且有一定技術能力的使用者使用。</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Beta.Warning.Message">你正在切換啟動器更新通道到測試版。&#xA;測試版可以提供下個版本更新內容的預覽，但可能會包含未經充分測試的功能，穩定性欠佳。&#xA;&#xA;在升級到測試版後，你需要等待下一個正式版釋出，或是手動重新下載啟動器來切換到正式版。&#xA;該選項僅推薦具有一定基礎知識和能力的使用者選擇。如果你正在製作模組包，請使用正式版！</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Common.Warning.Confirm">我已知曉</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Common.Warning.Title">繼續之前...</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Release">正式版 / Release</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Release.ToolTip">較為穩定的版本，僅推送修復性更新與部分內建資源更新，適合大多數使用者使用。</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Title">更新通道</sys:String>
-
     <!-- Setup.Update.Channel.Dev -->
-
-    <sys:String x:Key="Setup.Update.Channel.Dev">開發版 / Dev</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.ExpectedInput">我確認切換到此分支並已知曉風險</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.Message">你確認要切換到開發版通道嗎？&#xA;開發版可能存在嚴重問題，甚至無法啟動！&#xA;&#xA;在升級到開發版後，將無法切換回其他任何更新通道，只能手動重新下載啟動器來切換回正式版或測試版。&#xA;&#xA;該選項僅推薦高階使用者選擇。如果你正在製作模組包，請使用正式版！&#xA;請輸入 '{0}' 以確認。</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.Submit">提交</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.Title">最終確認</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.WrongInput">你輸入了錯誤的內容...</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.ToolTip">可能極不穩定的開發版本，直接從最新原始碼建置，適合高度技術性使用者。&#xA;可能需要具備較好的網際網路連線品質才能順利取得此通道更新。</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.Warning.Message">你正在切換啟動器更新通道到開發版。&#xA;該通道可第一時間取得基於最新程式碼建置的開發版本，但可能極不穩定，甚至直接無法啟動。&#xA;&#xA;在升級到開發版後，只能手動重新下載啟動器來切換回正式版或測試版。&#xA;該選項僅推薦高階使用者選擇。如果你正在製作模組包，請使用正式版！</sys:String>
 
     <!-- Speed -->
 
@@ -3299,38 +3230,7 @@
 
     <!-- Update -->
 
-    <sys:String x:Key="Update.Action">更新</sys:String>
-    <sys:String x:Key="Update.Available">啟動器有新版本可用（{0} -&gt; {1}）&#xA;是否立即更新？</sys:String>
-    <sys:String x:Key="Update.Check.Failed">無法取得最新版本資訊，請檢查網路連線</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Body">你正在使用來自 PCL-Community 的 PCL XH，遇到問題請不要向原版儲存庫回饋！&#xA;PCL-Community 及其成員與龍騰貓躍無從屬關係，且均不會為您的使用做擔保。&#xA;&#xA;如果你是意外下載的 PCL XH，建議下載原版 PCL 使用。&#xA;如果你是意外下載的 PCL XH，建議下載原版 PCL 使用。&#xA;如果你是意外下載的 PCL XH，建議下載原版 PCL 使用。&#xA;&#xA;該版本與原版的特性區別：&#xA;- 主題切換：僅部分固定藍色系主題，沒有計劃新增其他主題。&#xA;- 百寶箱：缺失部分原版中的內容（回聲洞、千萬別點）。&#xA;&#xA;此提示會在啟動器更新後展示一次。</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Confirm">我知道了</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Title">PCL XH 版本說明</sys:String>
-    <sys:String x:Key="Update.Error.FetchFailed">取得啟動器更新失敗，請檢查網路連線</sys:String>
-    <sys:String x:Key="Update.Error.FileNotFound">找不到更新檔案</sys:String>
-    <sys:String x:Key="Update.Error.OperationFailed">更新操作失敗。請檢視錯誤詳情。</sys:String>
-    <sys:String x:Key="Update.Error.Sha256Mismatch">更新檔案 SHA256 不正確，應該為 {0}，實際為 {1}</sys:String>
-    <sys:String x:Key="Update.Error.UnableToGetUpdate">無法取得更新</sys:String>
-    <sys:String x:Key="Update.Error.UpdateBlocked">更新失敗</sys:String>
-    <sys:String x:Key="Update.Error.UpdateBlockedMessage">由於被 Windows 安全中心攔截，或存在權限問題，導致 PCL XH 無法更新。&#xA;請將 PCL XH 所在資料夾加入白名單，或手動用 {0}PCL\PCL XH.exe 取代目前檔案！</sys:String>
-    <sys:String x:Key="Update.Service.PclCe">PCL XH 服務</sys:String>
-    <sys:String x:Key="Update.Title">啟動器更新</sys:String>
-
     <!-- Update.Task -->
-
-    <sys:String x:Key="Update.Task.ApplyFile">應用檔案</sys:String>
-    <sys:String x:Key="Update.Task.Check">校驗更新</sys:String>
-    <sys:String x:Key="Update.Task.DownloadFile">下載檔案</sys:String>
-    <sys:String x:Key="Update.Task.DownloadLatestStable">下載最新穩定版</sys:String>
-    <sys:String x:Key="Update.Task.DownloadUpdateFile">下載更新檔案</sys:String>
-    <sys:String x:Key="Update.Task.GetAnnouncementFailed">取得公告資訊失敗</sys:String>
-    <sys:String x:Key="Update.Task.GetDownloadInfo">取得下載資訊</sys:String>
-    <sys:String x:Key="Update.Task.GetVersionInfo">取得版本資訊</sys:String>
-    <sys:String x:Key="Update.Task.GetVersionInfoFailed">取得版本資訊失敗</sys:String>
-    <sys:String x:Key="Update.Task.Install">安裝更新</sys:String>
-    <sys:String x:Key="Update.Task.Prepare">準備更新</sys:String>
-    <sys:String x:Key="Update.Task.RefreshSettings">重新整理設定 UI</sys:String>
-    <sys:String x:Key="Update.Task.RestartInstall">重啟安裝</sys:String>
-    <sys:String x:Key="Update.Task.ShowButton">顯示按鈕</sys:String>
 
     <!-- Watcher -->
 
@@ -3362,4 +3262,31 @@
     <sys:String x:Key="Watcher.WindowLoaded">Minecraft 視窗已載入：{0}（{1}）</sys:String>
     <sys:String x:Key="Watcher.WindowMaximized">已最大化 Minecraft 視窗：{0}</sys:String>
 
+    <sys:String x:Key="Setup.Ui.Theme.Color.Custom">自訂</sys:String>
+    <sys:String x:Key="Setup.Ui.Theme.Accent.Title">重點色</sys:String>
+    <sys:String x:Key="Setup.Ui.Theme.Accent.Rgb">自訂重點色 · RGB</sys:String>
+    <sys:String x:Key="Main.Fluent.Instances">實例</sys:String>
+    <sys:String x:Key="Main.Fluent.Account">帳號</sys:String>
+    <sys:String x:Key="Main.Fluent.PlayEyebrow">準備好，開始下一場冒險</sys:String>
+    <sys:String x:Key="Main.Fluent.Recent">最近遊玩</sys:String>
+    <sys:String x:Key="Main.Fluent.AllInstances">查看全部實例</sys:String>
+    <sys:String x:Key="Main.Fluent.Tasks">工作概覽</sys:String>
+    <sys:String x:Key="Main.Fluent.Categories">設定分類</sys:String>
+    <sys:String x:Key="Main.Fluent.NoRecent">還沒有遊玩記錄。啟動遊戲後，最近遊玩的實例會顯示在這裡。</sys:String>
+    <sys:String x:Key="Main.Fluent.NoTasks">暫無進行中的工作</sys:String>
+    <sys:String x:Key="Main.Fluent.ActiveTasks">{0} 個工作進行中</sys:String>
+    <sys:String x:Key="Main.Fluent.SignInToPlay">新增帳號以開始</sys:String>
+    <sys:String x:Key="Download.Comp.Filter.Options">篩選與排序</sys:String>
+    <sys:String x:Key="Download.Comp.Source.Removed">CurseForge 管道已移除，請使用 Modrinth 資源。</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source">背景來源</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Original">原色背景</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Landscape">隨機風景</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Anime">隨機二次元</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Local">本機圖片 / 影片</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Shuffle">換一張</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Loading">正在載入隨機背景…</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Ready">圖片來源：{0}。點選「換一張」取得新的背景。</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Success">背景已更新</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Failed">背景載入失敗，已保留原色背景。請稍後重試。</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.KeptPrevious">背景載入失敗，已保留上一張圖片。請稍後重試。</sys:String>
 </ResourceDictionary>

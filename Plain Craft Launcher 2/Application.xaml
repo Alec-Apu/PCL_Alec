@@ -7,11 +7,13 @@
              xmlns:controls="clr-namespace:PCL.Core.UI.Controls;assembly=PCL.Core"
              xmlns:cvt="clr-namespace:PCL.Core.UI.Converters;assembly=PCL.Core"
              xmlns:localization="clr-namespace:PCL.Core.App.Localization;assembly=PCL.Core"
-             ShutdownMode="OnExplicitShutdown">
+             ShutdownMode="OnExplicitShutdown"
+    xmlns:glass="clr-namespace:PCL.Core.UI.Controls;assembly=PCL.Core">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Markdown.xaml" />
+                <ResourceDictionary Source="/Resources/Fluent.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <sys:Double x:Key="BlurRadius">0.0</sys:Double>
             <sys:Double x:Key="BlurSamplingRate">0.7</sys:Double>
@@ -120,7 +122,8 @@
             </Style>
             <Style TargetType="local:MyTextButton">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
-                <Setter Property="Padding" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Padding" Value="4,0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Label">
@@ -163,7 +166,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="Thumb">
                             <Border Background="{DynamicResource ColorBrushSemiTransparent}" SnapsToDevicePixels="True">
-                                <Border Background="{TemplateBinding Foreground}" CornerRadius="3" Margin="2" />
+                                <Border Background="{TemplateBinding Foreground}" CornerRadius="12" Margin="4,2" />
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
@@ -176,14 +179,14 @@
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="SnapsToDevicePixels" Value="True" />
                 <Setter Property="UseLayoutRounding" Value="True" />
-                <Setter Property="MinWidth" Value="8" />
-                <Setter Property="Width" Value="8" />
+                <Setter Property="MinWidth" Value="16" />
+                <Setter Property="Width" Value="16" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ScrollBar">
                             <Border CornerRadius="2">
                                 <Track x:Name="PART_Track" IsDirectionReversed="true"
-                                       IsEnabled="{TemplateBinding IsMouseOver}">
+                                       Margin="0">
                                     <Track.Resources>
                                         <sys:Double
                                             x:Key="{x:Static SystemParameters.VerticalScrollBarButtonHeightKey}">
@@ -215,16 +218,19 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="ScrollViewer">
                             <Grid>
+                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Row="0" Grid.ColumnSpan="2" Content="{Binding FixedHeader, RelativeSource={RelativeSource TemplatedParent}}" />
                                 <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
                                                         CanContentScroll="{TemplateBinding CanContentScroll}"
                                                         CanHorizontallyScroll="False" CanVerticallyScroll="False"
                                                         ContentTemplate="{TemplateBinding ContentTemplate}"
                                                         Content="{TemplateBinding Content}" Grid.Column="0"
-                                                        Margin="{TemplateBinding Padding}" Grid.Row="0" />
+                                                        Margin="{TemplateBinding Padding}" Grid.Row="1" />
                                 <local:MyScrollBar x:Name="PART_VerticalScrollBar"
                                                    AutomationProperties.AutomationId="VerticalScrollBar"
                                                    Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}"
-                                                   Minimum="0" Grid.Row="0"
+                                                   Minimum="0" Grid.Row="1"
                                                    Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
                                                    Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                    ViewportSize="{TemplateBinding ViewportHeight}"
@@ -235,6 +241,11 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+            <Style x:Key="Fluent.CategoryScroll" TargetType="local:MyScrollViewer" BasedOn="{StaticResource {x:Type local:MyScrollViewer}}">
+                <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+                <Setter Property="PanningMode" Value="VerticalOnly" />
             </Style>
             <Style TargetType="local:PageComp" BasedOn="{StaticResource {x:Type local:MyScrollViewer}}" />
             <Style TargetType="ScrollViewer" x:Key="ScrollViewerFullMargin">
@@ -307,6 +318,7 @@
 
             <!-- TextBox -->
             <Style TargetType="local:MyTextBox">
+                <Setter Property="MinHeight" Value="40" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Background" Value="{DynamicResource ColorBrushHalfWhite}" />
                 <Setter Property="FontSize" Value="13" />
@@ -318,7 +330,7 @@
                 <Setter Property="IsUndoEnabled" Value="True" />
                 <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="FocusVisualStyle" Value="{StaticResource Fluent.Focus}" />
                 <Setter Property="AllowDrop" Value="True" />
                 <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
                 <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
@@ -333,7 +345,7 @@
                                     <RowDefinition MinHeight="28" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}"
+                                <glass:LiquidGlassSurface Material="Input" x:Name="border" BorderThickness="{TemplateBinding BorderThickness}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         Background="{TemplateBinding Background}"
                                         CornerRadius="{TemplateBinding CornerRadius}">
@@ -342,7 +354,7 @@
                                                   RenderOptions.ClearTypeHint="Enabled" BorderThickness="0"
                                                   Margin="5,0,0,0" Cursor="IBeam" />
                                     <!-- 由于未知原因，TextView 会有 2,0 的 Margin -->
-                                </Border>
+                                </glass:LiquidGlassSurface>
                                 <Border Margin="{TemplateBinding Padding}" IsHitTestVisible="False"
                                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -370,18 +382,18 @@
                 <Setter Property="BorderBrush" Value="{DynamicResource ColorBrushBg0}" />
                 <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="FocusVisualStyle" Value="{StaticResource Fluent.Focus}" />
                 <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="PasswordBox">
-                            <Border x:Name="border" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}"
+                            <glass:LiquidGlassSurface Material="Input" x:Name="border" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}"
                                     Background="{TemplateBinding Background}" Padding="0" SnapsToDevicePixels="True"
-                                    CornerRadius="3">
+                                    CornerRadius="12">
                                 <local:MyScrollViewer x:Name="PART_ContentHost" Margin="4.5,4.5,0,4.5"
                                                       HorizontalScrollBarVisibility="Hidden"
                                                       RenderOptions.ClearTypeHint="Enabled" SnapsToDevicePixels="True" />
-                            </Border>
+                            </glass:LiquidGlassSurface>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Trigger.Setters>
@@ -421,18 +433,19 @@
                 </local:MyListItem>
             </DataTemplate>
             <Style TargetType="local:MyComboBox">
+                <Setter Property="MinHeight" Value="40" />
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="SnapsToDevicePixels" Value="True" />
                 <Setter Property="Foreground" Value="{DynamicResource ColorBrushBg0}" />
                 <Setter Property="Background" Value="{DynamicResource ColorBrushHalfWhite}" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="FocusVisualStyle" Value="{StaticResource Fluent.Focus}" />
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="MaxDropDownHeight" Value="160" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">
                             <Grid>
-                                <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="3"
+                                <glass:LiquidGlassSurface Material="Input" x:Name="border" Background="{TemplateBinding Background}" CornerRadius="12"
                                         BorderThickness="1" BorderBrush="{TemplateBinding Foreground}" />
                                 <ToggleButton Margin="0,0,1.5,0" Foreground="{TemplateBinding Foreground}"
                                               IsTabStop="False" SnapsToDevicePixels="False" Focusable="False"
@@ -448,8 +461,8 @@
                                        IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                        Placement="Bottom" PopupAnimation="Fade">
                                     <Grid x:Name="PanPopup">
-                                        <Border Background="{DynamicResource ColorBrushWhite}" CornerRadius="3" />
-                                        <Border x:Name="dropDownBorder" CornerRadius="3"
+                                        <glass:LiquidGlassSurface Material="Floating" Background="{DynamicResource Fluent.Surface}" CornerRadius="12" />
+                                        <Border x:Name="dropDownBorder" CornerRadius="12"
                                                 BorderBrush="{TemplateBinding Foreground}" BorderThickness="1"
                                                 Width="{TemplateBinding Width}"
                                                 MaxHeight="{TemplateBinding MaxDropDownHeight}">
@@ -480,8 +493,8 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ComboBox">
                                     <Grid>
-                                        <Border x:Name="border" Background="{TemplateBinding Background}"
-                                                CornerRadius="3" BorderThickness="1"
+                                        <glass:LiquidGlassSurface Material="Input" x:Name="border" Background="{TemplateBinding Background}"
+                                                CornerRadius="12" BorderThickness="1"
                                                 BorderBrush="{TemplateBinding Foreground}" />
                                         <ToggleButton Margin="0,0,1.5,0" Foreground="{TemplateBinding Foreground}"
                                                       IsTabStop="False" SnapsToDevicePixels="False" Focusable="False"
@@ -494,9 +507,9 @@
                                                IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                Placement="Bottom" PopupAnimation="Fade">
                                             <Grid x:Name="PanPopup">
-                                                <Border Background="{DynamicResource ColorBrushWhite}" CornerRadius="3" />
+                                                <glass:LiquidGlassSurface Material="Floating" Background="{DynamicResource Fluent.Surface}" CornerRadius="12" />
                                                 <Border x:Name="dropDownBorder" SnapsToDevicePixels="False"
-                                                        CornerRadius="3" BorderBrush="{TemplateBinding Foreground}"
+                                                        CornerRadius="12" BorderBrush="{TemplateBinding Foreground}"
                                                         BorderThickness="1" Width="{TemplateBinding Width}"
                                                         MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                                     <local:MyScrollViewer x:Name="DropDownScrollViewer"
@@ -567,7 +580,7 @@
             </Style>
             <Style TargetType="ComboBoxItem" x:Key="MyComboBoxItem">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="FocusVisualStyle" Value="{StaticResource Fluent.Focus}" />
                 <Setter Property="Background" Value="{DynamicResource ColorBrushTransparent}" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -582,7 +595,7 @@
             </Style>
             <Style TargetType="ComboBoxItem">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
-                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="FocusVisualStyle" Value="{StaticResource Fluent.Focus}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBoxItem">
@@ -605,15 +618,15 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ContextMenu">
-                            <Border BorderBrush="{DynamicResource ColorBrush1}" BorderThickness="1" CornerRadius="3"
-                                    Background="{DynamicResource ColorBrushWhite}" Margin="0,0,4,4"
+                            <glass:LiquidGlassSurface Material="Floating" BorderBrush="{DynamicResource ColorBrush1}" BorderThickness="1" CornerRadius="12"
+                                    Background="{DynamicResource Fluent.Surface}" Margin="0,0,4,4"
                                     SnapsToDevicePixels="True">
                                 <Border.Effect>
-                                    <DropShadowEffect Opacity="0.4" BlurRadius="4" ShadowDepth="2" />
+                                    <DropShadowEffect Opacity="0.15" BlurRadius="12" ShadowDepth="2" />
                                 </Border.Effect>
                                 <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"
-                                            Margin="0.5" />
-                            </Border>
+                                            Margin="6" />
+                            </glass:LiquidGlassSurface>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -625,7 +638,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="MenuItem">
                             <Border Name="PanBack" Padding="{TemplateBinding Padding}"
-                                    Background="{TemplateBinding Background}" SnapsToDevicePixels="True" Height="26">
+                                    Background="{TemplateBinding Background}" CornerRadius="8" SnapsToDevicePixels="True" Height="36">
                                 <Grid SnapsToDevicePixels="False" UseLayoutRounding="False">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />

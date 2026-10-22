@@ -257,7 +257,7 @@ public partial class PageSelectRight
                 // 建立控件
                 var cardTitle = $"{cardName}{(Card.Key == McInstanceCardType.Star ? "" : $" ({Lang.Number(filteredInstances.Count, "N0")})")}";
                 var newCard = new MyCard { Title = cardTitle, Margin = new Thickness(0d, 0d, 0d, 15d) };
-                var newStack = new StackPanel
+                StackPanel newStack = new FluentTilePanel
                 {
                     Margin = new Thickness(20d, MyCard.SwapedHeight, 18d, 0d),
                     VerticalAlignment = VerticalAlignment.Top, RenderTransform = new TranslateTransform(0d, 0d),
@@ -378,8 +378,8 @@ public partial class PageSelectRight
     {
         var newItem = new MyListItem
         {
-            Title = mcInstance.Name, Info = mcInstance.Desc, Height = 42d, Tag = mcInstance, SnapsToDevicePixels = true,
-            Type = MyListItem.CheckType.Clickable
+            Title = mcInstance.Name, Info = mcInstance.Desc, Height = 96d, Tag = mcInstance, SnapsToDevicePixels = true,
+            Type = MyListItem.CheckType.Clickable, Margin = new Thickness(0, 0, 0, 0)
         };
         var instanceInfo = mcInstance.Info;
         var tags = new List<string>();

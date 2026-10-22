@@ -42,10 +42,8 @@ public partial class PageSpeedLeft
         // 非调试模式隐藏连接数
         if (!ModBase.modeDebug)
         {
-            RowDefinitions[12].Height = new GridLength(0d);
-            RowDefinitions[13].Height = new GridLength(0d);
-            RowDefinitions[14].Height = new GridLength(0d);
-            RowDefinitions[15].Height = new GridLength(0d);
+            ColumnDefinitions[3].Width = new GridLength(0);
+            LabThread.Parent.SetValue(VisibilityProperty, Visibility.Collapsed);
         }
     }
 
@@ -53,6 +51,7 @@ public partial class PageSpeedLeft
     {
         if (ModMain.frmMain.pageCurrent != FormMain.PageType.TaskManager)
             return;
+        TryReturnToHome();
         try
         {
             #region 更新左边栏
@@ -406,7 +405,7 @@ public partial class PageSpeedLeft
     /// </summary>
     private void TryReturnToHome()
     {
-        if (ModMain.frmSpeedRight.PanMain.Children.Count == 0 &&
-            ModMain.frmMain.pageCurrent == FormMain.PageType.TaskManager) ModMain.frmMain.PageBack();
+        ModMain.frmSpeedRight.EmptyTasks.Visibility = ModMain.frmSpeedRight.PanMain.Children.Count == 0
+            ? Visibility.Visible : Visibility.Collapsed;
     }
 }

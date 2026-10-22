@@ -1,4 +1,4 @@
-<local:MyPageRight
+﻿<local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL"
@@ -22,15 +22,15 @@
                             <ColumnDefinition Width="60" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="9" />
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="9" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="9" />
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Text="{DynamicResource Instance.Setup.Options.InstanceIsolation}"
@@ -231,12 +231,12 @@
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="9" />
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="3" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left"
@@ -302,13 +302,13 @@
                             </local:MyTextBox.ValidateRules>
                         </local:MyTextBox>
                     </Grid>
-                    <local:MyButton x:Name="BtnServerAuthLittle" Height="35" MinWidth="150" Margin="0,12,0,0"
+                    <local:MyButton x:Name="BtnServerAuthLittle" Height="40" Margin="0,12,0,0"
                                     Text="{DynamicResource Instance.Setup.Server.SetLittleSkin}"
                                     HorizontalAlignment="Left" ColorType="Highlight" />
-                    <local:MyButton x:Name="BtnServerAuthLock" Height="35" MinWidth="150" Margin="180,-35,0,0"
+                    <local:MyButton x:Name="BtnServerAuthLock" Height="40" Margin="180,-35,0,0"
                                     Text="{DynamicResource Instance.Setup.Server.LockLoginMethod}"
                                     HorizontalAlignment="Left" IsEnabled="False" />
-                    <local:MyButton x:Name="BtnServerNewProfile" Height="35" MinWidth="150" Margin="360,-35,0,0"
+                    <local:MyButton x:Name="BtnServerNewProfile" Height="40" Margin="360,-35,0,0"
                                     Text="{DynamicResource Instance.Setup.Server.CreateProfile}"
                                     HorizontalAlignment="Left" />
                 </StackPanel>
@@ -321,15 +321,15 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="28" />
+                        <RowDefinition Height="44" />
                         <RowDefinition Height="9" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="9" />
-                        <RowDefinition Height="28" />
+                        <RowDefinition Height="44" />
                         <RowDefinition Height="9" />
-                        <RowDefinition Height="28" />
+                        <RowDefinition Height="44" />
                         <RowDefinition Height="9" />
-                        <RowDefinition Height="31" />
+                        <RowDefinition Height="Auto" MinHeight="44" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -380,37 +380,37 @@
                                      ToolTip="{DynamicResource Instance.Setup.Advanced.PreLaunchCommand.ToolTip}" />
 
                     <StackPanel Margin="0,8,0,4" Grid.Row="9" Grid.ColumnSpan="2" HorizontalAlignment="Left">
-                        <local:MyCheckBox Height="28" x:Name="CheckAdvanceRunWait" Tag="VersionAdvanceRunWait"
+                        <local:MyCheckBox MinHeight="28" x:Name="CheckAdvanceRunWait" Tag="VersionAdvanceRunWait"
                                           Visibility="Collapsed"
                                           Text="{DynamicResource Setup.Launch.Advanced.PreLaunchCommand.Wait}" />
-                        <local:MyCheckBox Height="28"
+                        <local:MyCheckBox MinHeight="28"
                                           Text="{DynamicResource Instance.Setup.Advanced.IgnoreJavaCompatibility}"
                                           x:Name="CheckAdvanceJava"
                                           Tag="VersionAdvanceJava"
                                           ToolTip="{DynamicResource Instance.Setup.Advanced.IgnoreJavaCompatibility.ToolTip}" />
-                        <local:MyCheckBox Height="28"
+                        <local:MyCheckBox MinHeight="28"
                                           Text="{DynamicResource Instance.Setup.Advanced.DisableFileVerification}"
                                           x:Name="CheckAdvanceAssetsV2"
                                           Tag="VersionAdvanceAssetsV2" Margin="0,0,60,0"
                                           ToolTip="{DynamicResource Instance.Setup.Advanced.DisableFileVerification.ToolTip}" />
-                        <local:MyCheckBox Height="28" Text="{DynamicResource Instance.Setup.Advanced.UseGlobalProxy}"
+                        <local:MyCheckBox MinHeight="28" Text="{DynamicResource Instance.Setup.Advanced.UseGlobalProxy}"
                                           x:Name="CheckAdvanceUseProxyV2"
                                           Tag="VersionAdvanceUseProxyV2"
                                           ToolTip="{DynamicResource Instance.Setup.Advanced.UseGlobalProxy.ToolTip}" />
-                        <local:MyCheckBox Height="28"
+                        <local:MyCheckBox MinHeight="28"
                                           Text="{DynamicResource Setup.Launch.Advanced.DisableJlw}"
                                           x:Name="CheckAdvanceDisableJLW"
                                           Tag="VersionAdvanceDisableJLW"
                                           ToolTip="{DynamicResource Setup.Launch.Advanced.DisableJlw.ToolTip}" />
-                        <local:MyCheckBox Height="28"
+                        <local:MyCheckBox MinHeight="28"
                                           Text="{DynamicResource Setup.Launch.Advanced.DisableLF}"
                                           x:Name="CheckAdvanceDisableLF"
                                           Tag="VersionAdvanceDisableLF"
                                           ToolTip="{DynamicResource Setup.Launch.Advanced.DisableLF.ToolTip}" />
-                        <local:MyCheckBox Height="28" Text="{DynamicResource Instance.Setup.Advanced.UseDebugLog4j}"
+                        <local:MyCheckBox MinHeight="28" Text="{DynamicResource Instance.Setup.Advanced.UseDebugLog4j}"
                                           x:Name="CheckUseDebugLog4j2Config"
                                           Tag="VersionUseDebugLog4j2Config" />
-                        <local:MyCheckBox Height="28"
+                        <local:MyCheckBox MinHeight="28"
                                           Text="{DynamicResource Setup.Launch.Advanced.DisableLwjglUnsafeAgent}"
                                           x:Name="CheckAdvanceDisableLwjglUnsafeAgent"
                                           Tag="VersionAdvanceDisableLwjglUnsafeAgent"

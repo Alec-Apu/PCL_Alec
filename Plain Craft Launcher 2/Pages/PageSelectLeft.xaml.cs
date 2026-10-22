@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -168,6 +168,7 @@ public partial class PageSelectLeft : IRefreshable
                 // 构建列表项
                 var newItem = new MyListItem
                 {
+                    IsNavigationChip = true, Margin = new Thickness(4, 0, 4, 0),
                     IsScaleAnimationEnabled = false,
                     Type = MyListItem.CheckType.RadioBox,
                     MinPaddingRight = 30,
@@ -220,6 +221,7 @@ public partial class PageSelectLeft : IRefreshable
             {
                 var itemCreate = new MyListItem
                 {
+                    IsNavigationChip = true, Margin = new Thickness(4, 0, 4, 0),
                     IsScaleAnimationEnabled = false,
                     Type = MyListItem.CheckType.Clickable,
                     Title = Lang.Text("Select.Folder.CreateNew.Title"),
@@ -235,7 +237,8 @@ public partial class PageSelectLeft : IRefreshable
 
             // 添加按钮
             var itemAdd = new MyListItem
-            {
+                {
+                    IsNavigationChip = true, Margin = new Thickness(4, 0, 4, 0),
                 IsScaleAnimationEnabled = false,
                 Type = MyListItem.CheckType.Clickable,
                 Title = Lang.Text("Select.Folder.AddExisting.Title"),
@@ -249,7 +252,8 @@ public partial class PageSelectLeft : IRefreshable
 
             // 导入整合包
             var itemInstall = new MyListItem
-            {
+                {
+                    IsNavigationChip = true, Margin = new Thickness(4, 0, 4, 0),
                 IsScaleAnimationEnabled = false,
                 Type = MyListItem.CheckType.Clickable,
                 Title = Lang.Text("Select.Folder.ImportModpack.Title"),

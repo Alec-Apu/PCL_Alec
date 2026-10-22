@@ -1,4 +1,4 @@
-using PCL.Core.App;
+﻿using PCL.Core.App;
 using PCL.Core.Utils;
 
 namespace PCL.Core.UI.Controls;
@@ -71,8 +71,14 @@ public partial class MotdRenderer {
     private const string RandomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
     private readonly Color _backgroundColor = Color.FromRgb(243, 246, 250); // #f3f6fa
 
+    private (string Text, bool Dark, int MaxLines, double FontSize, bool Centered)? _lastRender;
+
     public MotdRenderer() {
         InitializeComponent(); // 初始化 XAML 定义的控件
+        SizeChanged += (_, e) => {
+            if (e.WidthChanged && _lastRender is { } last)
+                RenderMotd(last.Text, last.Dark, last.MaxLines, last.FontSize, last.Centered);
+        };
         // Start timer to update §k text
         var timer = new DispatcherTimer {
             Interval = TimeSpan.FromMilliseconds(20)
@@ -181,17 +187,17 @@ public partial class MotdRenderer {
     }
 
     public void RenderMotd(string motd, bool isDarkMode = true, int maxLines = int.MaxValue, double fontSize = 12, bool isCentered = true) {
+        motd ??= string.Empty;
+        _lastRender = (motd, isDarkMode, maxLines, fontSize, isCentered);
         MotdCanvas.Children.Clear();
         _obfuscatedTextBlocks.Clear();
-
-        motd ??= string.Empty;
 
         var colorMap = isDarkMode ? _ColorMapWithBlackBackground : _ColorMapWithWhiteBackground;
         var font = Config.Preference.MotdFont;
         var fontFamily = new FontFamily(string.IsNullOrWhiteSpace(font)
             ? "./Resources/#PCL English, Segoe UI, Microsoft YaHei UI"
             : font);
-        var canvasWidth = MotdCanvas.ActualWidth > 0 ? MotdCanvas.ActualWidth : 300; // Prevent zero width
+        var canvasWidth = ActualWidth > 0 ? ActualWidth : 300; // Prevent zero width
         var canvasHeight = MotdCanvas.ActualHeight > 0 ? MotdCanvas.ActualHeight : 34; // Prevent zero height
         double y = 10;
 
@@ -431,11 +437,13 @@ public partial class MotdRenderer {
 
         // Capture Canvas using RenderTargetBitmap
         var rtb = new RenderTargetBitmap(
-            (int)MotdCanvas.Width, (int)MotdCanvas.Height, 96, 96, PixelFormats.Pbgra32);
+            (int)Math.Ceiling(Math.Max(1, ActualWidth > 0 ? ActualWidth : 300)),
+            (int)Math.Ceiling(Math.Max(1, MotdCanvas.ActualHeight > 0 ? MotdCanvas.ActualHeight : 34)), 96, 96, PixelFormats.Pbgra32);
         rtb.Render(MotdCanvas);
     }
 
     public void ClearCanvas() {
+        _lastRender = null;
         MotdCanvas.Children.Clear();
         _obfuscatedTextBlocks.Clear();
     }

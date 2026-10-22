@@ -1,4 +1,4 @@
-<Window
+﻿<Window
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL"
@@ -10,10 +10,13 @@
     Closing="FormMain_Closing" Activated="FormMain_Activated" Drop="FrmMain_Drop" StateChanged="WindowStateChanged"
     MouseMove="FormMain_MouseMove"
     x:Name="WindMain" x:Class="PCL.FormMain" Style="{StaticResource MyWindow}"
+    controls:LiquidGlassSurface.BackdropSource="{Binding ElementName=LiquidBackdrop}"
+    controls:LiquidGlassSurface.UseLightweightMaterial="True"
     AllowDrop="True" Topmost="True" Title="PCL XH" MinHeight="470" MinWidth="810"
     ScrollViewer.VerticalScrollBarVisibility="Disabled" Icon="/Plain Craft Launcher 2;component/Images/icon.ico"
-    ResizeMode="CanResize" Background="{x:Null}" d:DesignWidth="870" d:DesignHeight="520" Width="850" Height="500"
-    WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" AllowsTransparency="False">
+    ResizeMode="CanResize" Background="{x:Null}" d:DesignWidth="870" d:DesignHeight="520" Width="1350" Height="825"
+    WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" AllowsTransparency="False"
+    xmlns:glass="clr-namespace:PCL.Core.UI.Controls;assembly=PCL.Core">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo ThumbnailClipMargin="{Binding Margin, ElementName=PanForm}" />
     </Window.TaskbarItemInfo>
@@ -102,57 +105,140 @@
         </Rectangle>
         <Border x:Name="PanBack" Margin="10">
             <Border.Clip>
-                <RectangleGeometry x:Name="RectForm" RadiusX="6" RadiusY="6" />
+                <RectangleGeometry x:Name="RectForm" RadiusX="20" RadiusY="20" />
             </Border.Clip>
             <Grid x:Name="PanForm" SnapsToDevicePixels="False" UseLayoutRounding="False">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="52" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+                <Grid x:Name="SceneBackdrop" Grid.RowSpan="2">
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                <Grid x:Name="LiquidBackdrop" Grid.RowSpan="2" IsHitTestVisible="False" Background="{DynamicResource LiquidGlass.Backdrop}">
+                    <Grid.RowDefinitions><RowDefinition Height="52"/><RowDefinition Height="*"/></Grid.RowDefinitions>
                 <Canvas x:Name="ImgBack" IsHitTestVisible="False" Grid.Row="1"
                         RenderOptions.BitmapScalingMode="LowQuality">
                     <MediaElement x:Name="VideoBack" LoadedBehavior="Manual" UnloadedBehavior="Stop"
                                   Stretch="UniformToFill" IsHitTestVisible="False" Visibility="Visible"
                                   MediaEnded="VideoEnded" Volume="0" />
                 </Canvas>
-                <local:AnimatedBackgroundGrid Grid.Row="0" x:Name="PanTitle" Height="48"
+                </Grid>
+                <local:AnimatedBackgroundGrid Grid.Row="0" x:Name="PanTitle" Height="52"
                                               MouseLeftButtonDown="FormDragMove"
                                               WindowChrome.IsHitTestVisibleInChrome="True"
-                                              BackgroundBrush="{DynamicResource ColorBrush3}">
-                    <!-- <Grid.Background> -->
-                    <!--     <LinearGradientBrush EndPoint="1,0" StartPoint="0,0"> -->
-                    <!--         <GradientStop Color="{StaticResource ColorObject4}" Offset="0"/> -->
-                    <!--     </LinearGradientBrush> -->
-                    <!-- </Grid.Background> -->
-                    <local:MyImage x:Name="ImgTitle" IsHitTestVisible="False" Stretch="UniformToFill" IsEnabled="False" RenderOptions.BitmapScalingMode="LowQuality" />
-                    <local:MyIconButton x:Name="BtnTitleClose" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,12,0" Theme="White" Click="BtnTitleClose_Click"
-                                        SvgIcon="lucide/x" />
-                    <local:MyIconButton x:Name="BtnTitleMin" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,44,0" Theme="White" Click="BtnTitleMin_Click"
-                                       SvgIcon="lucide/minus" />
-                    <local:MyIconButton x:Name="BtnTitleHelp" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,76,0" Theme="White" Visibility="Collapsed" Click="BtnTitleHelp_Click"
+                                              BackgroundBrush="{DynamicResource Fluent.TitleBar}">
+                    <Border Background="{DynamicResource Fluent.TitleBar}" IsHitTestVisible="False" />
+                    <local:MyImage x:Name="ImgTitle" Visibility="Collapsed" IsHitTestVisible="False" Stretch="UniformToFill" IsEnabled="False" RenderOptions.BitmapScalingMode="LowQuality" />
+                    <StackPanel x:Name="WindowControls" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="14,0,0,0" Panel.ZIndex="4">
+                        <Button x:Name="BtnTitleClose" Style="{StaticResource Fluent.TrafficLight}" Click="BtnTitleClose_Click" AutomationProperties.Name="关闭窗口">
+                            <Path Data="M0,0 L5,5 M5,0 L0,5" Stroke="#99000000" StrokeThickness="1" Width="5" Height="5" />
+                        </Button>
+                        <Button x:Name="BtnTitleMin" Style="{StaticResource Fluent.TrafficLight}" Background="#FEBC2E" Click="BtnTitleMin_Click" AutomationProperties.Name="最小化窗口">
+                            <Path Data="M0,0 L6,0" Stroke="#99000000" StrokeThickness="1" Width="6" />
+                        </Button>
+                        <Button x:Name="BtnTitleZoom" Style="{StaticResource Fluent.TrafficLight}" Background="#28C840" Click="BtnTitleZoom_Click" AutomationProperties.Name="放大或还原窗口">
+                            <Path Data="M0,3 L0,0 L3,0 M3,6 L6,6 L6,3" Stroke="#99000000" StrokeThickness="1" Width="6" Height="6" />
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Visibility="{Binding Visibility, ElementName=PanTitleMain}" Text="{Binding Title, ElementName=WindMain}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="190,0" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ColorBrush1}" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" />
+                    <local:MyIconButton x:Name="BtnTitleHelp" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,94,0" Theme="Color" Visibility="Collapsed" Click="BtnTitleHelp_Click"
                                         SvgIcon="lucide/circle-help" />
+                    <local:MyIconButton x:Name="AccountAnchor" HorizontalAlignment="Right" Width="32" Height="32" Margin="0,0,14,0"
+                                        SvgIcon="lucide/user" ToolTip="{DynamicResource Main.Fluent.Account}"
+                                        Click="FluentAccount_Click" Panel.ZIndex="2" />
+                    <local:MyIconButton HorizontalAlignment="Right" Width="32" Height="32" Margin="0,0,52,0"
+                                        SvgIcon="lucide/download" ToolTip="{DynamicResource Main.Extra.TaskManager.ToolTip}"
+                                        Click="FluentTasksHeader_Click" Panel.ZIndex="2" />
+                    <TextBlock x:Name="FluentTaskCount" Text="0" FontSize="10" Margin="0,6,49,0"
+                               HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="False"
+                               Foreground="{DynamicResource ColorBrush1}" Panel.ZIndex="3" />
                     <Grid x:Name="PanTitleMain" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=PanTitle, Mode=OneWay}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <Grid x:Name="PanTitleLeft" SizeChanged="PanTitle_SizeChanged">
+                        <Grid x:Name="PanTitleLeft" Visibility="Collapsed" SizeChanged="PanTitle_SizeChanged">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <Path Grid.Column="0" x:Name="ShapeTitleLogo" Data="M26,29 v-25 h6 a7,7 180 0 1 0,14 h-6 M62.5,6.5 a10,11.5 180 1 0 0,18 M71,2.5 v24.5 h13.5" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="19,15.5,0,15.5" Stretch="fill" Stroke="White" StrokeThickness="2.2" Width="39" />
+                            <Path Grid.Column="0" x:Name="ShapeTitleLogo" Data="M26,29 v-25 h6 a7,7 180 0 1 0,14 h-6 M62.5,6.5 a10,11.5 180 1 0 0,18 M71,2.5 v24.5 h13.5" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="19,15.5,0,15.5" Stretch="fill" Stroke="{DynamicResource ColorBrush1}" StrokeThickness="2.2" Width="39" />
                             <Path Grid.Column="0" x:Name="ShapeHMCLTitleLogo" Data="M 60.375 53.406 L 53.625 53.406 L 53.625 0.906 L 63.6 0.906 L 78.15 34.131 L 92.475 0.906 L 102.675 0.906 L 102.675 53.406 L 95.55 53.406 L 95.55 9.981 L 81.525 41.556 L 74.475 41.556 L 60.375 9.981 L 60.375 53.406 Z M 7.125 53.406 L 0 53.406 L 0 0.906 L 7.125 0.906 L 7.125 23.331 L 33 23.331 L 33 0.906 L 40.125 0.906 L 40.125 53.406 L 33 53.406 L 33 29.481 L 7.125 29.481 L 7.125 53.406 Z M 149.85 2.706 L 147.675 8.706 Q 145.35 7.581 142.913 6.906 Q 140.475 6.231 137.175 6.231 Q 132.375 6.231 128.588 8.706 Q 124.8 11.181 122.625 15.831 A 25.755 25.755 0 0 0 120.458 26.263 A 38.963 38.963 0 0 0 120.45 27.081 Q 120.45 33.381 122.588 38.106 Q 124.725 42.831 128.512 45.456 Q 132.3 48.081 137.175 48.081 Q 140.85 48.081 143.55 47.181 Q 146.25 46.281 148.8 44.856 L 150.975 50.781 Q 148.2 52.281 144.638 53.293 Q 141.075 54.306 136.35 54.306 Q 129.525 54.306 124.275 51.043 Q 119.025 47.781 116.1 41.743 A 31.603 31.603 0 0 1 113.201 28.922 A 45.601 45.601 0 0 1 113.175 27.381 Q 113.175 19.356 116.138 13.168 Q 119.1 6.981 124.538 3.493 Q 129.975 0.006 137.25 0.006 Q 141 0.006 144.075 0.718 Q 147.15 1.431 149.85 2.706 Z M 191.925 53.406 L 160.725 53.406 L 160.725 0.906 L 167.85 0.906 L 167.85 47.031 L 191.925 47.031 L 191.925 53.406 Z"
-                                StrokeThickness="0.2" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Height="15" Margin="45,15.5,0,15.5" Stretch="Fill" Stroke="White" Fill="White" Width="52" />
-                            <TextBlock Grid.Column="0" x:Name="LabTitleLogo" Visibility="Collapsed" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="18,0,0,0" Foreground="White" FontSize="17" VerticalAlignment="Center" />
+                                StrokeThickness="0.2" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Height="15" Margin="45,15.5,0,15.5" Stretch="Fill" Stroke="{DynamicResource ColorBrush1}" Fill="{DynamicResource ColorBrush1}" Width="52" />
+                            <TextBlock Grid.Column="0" x:Name="LabTitleLogo" Visibility="Collapsed" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="18,0,0,0" Foreground="{DynamicResource ColorBrush1}" FontSize="17" VerticalAlignment="Center" />
                             <local:MyImage Grid.Column="0" x:Name="ImageTitleLogo" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="7" VerticalAlignment="Center" Visibility="Collapsed" />
                             <Border x:Name="CELogo" Grid.Column="1" SnapsToDevicePixels="False" UseLayoutRounding="False" IsHitTestVisible="False" HorizontalAlignment="Left" Margin="10,0,0,0" Background="White" CornerRadius="5" Height="18" Width="24">
                                 <TextBlock Text="XH" Foreground="{DynamicResource ColorBrush3}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Border>
                         </Grid>
-                        <StackPanel Grid.Column="1" x:Name="PanTitleSelect" HorizontalAlignment="Left" Height="27"
+
+                    </Grid>
+                    <Grid x:Name="PanTitleInner" Visibility="Collapsed" Margin="-16,0,0,0" Opacity="0"
+                          HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=PanTitle, Mode=OneWay}">
+                        <local:MyIconButton HorizontalAlignment="Left" Theme="Color" x:Name="BtnTitleInner"
+                                            Margin="104,0,0,0" Height="28" Width="28" Click="BtnTitleInner_Click"
+                                            LogoScale="0.87"
+                                            SvgIcon="lucide/arrow-left" />
+                        <TextBlock SnapsToDevicePixels="False" IsHitTestVisible="False" Name="LabTitleInner"
+                                   VerticalAlignment="Center" Margin="143,1,143,0" HorizontalAlignment="Stretch" TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource ColorBrush1}" FontSize="13" FontWeight="SemiBold" />
+                    </Grid>
+                </local:AnimatedBackgroundGrid>
+                <!-- Primary destinations float below content; categories remain in the sidebar. -->
+                <Grid x:Name="PanLeft" Visibility="Collapsed">
+                    <local:AnimatedBackgroundGrid x:Name="RectLeftBackground" Width="0" />
+                    <Rectangle x:Name="RectLeftShadow" />
+                </Grid>
+                <Grid x:Name="PanMain" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" ClipToBounds="True">
+                    <Grid.ColumnDefinitions><ColumnDefinition x:Name="CategoryColumn" Width="192"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <Grid x:Name="CategoryHost" Grid.RowSpan="2" Margin="8,8,0,8">
+                        <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                        <glass:LiquidGlassSurface x:Name="CategorySurface" Material="Content" Grid.RowSpan="2" Background="{DynamicResource Fluent.Card}" CornerRadius="20"
+                                IsHitTestVisible="False" />
+                        <Border x:Name="PanMainLeft" SizeChanged="PanMainLeft_SizeChanged" />
+                        <WrapPanel x:Name="CategoryActions" Grid.Row="1" Margin="8,8,8,0" />
+                    </Grid>
+                    <Border x:Name="ContentHost" Grid.Column="1" Grid.RowSpan="2" Grid.IsSharedSizeScope="True">
+                        <Border x:Name="PanMainRight" />
+                    </Border>
+                </Grid>
+                </Grid>
+                <Grid x:Name="PrimaryNavigation" Grid.Row="1" Panel.ZIndex="100" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                      Margin="16,8,16,16" Height="64" controls:LiquidGlassSurface.BackdropSource="{Binding ElementName=SceneBackdrop}">
+                    <controls:LiquidGlassSurface x:Name="DockPanel" Material="BottomTabs" CornerRadius="32" Padding="4" Background="{DynamicResource Fluent.GlassSurface}"
+                                                RenderTransformOrigin="0.5,0.5">
+                        <controls:LiquidGlassSurface.RenderTransform><TransformGroup><ScaleTransform x:Name="DockPanelScale"/><TranslateTransform x:Name="DockPanelOffset"/></TransformGroup></controls:LiquidGlassSurface.RenderTransform>
+                        <UniformGrid Rows="1" x:Name="FluentDock">
+
+                        <RadioButton x:Name="DockLaunch" Tag="0" GroupName="Dock" Style="{StaticResource Fluent.DockButton}" Click="FluentDock_Checked" IsChecked="True">
+                            <StackPanel Orientation="Horizontal"><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="&#xE768;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="{DynamicResource Main.Tab.Launch}" /></StackPanel>
+                        </RadioButton>
+                        <RadioButton x:Name="DockInstances" Tag="5" GroupName="Dock" Style="{StaticResource Fluent.DockButton}" Click="FluentDock_Checked">
+                            <StackPanel Orientation="Horizontal"><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="{DynamicResource Main.Fluent.Instances}" /></StackPanel>
+                        </RadioButton>
+                        <RadioButton x:Name="DockDownload" Tag="1" GroupName="Dock" Style="{StaticResource Fluent.DockButton}" Click="FluentDock_Checked" Visibility="{Binding Visibility, ElementName=BtnTitleSelect1}">
+                            <StackPanel Orientation="Horizontal"><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="&#xE896;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="{DynamicResource Main.Tab.Download}" /></StackPanel>
+                        </RadioButton>
+                        <RadioButton x:Name="DockTools" Tag="3" GroupName="Dock" Style="{StaticResource Fluent.DockButton}" Click="FluentDock_Checked" Visibility="{Binding Visibility, ElementName=BtnTitleSelect3}">
+                            <StackPanel Orientation="Horizontal"><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="&#xE90F;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="{DynamicResource Main.Tab.Tools}" /></StackPanel>
+                        </RadioButton>
+                        <RadioButton x:Name="DockSettings" Tag="2" GroupName="Dock" Style="{StaticResource Fluent.DockButton}" Click="FluentDock_Checked" Visibility="{Binding Visibility, ElementName=BtnTitleSelect2}">
+                            <StackPanel Orientation="Horizontal"><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="&#xE713;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Text="{DynamicResource Main.Tab.Settings}" /></StackPanel>
+                        </RadioButton>
+                        </UniformGrid>
+                    </controls:LiquidGlassSurface>
+                    <Canvas x:Name="DockSurface" Loaded="DockSurface_LayoutChanged" SizeChanged="DockSurface_LayoutChanged">
+                        <controls:LiquidGlassSurface x:Name="DockHighlight" Material="BottomTabIndicator" Width="0" Height="56" CornerRadius="28"
+                                                    Background="Transparent" RenderTransformOrigin="0.5,0.5">
+                            <controls:LiquidGlassSurface.RenderTransform><ScaleTransform x:Name="DockHighlightScale"/></controls:LiquidGlassSurface.RenderTransform>
+                        </controls:LiquidGlassSurface>
+                    </Canvas>
+                </Grid>
+                <Grid Visibility="Collapsed">
+                        <StackPanel  x:Name="PanTitleSelect" HorizontalAlignment="Left" Height="27" Visibility="Collapsed"
                                     VerticalAlignment="Center" Orientation="Horizontal" Margin="13,0">
                             <local:MyRadioButton x:Name="BtnTitleSelect0" Text="{DynamicResource Main.Tab.Launch}" Tag="0" Margin="5,0" Checked="True"
                                                  Padding="2,0" Check="BtnTitleSelect_Click"
@@ -171,64 +257,12 @@
                                                  LogoScale="1"
                                                  SvgIcon="lucide/wrench" />
                         </StackPanel>
-                    </Grid>
-                    <Grid x:Name="PanTitleInner" Visibility="Collapsed" Margin="-16,0,0,0" Opacity="0"
-                          HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=PanTitle, Mode=OneWay}">
-                        <local:MyIconButton HorizontalAlignment="Left" Theme="White" x:Name="BtnTitleInner"
-                                            Margin="12,0,0,0" Height="28" Width="28" Click="BtnTitleInner_Click"
-                                            LogoScale="0.87"
-                                            SvgIcon="lucide/arrow-left" />
-                        <TextBlock SnapsToDevicePixels="False" IsHitTestVisible="False" Name="LabTitleInner"
-                                   VerticalAlignment="Center" Margin="47,1,60,0" HorizontalAlignment="Left"
-                                   Foreground="White" FontSize="15" />
-                    </Grid>
-                </local:AnimatedBackgroundGrid>
-                <Grid x:Name="PanLeft" Grid.Row="1" HorizontalAlignment="Left" SnapsToDevicePixels="True">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-                    <controls:BlurBorder IsHitTestVisible="False">
-                        <local:AnimatedBackgroundGrid x:Name="RectLeftBackground" Width="0"
-                                                      BackgroundBrush="{DynamicResource ColorBrushTransparentBackground}" />
-                    </controls:BlurBorder>
-                    <Rectangle x:Name="RectLeftShadow" Width="4" HorizontalAlignment="Left" IsHitTestVisible="False"
-                               Grid.Column="1">
-                        <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="1,0" StartPoint="0,0" Opacity="0.04">
-                                <GradientStop Color="#000000" Offset="0" />
-                                <GradientStop Color="#00000000" Offset="1" />
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </Grid>
-                <Grid x:Name="PanMain" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-                    <Border Grid.Column="1" Grid.IsSharedSizeScope="True" UseLayoutRounding="True"
-                            SnapsToDevicePixels="True">
-                        <Border x:Name="PanMainRight" RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                UseLayoutRounding="False" SnapsToDevicePixels="False" />
-                    </Border>
-                    <Border Grid.Column="0" Grid.IsSharedSizeScope="True" UseLayoutRounding="True"
-                            SnapsToDevicePixels="True">
-                        <Border x:Name="PanMainLeft" RenderOptions.BitmapScalingMode="NearestNeighbor"
-                                SizeChanged="PanMainLeft_SizeChanged"
-                                UseLayoutRounding="False" SnapsToDevicePixels="False" />
-                    </Border>
                 </Grid>
                 <StackPanel x:Name="PanHint" UseLayoutRounding="True"
                             SnapsToDevicePixels="True" HorizontalAlignment="Left" VerticalAlignment="Bottom"
                             Margin="0,0,0,20"
                             Grid.Row="0" Grid.RowSpan="2" Panel.ZIndex="1" />
-                <StackPanel x:Name="PanExtraButtons" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1" Margin="15">
-                    <local:MyExtraButton x:Name="BtnExtraUpdateRestart" HorizontalAlignment="Right"
-                                         Click="BtnExtraUpdateRestart_Click"
-                                         VerticalAlignment="Center" ToolTip="{DynamicResource Main.Extra.UpdateRestart.ToolTip}"
-                                         Visibility="Collapsed"
-                                         SvgIcon="lucide/refresh-cw" />
+                <StackPanel x:Name="PanExtraButtons" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1" Margin="15,15,15,8">
                     <local:MyExtraButton x:Name="BtnExtraBack" HorizontalAlignment="Right" VerticalAlignment="Center"
                                          Click="BtnExtraBack_Click"
                                          ToolTip="{DynamicResource Main.Extra.BackToTop.ToolTip}" Visibility="Collapsed"

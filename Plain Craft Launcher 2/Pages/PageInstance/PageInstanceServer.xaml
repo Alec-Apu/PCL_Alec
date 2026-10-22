@@ -1,4 +1,4 @@
-<local:MyPageRight x:Class="PCL.PageInstanceServer"
+﻿<local:MyPageRight x:Class="PCL.PageInstanceServer"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,23 @@
                    mc:Ignorable="d"
                    PanScroll="{Binding ElementName=PanBack}" Grid.IsSharedSizeScope="True">
 
-    <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden" x:Name="PanBack">
+    <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
+        <local:MyScrollViewer.FixedHeader>
+<local:MyCard Margin="16,8,16,8"
+                              x:Name="PanContent">
+                    <WrapPanel Margin="12,0,0,8">
+
+                        <local:MyButton
+                                        Text="{DynamicResource Instance.Server.RefreshAll}"
+                                        Margin="0,8,12,0"
+                                        HorizontalAlignment="Left" Click="BtnRefresh_Click" ColorType="Highlight" />
+                        <local:MyButton
+                                        Text="{DynamicResource Instance.Server.AddServer}"
+                                        Margin="0,8,12,0"
+                                        HorizontalAlignment="Left" Click="BtnAddServer_Click" />
+                    </WrapPanel>
+                </local:MyCard>
+        </local:MyScrollViewer.FixedHeader>
         <Grid>
             <local:MyCard HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40" x:Name="PanNoServer">
                 <Grid Margin="20,17">
@@ -31,38 +47,22 @@
                                Height="2" Fill="{DynamicResource ColorBrush3}" />
                     <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Margin="10,15,10,5"
                                Text="{DynamicResource Instance.Server.Empty.Message}" TextWrapping="Wrap" />
-                    <local:MyButton Grid.Row="3" Grid.Column="1" Height="35" MinWidth="140"
+                    <local:MyButton Grid.Row="3" Grid.Column="1" Height="40"
                                     Text="{DynamicResource Instance.Server.RefreshInfo}"
-                                    Padding="13,0" Margin="10,10,10,0" HorizontalAlignment="Center"
+                                    Margin="10,10,10,0" HorizontalAlignment="Center"
                                     Click="BtnRefresh_Click" ColorType="Highlight" />
-                    <local:MyButton Grid.Row="3" Grid.Column="2" Height="35" HorizontalAlignment="Center"
-                                    Click="BtnAddServer_Click" x:Name="BtnAddServerTop" MinWidth="140"
+                    <local:MyButton Grid.Row="3" Grid.Column="2" Height="40" HorizontalAlignment="Center"
+                                    Click="BtnAddServer_Click" x:Name="BtnAddServerTop"
                                     Text="{DynamicResource Instance.Server.AddServer}" Margin="10,10,10,0"
-                                    Padding="13,0" />
+                                    />
                 </Grid>
             </local:MyCard>
-            <StackPanel Margin="10,25,10,10">
+            <StackPanel Margin="16,0,16,16">
                 <!-- 页面标题 -->
-                <local:MyCard Title="{DynamicResource Instance.Server.QuickActions}" Margin="15,0,15,15"
-                              x:Name="PanContent">
-                    <Grid Height="35" Margin="25,40,23,15">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                        </Grid.ColumnDefinitions>
-                        <local:MyButton Grid.Column="0" MinWidth="140"
-                                        Text="{DynamicResource Instance.Server.RefreshAll}" Padding="13,0"
-                                        Margin="0,0,20,0"
-                                        HorizontalAlignment="Left" Click="BtnRefresh_Click" ColorType="Highlight" />
-                        <local:MyButton Grid.Column="1" MinWidth="140"
-                                        Text="{DynamicResource Instance.Server.AddServer}" Padding="13,0"
-                                        Margin="0,0,20,0"
-                                        HorizontalAlignment="Left" Click="BtnAddServer_Click" />
-                    </Grid>
-                </local:MyCard>
+
 
                 <!-- 服务器列表 -->
-                <StackPanel x:Name="PanServers" Margin="15,0,15,15">
+                <StackPanel x:Name="PanServers" Margin="0,0,0,16">
                     <!-- 服务器项目将动态添加到这里 -->
                 </StackPanel>
 

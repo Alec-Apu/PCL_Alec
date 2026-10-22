@@ -32,47 +32,59 @@
                                             Tag="UiLauncherTransparent" MaxValue="600" ValueByKey="10" Grid.Column="1"
                                             Change="SliderChange" />
                         </Grid>
-                        <Border Background="{DynamicResource ColorBrushToolTip}" Margin="0,5,0,12" CornerRadius="4"
-                                Name="PanLauncherHide" Visibility="Collapsed">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
-                                <TextBlock Text="{DynamicResource Setup.Ui.Basic.BlueHint}" FontSize="13" Margin="0,0,0,0"
-                                           TextWrapping="Wrap" />
-                                <local:MyButton Height="35" x:Name="BtnLauncherDonate" MinWidth="140" Text="{DynamicResource Setup.Ui.Basic.GetSnapshot}"
-                                                Padding="13,0" HorizontalAlignment="Center" Margin="0,9,0,0"
-                                                ColorType="Highlight" Click="BtnLauncherDonate_Click" />
-                            </StackPanel>
-                        </Border>
-                        <Grid Height="28" Margin="0,0,0,7">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="Name1" />
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="92" SharedSizeGroup="SubName" />
-                                <ColumnDefinition />
-                                <ColumnDefinition SharedSizeGroup="SubName" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Ui.Theme.Title}" />
+                        <local:ResponsiveColumnsPanel MinimumColumnWidth="280" Gap="12" Margin="0,0,0,7">
+                            <Grid MinHeight="40">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="GlassAppearanceLabel"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <TextBlock MaxWidth="148" Margin="0,0,16,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="{DynamicResource Setup.Ui.Theme.Title}" />
                             <local:MyComboBox Grid.Column="1" x:Name="ComboDarkMode" Tag="UiDarkMode"
                                               SelectionChanged="ComboChange">
                                 <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Theme.Light}" />
                                 <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Theme.Dark}" />
                                 <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Theme.FollowSystem}" /> <!-- default -->
                             </local:MyComboBox>
-                            <TextBlock Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{DynamicResource Setup.Ui.Theme.LightColor}"/>
-                            <local:MyComboBox Grid.Column="3" x:Name="ComboLightColor" Tag="UiLightColor" ItemsSource="{Binding ThemeColors}" SelectionChanged="ThemeColor_Change"/>
-                            <TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{DynamicResource Setup.Ui.Theme.DarkColor}"/>
-                            <local:MyComboBox Grid.Column="5" x:Name="ComboDarkColor" Tag="UiDarkColor" ItemsSource="{Binding ThemeColors}" SelectionChanged="ThemeColor_Change"/>
-
-                        </Grid>
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.ShowLogo}" Margin="-1,0,0,7" Height="22"
+                            </Grid>
+                            <Grid MinHeight="40">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" SharedSizeGroup="GlassAppearanceLabel"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <TextBlock MaxWidth="148" Margin="0,0,16,0" TextWrapping="Wrap" VerticalAlignment="Center" Text="{DynamicResource Setup.Ui.Theme.Accent.Title}"/>
+                            <local:MyComboBox Grid.Column="1" x:Name="ComboAccentColor" ItemsSource="{Binding ThemeColors}" SelectionChanged="ThemeColor_Change"/>
+                            </Grid>
+                        </local:ResponsiveColumnsPanel>
+                        <Border x:Name="PanAccent" Visibility="Collapsed" Background="{DynamicResource ColorBrushToolTip}" CornerRadius="4" Padding="16" Margin="0,3,0,12">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Setup.Ui.Theme.Accent.Rgb}" Margin="0,0,0,10"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="145" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="44" />
+                                        <RowDefinition Height="44" />
+                                        <RowDefinition Height="44" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="R" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                    <local:MySlider Grid.Row="0" Grid.Column="1" x:Name="SliderAccentR" MaxValue="255" ValueByKey="1" Change="AccentSlider_Change" ToolTip="R (0–255)"/>
+                                    <TextBlock Grid.Row="1" Text="G" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                    <local:MySlider Grid.Row="1" Grid.Column="1" x:Name="SliderAccentG" MaxValue="255" ValueByKey="1" Change="AccentSlider_Change" ToolTip="G (0–255)"/>
+                                    <TextBlock Grid.Row="2" Text="B" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                    <local:MySlider Grid.Row="2" Grid.Column="1" x:Name="SliderAccentB" MaxValue="255" ValueByKey="1" Change="AccentSlider_Change" ToolTip="B (0–255)"/>
+                                    <StackPanel Grid.Column="2" Grid.RowSpan="3" Margin="16,0,0,0" VerticalAlignment="Center">
+                                        <Border x:Name="PreviewAccent" Height="32" CornerRadius="4" Margin="0,0,0,8"/>
+                                        <TextBlock x:Name="TextAccent" FontSize="11" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.ShowLogo}" Margin="-1,0,0,7" MinHeight="28"
                                           x:Name="CheckLauncherLogo" Tag="UiLauncherLogo" Change="CheckBoxChange" />
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.LockWindow}" Margin="-1,0,0,7" Height="22" x:Name="CheckLockWindowSize"
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.LockWindow}" Margin="-1,0,0,7" MinHeight="28" x:Name="CheckLockWindowSize"
                                           Tag="UiLockWindowSize" Change="CheckBoxChange" />
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.ShowTriviaHint}" Margin="-1,0,0,7" Height="22"
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.ShowTriviaHint}" Margin="-1,0,0,7" MinHeight="28"
                                            x:Name="CheckShowLaunchingHint" Tag="UiShowLaunchingHint"
                                            Change="CheckBoxChange" />
                         <StackPanel x:Name="PanelBlur" Margin="0,0,0,10">
-                            <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.AdvancedMaterial}" Height="22" x:Name="CheckBlur" Tag="UiBlur"
+                            <local:MyCheckBox Text="{DynamicResource Setup.Ui.Basic.AdvancedMaterial}" MinHeight="28" x:Name="CheckBlur" Tag="UiBlur"
                                               ToolTip="{DynamicResource Setup.Ui.Basic.AdvancedMaterial.ToolTip}"
                                               Change="CheckBoxChange" />
                             <Grid x:Name="PanBlurValue" Margin="0,10,0,0">
@@ -102,7 +114,7 @@
                                 <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"
                                            HorizontalAlignment="Left" Text="{DynamicResource Setup.Ui.Basic.BlurMethod}" />
                                 <local:MyComboBox Grid.Row="2" Grid.Column="1" x:Name="ComboBlurType" Tag="UiBlurType"
-                                                  Height="28" MinWidth="100" ToolTip="{DynamicResource Setup.Ui.Basic.BlurMethod.ToolTip}"
+                                                  MinHeight="40" MinWidth="100" ToolTip="{DynamicResource Setup.Ui.Basic.BlurMethod.ToolTip}"
                                                   SelectionChanged="ComboChange">
                                     <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Basic.BlurMethod.Gaussian}"
                                                           ToolTip="{DynamicResource Setup.Ui.Basic.BlurMethod.Gaussian.ToolTip}" />
@@ -122,7 +134,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition SharedSizeGroup="FontSelector" Height="30" />
+                        <RowDefinition SharedSizeGroup="FontSelector" Height="44" />
                         <RowDefinition Height="10" />
                         <RowDefinition SharedSizeGroup="FontSelector" />
                     </Grid.RowDefinitions>
@@ -136,7 +148,20 @@
             </local:MyCard>
             <local:MyCard x:Name="CardBackground" Margin="0,0,0,15" Title="{DynamicResource Setup.Ui.Background.TitleDefault}">
                 <StackPanel Margin="25,40,25,20">
-                    <Grid x:Name="PanBackgroundSuit" Height="28" Margin="0,0,0,10" Visibility="Collapsed">
+                    <Grid MinHeight="40" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Name" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{DynamicResource Setup.Ui.Background.Source}" VerticalAlignment="Center" Margin="0,0,25,0" />
+                        <local:MyComboBox x:Name="ComboBackgroundSource" Grid.Column="1" Tag="UiBackgroundSource" SelectionChanged="ComboChange">
+                            <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Background.Source.Original}" IsSelected="True" />
+                            <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Background.Source.Landscape}" />
+                            <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Background.Source.Anime}" />
+                            <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Background.Source.Local}" />
+                        </local:MyComboBox>
+                    </Grid>
+                    <Grid x:Name="PanBackgroundSuit" MinHeight="40" Margin="0,0,0,10" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="Name" />
                             <ColumnDefinition />
@@ -175,28 +200,24 @@
                                         Grid.Column="1" Change="SliderChange"
                                          ToolTip="{DynamicResource Setup.Ui.Background.Blur.ToolTip}" />
                     </Grid>
-                    <local:MyCheckBox Text="{DynamicResource Setup.Ui.Background.PauseVideo}" Margin="-1,0,0,8" Height="22"
+                    <local:MyCheckBox Text="{DynamicResource Setup.Ui.Background.PauseVideo}" Margin="-1,0,0,8" MinHeight="28"
                                       x:Name="CheckAutoPauseVideo" Tag="UiAutoPauseVideo" Change="CheckBoxChange"
                                       ToolTip="{DynamicResource Setup.Ui.Background.PauseVideo.ToolTip}" IsEnabled="True" />
-                    <local:MyCheckBox Text="{DynamicResource Setup.Ui.Background.ColorOverlay}" Margin="-1,0,0,8" Height="22" x:Name="CheckBackgroundColorful"
+                    <local:MyCheckBox Text="{DynamicResource Setup.Ui.Background.ColorOverlay}" Margin="-1,0,0,8" MinHeight="28" x:Name="CheckBackgroundColorful"
                                       Tag="UiBackgroundColorful" Change="CheckBoxChange" />
-                    <Grid Height="35" Margin="0,2,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                        </Grid.ColumnDefinitions>
-                        <local:MyButton x:Name="BtnBackgroundOpen" MinWidth="140" Text="{DynamicResource Common.Action.OpenFolder}" Padding="13,0"
-                                        Margin="0,0,20,0" Click="BtnUIBgOpen_Click"
+                    <TextBlock x:Name="LabBackgroundStatus" TextWrapping="Wrap" Foreground="{DynamicResource ColorBrushGray3}" Margin="0,0,0,10" Visibility="Collapsed" />
+                    <WrapPanel Margin="0,2,-12,-8">
+                        <local:MyButton x:Name="BtnBackgroundOpen" Text="{DynamicResource Common.Action.OpenFolder}"
+                                        Margin="0,0,12,8" Click="BtnUIBgOpen_Click"
                                         ToolTip="{DynamicResource Setup.Ui.Background.OpenFolder.ToolTip}" />
-                        <local:MyButton x:Name="BtnBackgroundRefresh" MinWidth="140" Text="{DynamicResource Setup.Ui.Background.Refresh}" Padding="13,0"
-                                        Margin="0,0,20,0" Click="BtnBackgroundRefresh_Click"
+                        <local:MyButton x:Name="BtnBackgroundRefresh" Text="{DynamicResource Setup.Ui.Background.Refresh}"
+                                        Margin="0,0,12,8" Click="BtnBackgroundRefresh_Click"
                                         ToolTip="{DynamicResource Setup.Ui.Background.Refresh.ToolTip}"
-                                        Grid.Column="1" />
-                        <local:MyButton x:Name="BtnBackgroundClear" MinWidth="140" Text="{DynamicResource Setup.Ui.Background.Clear}" Visibility="Collapsed"
-                                        Padding="13,0" Margin="0,0,20,0" ColorType="Red"
-                                        Click="BtnBackgroundClear_Click" Grid.Column="2" />
-                    </Grid>
+                                        />
+                        <local:MyButton x:Name="BtnBackgroundClear" Text="{DynamicResource Setup.Ui.Background.Clear}" Visibility="Collapsed"
+                                        Margin="0,0,12,8" ColorType="Red"
+                                        Click="BtnBackgroundClear_Click" />
+                    </WrapPanel>
                 </StackPanel>
             </local:MyCard>
             <local:MyCard x:Name="CardMusic" Margin="0,0,0,15" Title="{DynamicResource Setup.Ui.Music.Title}">
@@ -211,32 +232,32 @@
                                         Grid.Column="1" Change="SliderChange" />
                     </Grid>
                     <StackPanel x:Name="PanMusicDetail" Visibility="Collapsed" Margin="-1,0,0,3">
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.Shuffle}" Margin="0,0,0,5" Height="22" x:Name="CheckMusicRandom"
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.Shuffle}" Margin="0,0,0,5" MinHeight="28" x:Name="CheckMusicRandom"
                                           Tag="UiMusicRandom" Change="CheckBoxChange" />
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.AutoStart}" Margin="0,0,0,5" Height="22" x:Name="CheckMusicAuto"
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.AutoStart}" Margin="0,0,0,5" MinHeight="28" x:Name="CheckMusicAuto"
                                           Tag="UiMusicAuto" Change="CheckBoxChange" />
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.StartInGame}" Margin="0,0,0,5" Height="22"
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.StartInGame}" Margin="0,0,0,5" MinHeight="28"
                                           x:Name="CheckMusicStart" Tag="UiMusicStart" Change="CheckMusicStart_OnChange" />
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.StopInGame}" Margin="0,0,0,5" Height="22"
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.StopInGame}" Margin="0,0,0,5" MinHeight="28"
                                           x:Name="CheckMusicStop" Tag="UiMusicStop" Change="CheckMusicStop_OnChange" />
-                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.Smtc}" Margin="0,0,0,5" Height="22"
+                        <local:MyCheckBox Text="{DynamicResource Setup.Ui.Music.Smtc}" Margin="0,0,0,5" MinHeight="28"
                                           x:Name="CheckMusicSMTC" Tag="UiMusicSMTC" Change="CheckBoxChange"
                                           ToolTip="{DynamicResource Setup.Ui.Music.Smtc.ToolTip}" />
                     </StackPanel>
-                    <Grid Height="35">
+                    <Grid MinHeight="40">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <local:MyButton x:Name="BtnMusicOpen" Text="{DynamicResource Common.Action.OpenFolder}" MinWidth="140" Padding="13,0"
+                        <local:MyButton x:Name="BtnMusicOpen" Text="{DynamicResource Common.Action.OpenFolder}"
                                         Margin="0,0,20,0" Click="BtnMusicOpen_Click"
                                         ToolTip="{DynamicResource Setup.Ui.Music.OpenFolder.ToolTip}" />
-                        <local:MyButton x:Name="BtnMusicRefresh" Text="{DynamicResource Setup.Ui.Music.Refresh}" MinWidth="140" Padding="13,0"
+                        <local:MyButton x:Name="BtnMusicRefresh" Text="{DynamicResource Setup.Ui.Music.Refresh}"
                                         Margin="0,0,20,0" Click="BtnMusicRefresh_Click"
                                         ToolTip="{DynamicResource Setup.Ui.Music.Refresh.ToolTip}" Grid.Column="1" />
-                        <local:MyButton x:Name="BtnMusicClear" Text="{DynamicResource Setup.Ui.Music.Clear}" MinWidth="140" Visibility="Collapsed"
-                                        Padding="13,0" Margin="0,0,20,0" ColorType="Red" Click="BtnMusicClear_Click"
+                        <local:MyButton x:Name="BtnMusicClear" Text="{DynamicResource Setup.Ui.Music.Clear}" Visibility="Collapsed"
+                                        Margin="0,0,20,0" ColorType="Red" Click="BtnMusicClear_Click"
                                         Grid.Column="2" />
                     </Grid>
                 </StackPanel>
@@ -251,16 +272,16 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="0.2*" />
                         </Grid.ColumnDefinitions>
-                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Logo.None}" x:Name="RadioLogoType0" Height="22" Tag="UiLogoType/0"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Logo.None}" x:Name="RadioLogoType0" MinHeight="28" Tag="UiLogoType/0"
                                           Grid.Column="0" Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Common.Option.Default}" x:Name="RadioLogoType1" Height="22" Tag="UiLogoType/1"
+                        <local:MyRadioBox Text="{DynamicResource Common.Option.Default}" x:Name="RadioLogoType1" MinHeight="28" Tag="UiLogoType/1"
                                           Grid.Column="1" Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Logo.Text}" x:Name="RadioLogoType2" Height="22" Tag="UiLogoType/2"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Logo.Text}" x:Name="RadioLogoType2" MinHeight="28" Tag="UiLogoType/2"
                                           Grid.Column="2" Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Logo.Image}" x:Name="RadioLogoType3" Height="22" Tag="UiLogoType/3"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Logo.Image}" x:Name="RadioLogoType3" MinHeight="28" Tag="UiLogoType/3"
                                           Grid.Column="3" Check="RadioBoxChange" PreviewCheck="RadioLogoType3_Check" />
                     </Grid>
-                    <local:MyCheckBox Text="{DynamicResource Setup.Ui.Logo.LeftAlign}" Margin="-1,8,0,3" Height="22" x:Name="CheckLogoLeft"
+                    <local:MyCheckBox Text="{DynamicResource Setup.Ui.Logo.LeftAlign}" Margin="-1,8,0,3" MinHeight="28" x:Name="CheckLogoLeft"
                                       Tag="UiLogoLeft" Visibility="Collapsed" Change="CheckBoxChange" />
                     <Grid x:Name="PanLogoText" Margin="0,14,0,5" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
@@ -271,14 +292,14 @@
                         <local:MyTextBox x:Name="TextLogoText" Tag="UiLogoText" Grid.Column="1" MaxLength="100"
                                          ValidatedTextChanged="TextBoxChange" />
                     </Grid>
-                    <Grid x:Name="PanLogoChange" Margin="0,14,0,5" Height="35" Visibility="Collapsed">
+                    <Grid x:Name="PanLogoChange" Margin="0,14,0,5" MinHeight="40" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <local:MyButton x:Name="BtnLogoChange" Text="{DynamicResource Setup.Ui.Logo.ChangeImage}" MinWidth="140" Padding="13,0"
+                        <local:MyButton x:Name="BtnLogoChange" Text="{DynamicResource Setup.Ui.Logo.ChangeImage}"
                                         Margin="0,0,20,0" Click="BtnLogoChange_Click" />
-                        <local:MyButton x:Name="BtnLogoDelete" Text="{DynamicResource Setup.Ui.Logo.ClearImage}" MinWidth="140" Padding="13,0"
+                        <local:MyButton x:Name="BtnLogoDelete" Text="{DynamicResource Setup.Ui.Logo.ClearImage}"
                                         Margin="0,0,20,0" ColorType="Red" Click="BtnLogoDelete_Click" Grid.Column="1" />
                     </Grid>
                 </StackPanel>
@@ -293,30 +314,30 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="0.2*" />
                         </Grid.ColumnDefinitions>
-                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.Blank}" x:Name="RadioCustomType0" Height="22" Tag="UiCustomType/0"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.Blank}" x:Name="RadioCustomType0" MinHeight="28" Tag="UiCustomType/0"
                                           Grid.Column="0" Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.Preset}" x:Name="RadioCustomType3" Height="22" Tag="UiCustomType/3"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.Preset}" x:Name="RadioCustomType3" MinHeight="28" Tag="UiCustomType/3"
                                           Grid.Column="1" Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.LocalFile}" x:Name="RadioCustomType1" Height="22" Tag="UiCustomType/1"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.LocalFile}" x:Name="RadioCustomType1" MinHeight="28" Tag="UiCustomType/1"
                                           Grid.Column="2" Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.NetUpdate}" x:Name="RadioCustomType2" Height="22" Tag="UiCustomType/2"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Ui.Homepage.NetUpdate}" x:Name="RadioCustomType2" MinHeight="28" Tag="UiCustomType/2"
                                           Grid.Column="3" Check="RadioBoxChange" />
                     </Grid>
                     <local:MyHint Margin="0,15,0,-4" Text="{DynamicResource Setup.Ui.Homepage.HintReferToModSetup}" Theme="Blue" x:Name="HintCustom" />
                     <local:MyHint Margin="0,15,0,6" Text="{DynamicResource Setup.Ui.Homepage.NetWarning}" Theme="Yellow"
                                   x:Name="HintCustomWarn"
                                   CanClose="True" RelativeSetup="HintCustomWarn" />
-                    <Grid Height="35" x:Name="PanCustomLocal" Visibility="Collapsed" Margin="0,10,0,5">
+                    <Grid MinHeight="40" x:Name="PanCustomLocal" Visibility="Collapsed" Margin="0,10,0,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <local:MyButton x:Name="BtnCustomRefresh" Grid.Column="0" MinWidth="140" Text="{DynamicResource Setup.Ui.Homepage.Refresh}"
-                                        Padding="13,0" Margin="0,0,20,0" HorizontalAlignment="Left"
+                        <local:MyButton x:Name="BtnCustomRefresh" Grid.Column="0" Text="{DynamicResource Setup.Ui.Homepage.Refresh}"
+                                        Margin="0,0,20,0" HorizontalAlignment="Left"
                                         ColorType="Highlight" Click="BtnCustomRefresh_Click" />
-                        <local:MyButton x:Name="BtnCustomTutorial" Grid.Column="1" MinWidth="140" Text="{DynamicResource Setup.Ui.Homepage.Tutorial}"
-                                        Padding="13,0" Margin="0,0,20,0" HorizontalAlignment="Left"
+                        <local:MyButton x:Name="BtnCustomTutorial" Grid.Column="1" Text="{DynamicResource Setup.Ui.Homepage.Tutorial}"
+                                        Margin="0,0,20,0" HorizontalAlignment="Left"
                                         Click="BtnCustomTutorial_Click" />
                     </Grid>
                     <Grid x:Name="PanCustomNet" Visibility="Collapsed" Margin="0,10,0,5">
@@ -332,7 +353,7 @@
                             </local:MyTextBox.ValidateRules>
                         </local:MyTextBox>
                     </Grid>
-                    <Grid x:Name="PanCustomPreset" Visibility="Collapsed" Margin="0,12,10,5" Height="28">
+                    <Grid x:Name="PanCustomPreset" Visibility="Collapsed" Margin="0,12,10,5" MinHeight="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="Name" />
                             <ColumnDefinition />
@@ -358,7 +379,6 @@
                             <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Homepage.Preset.MinecraftKnowledge}" />
                             <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Homepage.Preset.ModpackRecommendation}" />
                             <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Homepage.Preset.Bangumi}" />
-                            <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Homepage.Preset.PclAnnouncement}"/>
                             <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Homepage.Preset.McOfficialFeed}"/>
                         </local:MyComboBox>
                     </Grid>
@@ -380,93 +400,90 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="4" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="30" />
+                            <RowDefinition Height="44" />
+                            <RowDefinition Height="44" />
+                            <RowDefinition Height="44" />
+                            <RowDefinition Height="44" />
+                            <RowDefinition Height="44" />
+                            <RowDefinition Height="44" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Ui.FeatureHide.MainPage}" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Download}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Download}"
                                           x:Name="CheckHiddenPageDownload" Tag="UiHiddenPageDownload"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="1" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Settings}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="1" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Settings}"
                                           x:Name="CheckHiddenPageSetup" Tag="UiHiddenPageSetup" Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="1" Grid.Column="4" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Tools}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="1" Grid.Column="4" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Tools}"
                                           x:Name="CheckHiddenPageTools" Tag="UiHiddenPageTools" Change="CheckBoxChange" />
                         <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Ui.FeatureHide.SubSetup}" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="2" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Launch}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="2" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Launch}"
                                           x:Name="CheckHiddenSetupLaunch" Tag="UiHiddenSetupLaunch"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="2" Grid.Column="3"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="2" Grid.Column="3"
                                           Text="Java" x:Name="CheckHiddenSetupJava" Tag="UiHiddenSetupJava"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="2" Grid.Column="4" Text="{DynamicResource Setup.Ui.FeatureHide.Item.GameManage}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="2" Grid.Column="4" Text="{DynamicResource Setup.Ui.FeatureHide.Item.GameManage}"
                                           x:Name="CheckHiddenSetupGameManage" Tag="UiHiddenSetupGameManage"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="2" Grid.Column="6"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="2" Grid.Column="6"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.Ui}" x:Name="CheckHiddenSetupUI" Tag="UiHiddenSetupUi"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="3" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Language}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="3" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Language}"
                                           x:Name="CheckHiddenSetupLauncherLanguage" Tag="UiHiddenSetupLauncherLanguage"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="3" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Misc}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="3" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Misc}"
                                           x:Name="CheckHiddenLauncherMisc" Tag="UiHiddenSetupLauncherMisc"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="3" Grid.Column="4"
-                                          Text="{DynamicResource Setup.Ui.FeatureHide.Item.Update}" x:Name="CheckHiddenSetupUpdate" Tag="UiHiddenSetupUpdate"
-                                          Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="3" Grid.Column="5" Text="{DynamicResource Setup.Ui.FeatureHide.Item.About}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="3" Grid.Column="5" Text="{DynamicResource Setup.Ui.FeatureHide.Item.About}"
                                           x:Name="CheckHiddenSetupAbout" Tag="UiHiddenSetupAbout"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="3" Grid.Column="6" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Feedback}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="3" Grid.Column="6" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Feedback}"
                                           x:Name="CheckHiddenSetupFeedback" Tag="UiHiddenSetupFeedback"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="3" Grid.Column="7"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="3" Grid.Column="7"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.Log}" x:Name="CheckHiddenSetupLog" Tag="UiHiddenSetupLog"
                                           Change="CheckBoxChange" />
                         <TextBlock Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Ui.FeatureHide.SubTools}" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="4" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Toolbox}" x:Name="CheckHiddenToolsTest" Tag="UiHiddenToolsTest" Change="CheckBoxChange"/>
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="4" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Toolbox}" x:Name="CheckHiddenToolsTest" Tag="UiHiddenToolsTest" Change="CheckBoxChange"/>
                         <TextBlock Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Ui.FeatureHide.SubInstance}" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="5" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Edit}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="5" Grid.Column="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Edit}"
                                           x:Name="CheckHiddenVersionEdit" Tag="UiHiddenVersionEdit"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="5" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Export}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="5" Grid.Column="3" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Export}"
                                           x:Name="CheckHiddenVersionExport" Tag="UiHiddenVersionExport"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="5" Grid.Column="4" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Save}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="5" Grid.Column="4" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Save}"
                                           x:Name="CheckHiddenVersionSave" Tag="UiHiddenVersionSave"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="5" Grid.Column="5" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Screenshot}"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="5" Grid.Column="5" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Screenshot}"
                                           x:Name="CheckHiddenVersionScreenshot" Tag="UiHiddenVersionScreenshot"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="5" Grid.Column="6"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="5" Grid.Column="6"
                                           Text="Mod" x:Name="CheckHiddenVersionMod" Tag="UiHiddenVersionMod"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="6" Grid.Column="2"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="6" Grid.Column="2"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.ResourcePack}" x:Name="CheckHiddenVersionResourcePack"
                                           Tag="UiHiddenVersionResourcePack" Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="6" Grid.Column="3"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="6" Grid.Column="3"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.Shader}" x:Name="CheckHiddenVersionShader" Tag="UiHiddenVersionShader"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="6" Grid.Column="4"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="6" Grid.Column="4"
                                           Grid.ColumnSpan="2" Text="{DynamicResource Setup.Ui.FeatureHide.Item.Schematic}" x:Name="CheckHiddenVersionSchematic"
                                           Tag="UiHiddenVersionSchematic" Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="6" Grid.Column="6"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="6" Grid.Column="6"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.Server}" x:Name="CheckHiddenVersionServer" Tag="UiHiddenVersionServer"
                                           Change="CheckBoxChange" />
                         <TextBlock Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Ui.FeatureHide.SpecificFeature}" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="7" Grid.Column="2"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="7" Grid.Column="2"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.InstanceSelect}" x:Name="CheckHiddenFunctionSelect" Tag="UiHiddenFunctionSelect"
                                           ToolTip="{DynamicResource Setup.Ui.FeatureHide.Item.InstanceSelect.ToolTip}" Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="7" Grid.Column="3"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="7" Grid.Column="3"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.ModUpdate}" x:Name="CheckHiddenFunctionModUpdate"
                                           Tag="UiHiddenFunctionModUpdate" ToolTip="{DynamicResource Setup.Ui.FeatureHide.Item.ModUpdate.ToolTip}"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Height="22" VerticalAlignment="Center" Grid.Row="7" Grid.Column="4"
+                        <local:MyCheckBox MinHeight="28" VerticalAlignment="Center" Grid.Row="7" Grid.Column="4"
                                           Text="{DynamicResource Setup.Ui.FeatureHide.Item.FeatureHide}" x:Name="CheckHiddenFunctionHidden" Tag="UiHiddenFunctionHidden"
                                           ToolTip="{DynamicResource Setup.Ui.FeatureHide.Item.FeatureHide.ToolTip}"
                                           Change="CheckBoxChange" />

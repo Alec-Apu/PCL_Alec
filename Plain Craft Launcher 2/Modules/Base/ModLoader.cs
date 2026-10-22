@@ -56,7 +56,12 @@ public static class ModLoader
                 loaderTaskbarProgress = newProgress;
             else
                 loaderTaskbarProgress = loaderTaskbarProgress * 0.9d + newProgress * 0.1d;
-            ModBase.RunInUi(() => ModMain.frmMain.BtnExtraDownload.Progress = loaderTaskbarProgress);
+            ModBase.RunInUi(() =>
+            {
+                ModMain.frmMain.BtnExtraDownload.Progress = loaderTaskbarProgress;
+                ModMain.frmLaunchRight?.RefreshFluentTasks();
+                ModMain.frmMain.FluentTaskCount.Text = loaderTaskbar.Count.ToString();
+            });
             // 更新任务栏信息
             if (!loaderTaskbar.Any() || loaderTaskbarProgress == 1d)
             {

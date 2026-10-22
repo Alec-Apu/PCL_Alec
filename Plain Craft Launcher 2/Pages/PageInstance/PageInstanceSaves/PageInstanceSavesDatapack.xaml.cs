@@ -59,6 +59,11 @@ public partial class PageInstanceSavesDatapack : IRefreshable
         currentSwipSelect = new MyLocalCompItem.SwipeSelect { TargetFrm = this };
 
         InitializeComponent();
+        CardSelect.SizeChanged += (_, _) =>
+        {
+            if (CardSelect.Visibility == Visibility.Visible && CardSelect.ActualHeight > 0)
+                PanListBack.Margin = new Thickness(0, 0, 0, CardSelect.ActualHeight + 24);
+        };
         Unloaded += Page_Unloaded;
         Loaded += (_, _) => PageOther_Loaded();
         LoaderInit();
@@ -474,7 +479,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
             // 更新显示状态
             if (ModAnimation.AniControlEnabled == 0)
             {
-                PanListBack.Margin = new Thickness(0d, 0d, 0d, selected ? 95 : 15);
+                PanListBack.Margin = new Thickness(0d, 0d, 0d, selected ? Math.Max(95, CardSelect.ActualHeight + 24) : 15);
                 if (selected)
                 {
                     // 仅在数量增加时播放出现/跳跃动画

@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
@@ -46,6 +46,13 @@ public partial class MyIconTextButton
     public MyIconTextButton()
     {
         InitializeComponent();
+        KeyDown += (_, e) =>
+        {
+            if (!IsEnabled || e.IsRepeat || e.Key is not (System.Windows.Input.Key.Enter or System.Windows.Input.Key.Space)) return;
+            e.Handled = true;
+            Click?.Invoke(this, new ModBase.RouteEventArgs(false));
+            ModMain.RaiseCustomEvent(this);
+        };
         RefreshLogoHostVisibility();
 
         MouseLeftButtonUp += (_, _) => MyIconTextButton_MouseUp();

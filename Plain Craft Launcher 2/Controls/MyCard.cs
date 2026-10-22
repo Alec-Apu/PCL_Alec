@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -13,12 +13,12 @@ public class MyCard : AnimatedBackgroundGrid
 {
     // 动画
     private const double dropShadowIdleOpacity = 0.07d;
-    private const double dropShadowHoverOpacity = 0.4d;
+    private const double dropShadowHoverOpacity = 0.12d;
 
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register("Title", typeof(string), typeof(MyCard), new PropertyMetadata(""));
 
-    private readonly BlurBorder mainBorder;
+    private readonly LiquidGlassSurface mainBorder;
 
     // 控件
     private readonly Grid mainGrid;
@@ -26,21 +26,23 @@ public class MyCard : AnimatedBackgroundGrid
     private bool isLoad;
 
     // UI 建立
-    public MyCard() : base(BlurBorder.BackgroundProperty)
+    public MyCard() : base(Border.BackgroundProperty)
     {
         MainChrome = new MyDropShadow
         {
             Margin = new Thickness(-3, -3, -3, -3 - ModBase.GetWPFSize(1d)), ShadowRadius = 3d,
-            Opacity = dropShadowIdleOpacity, CornerRadius = new CornerRadius(5d)
+            Opacity = dropShadowIdleOpacity, CornerRadius = new CornerRadius(20d)
         };
         MainChrome.SetResourceReference(MyDropShadow.ColorProperty, "ColorObject1");
         Children.Insert(0, MainChrome);
-        mainBorder = new BlurBorder { CornerRadius = new CornerRadius(5d), IsHitTestVisible = false };
+        mainBorder = new LiquidGlassSurface { CornerRadius = new CornerRadius(20d), IsHitTestVisible = false };
+        mainBorder.SetResourceReference(Border.BorderBrushProperty, "Fluent.Stroke");
+        mainBorder.BorderThickness = new Thickness(1);
         Children.Insert(1, mainBorder);
         mainGrid = new Grid();
         Children.Add(mainGrid);
         // 设置背景色
-        SetResourceReference(BackgroundBrushProperty, "ColorBrushTransparentBackground");
+        SetResourceReference(BackgroundBrushProperty, "Fluent.Card");
         Loaded += (_, _) => Init();
         MouseEnter += MyCard_MouseEnter;
         MouseLeave += MyCard_MouseLeave;
@@ -123,7 +125,7 @@ public class MyCard : AnimatedBackgroundGrid
             MainTextBlock = new TextBlock
             {
                 HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(15d, 12d, 0d, 0d), FontWeight = FontWeights.Bold, FontSize = 13d,
+                Margin = new Thickness(15d, 12d, 0d, 0d), FontWeight = FontWeights.SemiBold, FontSize = 15d,
                 IsHitTestVisible = false
             };
             MainTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "ColorBrush1");

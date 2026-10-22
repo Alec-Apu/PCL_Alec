@@ -1,4 +1,4 @@
-<local:MyPageRight
+﻿<local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL"
@@ -6,7 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" x:Class="PCL.PageSpeedRight"
     PanScroll="{Binding ElementName=PanBack}">
+    <Grid>
+    <TextBlock x:Name="EmptyTasks" Text="{DynamicResource Main.Fluent.NoTasks}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ColorBrushGray2}"/>
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
-        <StackPanel x:Name="PanMain" Margin="25,25,25,10" Grid.IsSharedSizeScope="True" />
+        <StackPanel x:Name="PanMain" Margin="16,16,16,16" Grid.IsSharedSizeScope="True" />
     </local:MyScrollViewer>
+    </Grid>
 </local:MyPageRight>

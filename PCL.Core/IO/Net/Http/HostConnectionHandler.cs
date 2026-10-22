@@ -47,6 +47,7 @@ public class HostConnectionHandler
 
         // 对待连接地址进行排序 (缓存成功+IPv6优先)
         var sortedAddresses = _SortAddresses(host, port, addresses, now);
+        LogWrapper.Debug(ModuleName, $"Connection candidates; host={host}; port={port}; resolved={string.Join(",", addresses.Select(ip => ip.ToString()))}; selected={string.Join(",", sortedAddresses.Select(ip => ip.ToString()))}");
 
         // Happy Eyeballs 连接逻辑，优先 IPv6 稍后
         var connectionTasks = new List<Task<NetworkStream>>(WaitTasks);
@@ -93,7 +94,8 @@ public class HostConnectionHandler
             cancellationSource.Cancel();
             _ = _CleanupUnusedConnectionsAsync(connectionTasks, null).ConfigureAwait(false);
 
-            LogWrapper.Error(ex, ModuleName, $"All connection attempts failed for {host}");
+            // The caller owns retries, mirror fallback and the final user-facing error.
+            LogWrapper.Debug(ex, ModuleName, $"All connection attempts failed for {host}");
             throw new HttpRequestException($"Connection failed for {host}", ex);
         }
         finally

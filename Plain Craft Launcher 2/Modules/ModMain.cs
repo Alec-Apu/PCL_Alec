@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -58,7 +58,6 @@ public static class ModMain
     public static PageSetupLaunch? frmSetupLaunch;
     public static PageSetupUI? frmSetupUI;
     public static PageSetupGameManage? frmSetupGameManage;
-    public static PageSetupUpdate? frmSetupUpdate;
     public static PageSetupJava? frmSetupJava;
     public static PageSetupAbout? frmSetupAbout;
     public static PageSetupLog? frmSetupLog;

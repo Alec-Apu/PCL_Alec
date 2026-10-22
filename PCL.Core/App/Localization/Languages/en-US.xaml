@@ -1,4 +1,4 @@
-<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. -->
+﻿<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. -->
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -78,6 +78,7 @@
     <sys:String x:Key="Common.Action.OpenFolder">Open folder</sys:String>
     <sys:String x:Key="Common.Action.Overwrite">Override</sys:String>
     <sys:String x:Key="Common.Action.Refresh">Refresh</sys:String>
+    <sys:String x:Key="Common.Action.More">More actions</sys:String>
     <sys:String x:Key="Common.Action.Reset">Reset</sys:String>
     <sys:String x:Key="Common.Action.Search">Search</sys:String>
     <sys:String x:Key="Common.Action.UpdateLog">Changelog</sys:String>
@@ -249,7 +250,6 @@
     <sys:String x:Key="Crash.Suggestion.InvalidModFileName">Remove or rename the affected mod file so that its name contains only English letters, numbers, hyphens, underscores, and periods.</sys:String>
     <sys:String x:Key="Crash.Suggestion.JavaIncompatible">Choose a suitable Java version in launch settings based on the Minecraft version and mod requirements.</sys:String>
     <sys:String x:Key="Crash.Suggestion.JavaTooNew">Switch to an older Java version in launch settings and try again.</sys:String>
-    <sys:String x:Key="Crash.Suggestion.LauncherOutdated">You are using an outdated version of PCL XH. Updating PCL XH may resolve this problem: Settings → Launcher → Check updates.</sys:String>
     <sys:String x:Key="Crash.Suggestion.MissingMixinBootstrap">Check that MixinBootstrap, the mod loader, and related dependencies are installed correctly.</sys:String>
     <sys:String x:Key="Crash.Suggestion.ModConfigCrash">Try deleting this mod's configuration file and launch again. If needed, update or disable the mod.</sys:String>
     <sys:String x:Key="Crash.Suggestion.ModLoaderIncompatible">Open instance settings and adjust or reinstall the mod loader version.</sys:String>
@@ -835,7 +835,6 @@
     <sys:String x:Key="Instance.Export.StartExport">Export</sys:String>
     <sys:String x:Key="Instance.Export.Task.CopyContent">Copy export contents</sys:String>
     <sys:String x:Key="Instance.Export.Task.CreateArchive">Create archive</sys:String>
-    <sys:String x:Key="Instance.Export.Task.DownloadPclRelease">Download PCL XH release</sys:String>
     <sys:String x:Key="Instance.Export.Task.FetchFileInfo">Get file information</sys:String>
     <sys:String x:Key="Instance.Export.ZipFilter">ZIP file (*.zip)|*.zip</sys:String>
 
@@ -1844,8 +1843,6 @@
     <sys:String x:Key="Main.Extra.GiveUp.ToolTip">Surrender</sys:String>
     <sys:String x:Key="Main.Extra.ShutdownMinecraft.ToolTip">Close Minecraft</sys:String>
     <sys:String x:Key="Main.Extra.TaskManager.ToolTip">Task manager</sys:String>
-    <sys:String x:Key="Main.Extra.UpdateRestart.ToolTip">Restart PCL XH to apply software updates</sys:String>
-    <sys:String x:Key="Main.Extra.UpdateRestart.ToolTipWithVersion">Restart PCL XH to apply software updates ({0} → {1})</sys:String>
     <sys:String x:Key="Main.HiddenFeature.Disabled">The feature hiding setting has been temporarily disabled!</sys:String>
     <sys:String x:Key="Main.HiddenFeature.Enabled">The feature hiding setting has been re-enabled!</sys:String>
     <sys:String x:Key="Main.ShutdownMinecraft.Success">Minecraft instance closed!</sys:String>
@@ -2520,7 +2517,6 @@
 
     <sys:String x:Key="Setup.Feedback.ErrorPrompt.Submit.Action">Send feedback</sys:String>
     <sys:String x:Key="Setup.Feedback.ErrorPrompt.Submit.Message">{0}&#xA;&#xA;Would you like to send feedback? Without a report, this problem may not be resolved.</sys:String>
-    <sys:String x:Key="Setup.Feedback.ErrorPrompt.Update.Message">{0}&#xA;&#xA;Updating PCL XH to the latest version may resolve this problem.</sys:String>
     <sys:String x:Key="Setup.Feedback.Item.Submitter">Submitter: {0} ({1})</sys:String>
     <sys:String x:Key="Setup.Feedback.Item.Type">Type: {0}</sys:String>
     <sys:String x:Key="Setup.Feedback.Item.ViewDetail">Details</sys:String>
@@ -2532,11 +2528,6 @@
     <sys:String x:Key="Setup.Feedback.Submit.Description">Please check the feedback list for similar issues before submitting new feedback to avoid duplicate submissions.&#xA;Note: This page does not show all feedback. To view more, please go to GitHub.</sys:String>
     <sys:String x:Key="Setup.Feedback.Submit.Open">New feedback</sys:String>
     <sys:String x:Key="Setup.Feedback.Submit.Title">Submit feedback</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.CheckFailed.Action">Check again</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.CheckFailed.Message">Update checking failed, so feedback cannot be sent.&#xA;Connect to the internet, check for updates, confirm that the problem still occurs on the latest version, then send feedback.</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.NotLatest.Action">Update</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.NotLatest.Message">You are not using the latest version of PCL XH, so feedback cannot be sent.&#xA;Update PCL XH, confirm that the problem still occurs on the latest version, then send feedback.</sys:String>
-    <sys:String x:Key="Setup.Feedback.Unavailable.Title">Cannot send feedback</sys:String>
     <sys:String x:Key="Setup.Feedback.Uncategorized">Uncategorized</sys:String>
 
     <!-- Setup.Feedback.Status -->
@@ -2818,7 +2809,6 @@
     <sys:String x:Key="Setup.Left.Item.Log">Logs</sys:String>
     <sys:String x:Key="Setup.Left.Item.Misc">Miscellaneous</sys:String>
     <sys:String x:Key="Setup.Left.Item.Ui">Personalization</sys:String>
-    <sys:String x:Key="Setup.Left.Item.Update">Updates</sys:String>
 
     <!-- Setup.Log -->
 
@@ -2877,14 +2867,6 @@
     <sys:String x:Key="Setup.Misc.Network.Proxy.Username">Account</sys:String>
 
     <!-- Setup.Misc.System -->
-
-    <sys:String x:Key="Setup.Misc.System.Announcement">Launcher announcements</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.All">Show all announcements</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.All.ToolTip">Show all announcements, including launcher feature surveys, events, and more.</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.Disabled">Disable all announcements</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.Disabled.Warning.Confirm">I know what I am doing</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.Disabled.Warning.Message">If you choose this option, you will not receive relevant notifications even when serious issues occur in the future.&#xA;For example, if a critical bug is found in a certain game version, you may miss the notification and face unpredictable consequences.&#xA;&#xA;In general, choosing "Show announcements only when important" should keep you mostly undisturbed.&#xA;Unless you are creating a server modpack or frequently update the launcher manually, this option is strongly discouraged!</sys:String>
-    <sys:String x:Key="Setup.Misc.System.Announcement.ImportantOnly">Show announcements only when important</sys:String>
     <sys:String x:Key="Setup.Misc.System.DisableHardwareAcceleration">Disable hardware acceleration</sys:String>
     <sys:String x:Key="Setup.Misc.System.ExportSettings">Export settings</sys:String>
     <sys:String x:Key="Setup.Misc.System.ExportSettings.Filter">PCL XH config file (*.json)|*.json</sys:String>
@@ -3029,7 +3011,6 @@
     <sys:String x:Key="Setup.Ui.FeatureHide.Item.Toolbox">Toolbox</sys:String>
     <sys:String x:Key="Setup.Ui.FeatureHide.Item.Tools">Tools</sys:String>
     <sys:String x:Key="Setup.Ui.FeatureHide.Item.Ui">Personalization</sys:String>
-    <sys:String x:Key="Setup.Ui.FeatureHide.Item.Update">Update</sys:String>
 
     <!-- Setup.Ui.Homepage -->
 
@@ -3066,7 +3047,6 @@
     <sys:String x:Key="Setup.Ui.Homepage.Preset.Bangumi">Bangumi Anime (Author: wzyaeu)</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.OpenBmclapi">OpenBMCLAPI Dashboard Lite (Authors: Silverteal, Mxmilu666)</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.OpenMcim">OpenMCIM Dashboard (Author: SALTWOOD)</sys:String>
-    <sys:String x:Key="Setup.Ui.Homepage.Preset.PclAnnouncement">PCL XH Announcements</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.PclManual">PCL New Feature Manual (Author: WForst-Breeze)</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.PclMarket">PCL Homepage Market (Author: MoYuan-CN)</sys:String>
     <sys:String x:Key="Setup.Ui.Homepage.Preset.PclNews">PCL News Bulletin (Author: Joker2184)</sys:String>
@@ -3120,61 +3100,11 @@
 
     <!-- Setup.Update -->
 
-    <sys:String x:Key="Setup.Update.Changelog.Empty">The developers seem to have forgotten to provide an update summary... Maybe click below to view the full changelog?</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.MoreInfo">More information about this update...</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.Placeholder">PCL XH 2.14.0 brings a refreshing new design, several Pigeon smart features, and a delightful cross-instance workflow to boost your productivity.</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.Title">About this update</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.Unavailable">No changelog available...</sys:String>
-    <sys:String x:Key="Setup.Update.Changelog.View">Full changelog</sys:String>
-    <sys:String x:Key="Setup.Update.CheckAgain">Check again</sys:String>
-    <sys:String x:Key="Setup.Update.CheckFailed">Failed to check for updates</sys:String>
-    <sys:String x:Key="Setup.Update.Checking">Checking for updates...</sys:String>
-    <sys:String x:Key="Setup.Update.DotNetMissing.DownloadRuntime">Download .NET 10 Runtime</sys:String>
-    <sys:String x:Key="Setup.Update.DotNetMissing.Message">A launcher update (version {0}) was found, but the new version requires .NET 10 to be installed on your computer.&#xA;You need to install .NET 10 before continuing the update.&#xA;&#xA;Click the button below to open the webpage, then select {1} under ".NET Desktop Runtime" to download.</sys:String>
-    <sys:String x:Key="Setup.Update.DotNetMissing.Title">Launcher update - missing runtime</sys:String>
-    <sys:String x:Key="Setup.Update.Error.NetworkFailed">Unable to retrieve latest version information. Please check your network connection.</sys:String>
-    <sys:String x:Key="Setup.Update.Install">Download and install</sys:String>
-    <sys:String x:Key="Setup.Update.Latest">Already up to date</sys:String>
-    <sys:String x:Key="Setup.Update.MirrorChyanCdk.Get">Get CDK</sys:String>
-    <sys:String x:Key="Setup.Update.MirrorChyanCdk.Label">MirrorChyan CDK</sys:String>
-    <sys:String x:Key="Setup.Update.MirrorChyanCdk.ToolTip">MirrorChyan (mirrorchyan.com) is a paid third-party application distribution platform that provides high-speed download sources in China.&#xA;This is an optional service. Leaving the CDK blank does not affect normal use or updates.&#xA;If you have a MirrorChyan CDK, you can provide it to PCL XH, and the launcher will prioritize its high-speed download source for software updates. This can also help reduce pressure on the community update server...</sys:String>
-    <sys:String x:Key="Setup.Update.OtherOptions.Placeholder">AquaCL 3 is the first major update of PCL XH. It brings a refreshing new design, uses the latest development technologies, completely rebuilds the core experience, and adds support for macOS, Linux, and other platforms.</sys:String>
-    <sys:String x:Key="Setup.Update.OtherOptions.Title">Other update options - upgrade to AquaCL</sys:String>
-    <sys:String x:Key="Setup.Update.RestartInstall">Restart to install</sys:String>
-
     <!-- Setup.Update.Auto -->
-
-    <sys:String x:Key="Setup.Update.Auto.Disabled">Do not automatically check for updates (not recommended)</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.Disabled.ToolTip">Disable automatic update checking. This may prevent you from receiving updates in a timely manner.</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndInstall">Automatically download and install updates</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndInstall.ToolTip">The launcher will automatically check for and download available updates, and install them after closing.</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndNotify">Automatically download and prompt for update</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.DownloadAndNotify.ToolTip">The launcher will automatically check for and download available updates, then prompt you to install.</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.NotifyOnly">Prompt for update</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.NotifyOnly.ToolTip">The launcher will automatically check for available updates, then prompt you to download and install.</sys:String>
-    <sys:String x:Key="Setup.Update.Auto.Title">Auto update settings</sys:String>
 
     <!-- Setup.Update.Channel -->
 
-    <sys:String x:Key="Setup.Update.Channel.Beta">Beta</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Beta.ToolTip">Potentially unstable beta versions for early feature testing. Suitable for users who want to help test and have some technical ability.</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Beta.Warning.Message">You are switching the launcher update channel to Beta.&#xA;Beta versions provide previews of upcoming updates, but may include insufficiently tested features and have reduced stability.&#xA;&#xA;After upgrading to Beta, you will need to wait for the next Release version or manually re-download the launcher to switch back to Release.&#xA;This option is only recommended for users with some basic knowledge and ability. If you are creating a modpack, please use the Release version!</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Common.Warning.Confirm">I understand</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Common.Warning.Title">Before continuing...</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Release">Release</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Release.ToolTip">A relatively stable version that only receives bug fixes and some built-in resource updates. Suitable for most users.</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Title">Update channel</sys:String>
-
     <!-- Setup.Update.Channel.Dev -->
-
-    <sys:String x:Key="Setup.Update.Channel.Dev">Dev</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.ExpectedInput">I confirm switching to this branch and am aware of the risks</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.Message">Are you sure you want to switch to the Dev channel?&#xA;Dev versions may have serious issues or even fail to launch!&#xA;&#xA;After upgrading to Dev, you will not be able to switch back to any other update channel without manually re-downloading the launcher.&#xA;&#xA;This option is only recommended for advanced users. If you are creating a modpack, please use the Release version!&#xA;Please enter "{0}" to confirm.</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.Submit">Submit</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.Title">Final confirmation</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.FinalConfirm.WrongInput">The content you entered is incorrect...</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.ToolTip">Potentially highly unstable development versions built directly from the latest source code. Suitable for highly technical users.&#xA;Good internet connectivity may be required to download updates from this channel.</sys:String>
-    <sys:String x:Key="Setup.Update.Channel.Dev.Warning.Message">You are switching the launcher update channel to Dev.&#xA;This channel provides early access to development builds from the latest code, but may be extremely unstable or even fail to launch.&#xA;&#xA;After upgrading to Dev, you can only manually re-download the launcher to switch back to Release or Beta.&#xA;This option is only recommended for advanced users. If you are creating a modpack, please use the Release version!</sys:String>
 
     <!-- Speed -->
 
@@ -3355,38 +3285,7 @@
 
     <!-- Update -->
 
-    <sys:String x:Key="Update.Action">Update</sys:String>
-    <sys:String x:Key="Update.Available">A new launcher version is available ({0} -&gt; {1})&#xA;Update now?</sys:String>
-    <sys:String x:Key="Update.Check.Failed">Unable to get latest version information. Please check your network connection.</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Body">You are using PCL XH from PCL-Community. Please DO NOT report issues to the original repository!&#xA;PCL-Community and its members are not affiliated with LTCat (龙腾猫跃), and do not guarantee your usage.&#xA;&#xA;If you downloaded PCL XH by mistake, we recommend using the original PCL instead.&#xA;If you downloaded PCL XH by mistake, we recommend using the original PCL instead.&#xA;If you downloaded PCL XH by mistake, we recommend using the original PCL instead.&#xA;&#xA;Differences from the original version:&#xA;- Themes: only some fixed blue themes; no plans to add new themes.&#xA;- Toolbox: some content from the original version is missing (Echo Cave, Don't Click).&#xA;&#xA;This message will be shown once after a launcher update.</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Confirm">I understand</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Title">PCL XH notice</sys:String>
-    <sys:String x:Key="Update.Error.FetchFailed">Failed to get launcher update. Please check your network connection.</sys:String>
-    <sys:String x:Key="Update.Error.FileNotFound">Update file not found</sys:String>
-    <sys:String x:Key="Update.Error.OperationFailed">An update operation failed. See the details below.</sys:String>
-    <sys:String x:Key="Update.Error.Sha256Mismatch">Update file SHA256 mismatch. Expected: {0}, actual: {1}</sys:String>
-    <sys:String x:Key="Update.Error.UnableToGetUpdate">Unable to get update information</sys:String>
-    <sys:String x:Key="Update.Error.UpdateBlocked">Update failed</sys:String>
-    <sys:String x:Key="Update.Error.UpdateBlockedMessage">PCL XH cannot update because it was blocked by Windows Security or does not have sufficient permissions.&#xA;Please add the PCL XH folder to the exclusion list, or manually replace the current file with {0}PCL\PCL XH.exe!</sys:String>
-    <sys:String x:Key="Update.Service.PclCe">PCL XH service</sys:String>
-    <sys:String x:Key="Update.Title">Launcher update</sys:String>
-
     <!-- Update.Task -->
-
-    <sys:String x:Key="Update.Task.ApplyFile">Apply file</sys:String>
-    <sys:String x:Key="Update.Task.Check">Verify update</sys:String>
-    <sys:String x:Key="Update.Task.DownloadFile">Download file</sys:String>
-    <sys:String x:Key="Update.Task.DownloadLatestStable">Download latest stable</sys:String>
-    <sys:String x:Key="Update.Task.DownloadUpdateFile">Download update file</sys:String>
-    <sys:String x:Key="Update.Task.GetAnnouncementFailed">Failed to get announcement information</sys:String>
-    <sys:String x:Key="Update.Task.GetDownloadInfo">Get download information</sys:String>
-    <sys:String x:Key="Update.Task.GetVersionInfo">Get version information</sys:String>
-    <sys:String x:Key="Update.Task.GetVersionInfoFailed">Failed to get version information</sys:String>
-    <sys:String x:Key="Update.Task.Install">Install update</sys:String>
-    <sys:String x:Key="Update.Task.Prepare">Prepare update</sys:String>
-    <sys:String x:Key="Update.Task.RefreshSettings">Refresh settings UI</sys:String>
-    <sys:String x:Key="Update.Task.RestartInstall">Restart install</sys:String>
-    <sys:String x:Key="Update.Task.ShowButton">Show button</sys:String>
 
     <!-- Watcher -->
 
@@ -3418,4 +3317,32 @@
     <sys:String x:Key="Watcher.WindowLoaded">Minecraft window loaded: {0} ({1})</sys:String>
     <sys:String x:Key="Watcher.WindowMaximized">Minecraft window maximized: {0}</sys:String>
 
+    <sys:String x:Key="Setup.Ui.Theme.Color.Custom">Custom</sys:String>
+    <sys:String x:Key="Setup.Ui.Theme.Accent.Title">Accent color</sys:String>
+    <sys:String x:Key="Setup.Ui.Theme.Accent.Rgb">Custom accent · RGB</sys:String>
+    <sys:String x:Key="Main.Fluent.Instances">Instances</sys:String>
+    <sys:String x:Key="Main.Fluent.Account">Account</sys:String>
+    <sys:String x:Key="Main.Fluent.PlayEyebrow">Ready for your next adventure</sys:String>
+    <sys:String x:Key="Main.Fluent.Recent">Recently played</sys:String>
+    <sys:String x:Key="Main.Fluent.AllInstances">All instances</sys:String>
+    <sys:String x:Key="Main.Fluent.Tasks">Tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.Categories">Settings categories</sys:String>
+    <sys:String x:Key="Main.Fluent.NoRecent">No play history yet. Launch a game to see your recent instances here.</sys:String>
+    <sys:String x:Key="Main.Fluent.NoTasks">No active tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.ActiveTasks">{0} active tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.SignInToPlay">Add account to play</sys:String>
+    <sys:String x:Key="Download.Comp.Filter.Options">Filters and sorting</sys:String>
+    <sys:String x:Key="Download.Comp.Source.Removed">The CurseForge source has been removed. Use Modrinth resources instead.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source">Background source</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Original">Original colors</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Landscape">Random scenery</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Anime">Random anime</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Local">Local images / video</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Shuffle">Another image</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Loading">Loading a random background…</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Ready">Images from {0}. Choose Another image to refresh.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Success">Background updated</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Failed">Could not load the background. Original colors are retained. Try again later.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.KeptPrevious">Could not load the background. The previous image is retained. Try again later.</sys:String>
+    <sys:String x:Key="Setup.Misc.System.MaxFps.Automatic">Automatic (display refresh rate)</sys:String>
 </ResourceDictionary>

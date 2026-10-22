@@ -8,6 +8,18 @@ namespace PCL;
 
 public class MyPageRight : AdornerDecorator
 {
+    public MyPageRight()
+    {
+        Loaded += (_, _) =>
+        {
+            // A scene used as a VisualBrush can acquire an additional inheritance
+            // context before its page's root ElementName binding resolves. Register
+            // the declared scroll owner from the page's own namescope after loading.
+            if (GetValue(PanScrollProperty) is null && FindName("PanBack") is MyScrollViewer scroll)
+                PanScroll = scroll;
+        };
+    }
+
     // 当前状态
     public enum PageStates
     {
@@ -164,6 +176,12 @@ public class MyPageRight : AdornerDecorator
         if (ModBase.modeDebug)
             ModBase.Log("[UI] 已触发 PageOnEnter");
         PageEnter?.Invoke();
+        if (_navigationScrollOffset is { } offset)
+            ModAnimation.AniStart(ModAnimation.AaCode(() =>
+            {
+                if (IsLoaded && GetValue(PanScrollProperty) is MyScrollViewer scroll)
+                    scroll.ScrollToVerticalOffset(Math.Min(offset, scroll.ScrollableHeight));
+            }, 200), "Fluent RestoreScroll " + pageUuid);
         switch (PageState)
         {
             case PageStates.Empty:
@@ -232,8 +250,12 @@ public class MyPageRight : AdornerDecorator
     ///     需要切换到其他页面。
     ///     需要立即切换至 PageExit 或 Empty。
     /// </summary>
+    private double? _navigationScrollOffset;
+
     public void PageOnExit()
     {
+        if (GetValue(PanScrollProperty) is MyScrollViewer scroll)
+            _navigationScrollOffset = scroll.VerticalOffset;
         if (ModBase.modeDebug)
             ModBase.Log("[UI] 已触发 PageOnExit");
         PageExit?.Invoke();

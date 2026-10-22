@@ -2718,6 +2718,7 @@ public static class ModLaunch
 
         // 启动计数
         States.System.LaunchCount += 1;
+        States.Instance.LastPlayedUtc[ModInstanceList.McMcInstanceSelected.PathInstance] = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         States.Instance.LaunchCount[ModInstanceList.McMcInstanceSelected.PathInstance] =
             States.Instance.LaunchCount[ModInstanceList.McMcInstanceSelected.PathInstance] + 1;

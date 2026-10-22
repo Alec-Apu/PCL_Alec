@@ -49,6 +49,13 @@ public partial class MyRadioBox : IMyRadio
     public MyRadioBox()
     {
         InitializeComponent();
+        KeyDown += (_, e) =>
+        {
+            if (e.Key is not (System.Windows.Input.Key.Space or System.Windows.Input.Key.Enter) || !IsEnabled || e.IsRepeat) return;
+            e.Handled = true;
+            Radiobox_MouseDown();
+            Radiobox_MouseUp();
+        };
         MouseLeftButtonUp += (_, _) => Radiobox_MouseUp();
         MouseLeftButtonDown += (_, _) => Radiobox_MouseDown();
         MouseLeave += (_, _) => Radiobox_MouseLeave();

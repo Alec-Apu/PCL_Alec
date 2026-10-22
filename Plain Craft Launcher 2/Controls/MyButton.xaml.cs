@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -30,9 +30,9 @@ public partial class MyButton
 
     // 属性穿透
     public new static readonly DependencyProperty PaddingProperty = DependencyProperty.Register("Padding",
-        typeof(Thickness), typeof(MyButton), new PropertyMetadata((sender, e) =>
+        typeof(Thickness), typeof(MyButton), new PropertyMetadata(new Thickness(12, 0, 12, 0), (sender, e) =>
         {
-            if (sender is not null) ((MyButton)sender).PanFore.Padding = (Thickness)e.NewValue;
+            if (sender is MyButton { PanFore: not null } button) button.PanFore.Padding = (Thickness)e.NewValue;
         }));
     
     private ColorState _ColorType = ColorState.Normal; // 配色方案
@@ -43,14 +43,28 @@ public partial class MyButton
     // 自定义属性
     public int Uuid = ModBase.GetUuid();
 
+    static MyButton()
+    {
+        HorizontalAlignmentProperty.OverrideMetadata(typeof(MyButton),
+            new FrameworkPropertyMetadata(HorizontalAlignment.Left));
+    }
+
     public MyButton()
     {
         InitializeComponent();
+        PanFore.Padding = Padding;
 
         MouseEnter += RefreshColor;
         MouseLeave += RefreshColor;
         Loaded += RefreshColor;
         IsEnabledChanged += (_, _) => RefreshColor();
+        KeyDown += (_, e) =>
+        {
+            if (e.Key is not (Key.Enter or Key.Space) || !IsEnabled || e.IsRepeat) return;
+            e.Handled = true;
+            Click?.Invoke(this, new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left));
+            ModMain.RaiseCustomEvent(this);
+        };
         MouseLeftButtonUp += Button_MouseUp;
         MouseLeftButtonDown += Button_MouseDown;
         MouseEnter += (_, _) => Button_MouseEnter();
@@ -84,8 +98,8 @@ public partial class MyButton
 
     public new Thickness Padding
     {
-        get => PanFore.Padding;
-        set => PanFore.Padding = value;
+        get => (Thickness)GetValue(PaddingProperty);
+        set => SetValue(PaddingProperty, value);
     }
 
     public Transform RealRenderTransform
@@ -101,7 +115,7 @@ public partial class MyButton
     {
         return ColorType switch
         {
-            ColorState.Normal => IsMouseOver ? "ColorBrush3" : "ColorBrush1",
+            ColorState.Normal => "Fluent.Stroke",
             ColorState.Highlight => IsMouseOver ? "ColorBrush3" : "ColorBrush2",
             ColorState.Red => IsMouseOver ? "ColorBrushRedLight" : "ColorBrushRedDark",
             _ => "ColorBrush1"
@@ -119,6 +133,18 @@ public partial class MyButton
 
     private void RefreshColor(object obj = null, object e = null)
     {
+        LabText.SetResourceReference(System.Windows.Controls.TextBlock.ForegroundProperty,
+            !IsEnabled ? "ColorBrushGray3" : ColorType == ColorState.Highlight ? "Fluent.OnAccent" : "ColorBrush1");
+        if (ColorType == ColorState.Highlight)
+            PanFore.SetResourceReference(BackgroundProperty, "ColorBrush3");
+        // PanFore has no painted border by default. Animating its BorderBrush only
+        // creates invisible brush work on load/hover; keep visible-border callers unchanged.
+        if (PanFore.BorderThickness == new Thickness(0))
+        {
+            ModAnimation.AniStop("MyButton Color " + Uuid);
+            PanFore.SetResourceReference(BorderBrushProperty, IsEnabled ? GetBorderBrushResourceKey() : "ColorBrushGray4");
+            return;
+        }
         try
         {
             if (ControlVisualHelpers.ShouldAnimate(this)) // 防止默认属性变更触发动画
@@ -177,7 +203,7 @@ public partial class MyButton
     {
         ModAnimation.AniStart(
             ModAnimation.AaColor(PanFore, BackgroundProperty,
-                _ColorType == ColorState.Red ? "ColorBrushRedBack" : "ColorBrush7", animationColorIn),
+                _ColorType == ColorState.Red ? "ColorBrushRedBack" : _ColorType == ColorState.Highlight ? "ColorBrush2" : "Fluent.NavigationHover", animationColorIn),
             "MyButton Background " + Uuid);
     }
 
@@ -197,7 +223,7 @@ public partial class MyButton
     private void Button_MouseLeave()
     {
         ModAnimation.AniStart(
-            ModAnimation.AaColor(PanFore, BackgroundProperty, "ColorBrushHalfWhite", animationColorOut),
+            ModAnimation.AaColor(PanFore, BackgroundProperty, _ColorType == ColorState.Highlight ? "ColorBrush3" : "Fluent.GlassSurface", animationColorOut),
             "MyButton Background " + Uuid);
         if (!isMouseDown)
             return;

@@ -1,4 +1,4 @@
-<local:MyPageRight
+﻿<local:MyPageRight
     x:Class="PCL.PageSetupAbout"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     DataContext="{Binding Source={x:Static app:Basics.Metadata}}"
-    PanScroll="{Binding ElementName=PanBack}"
     RenderOptions.BitmapScalingMode="LowQuality">
     <local:MyScrollViewer
         x:Name="PanBack"
@@ -28,7 +27,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <local:MyListItem
                         Grid.Row="0"
@@ -83,21 +82,21 @@
                     <local:MyButton
                         Grid.Row="0"
                         Grid.Column="2"
-                        Height="35"
+                        Height="40"
                         local:CustomEventService.EventData="https://ifdian.net/a/LTCat"
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.SponsorOriginalAuthor}" />
                     <local:MyButton
                         Grid.Row="1"
                         Grid.Column="2"
-                        Height="35"
+                        Height="40"
                         local:CustomEventService.EventData="https://github.com/PCL-Community"
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.GitHubHome}" />
                     <local:MyButton
                         Grid.Row="2"
                         Grid.Column="2"
-                        Height="35"
+                        Height="40"
                         local:CustomEventService.EventData="https://github.com/NoSetViolin/PCL-XH"
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.SourceCode}" />
@@ -117,7 +116,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="40" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <local:MyListItem
                         Grid.Row="0"
@@ -129,7 +128,7 @@
                     <local:MyButton
                         Grid.Row="0"
                         Grid.Column="2"
-                        Height="35"
+                        Height="40"
                         local:CustomEventService.EventData="https://afdian.com/a/bangbang93"
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.SpecialThanks.SponsorMirror}" />
@@ -146,7 +145,7 @@
                         x:Name="BtnMcmod"
                         Grid.Row="1"
                         Grid.Column="2"
-                        Height="35"
+                        Height="40"
                         local:CustomEventService.EventData="https://www.mcmod.cn"
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.SpecialThanks.OpenMcmod}" />
@@ -161,7 +160,7 @@
                     <local:MyButton
                         Grid.Row="2"
                         Grid.Column="2"
-                        Height="35"
+                        Height="40"
                         local:CustomEventService.EventData="https://www.pysio.online"
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.SpecialThanks.GoBlog}" />
@@ -176,7 +175,7 @@
                     <local:MyButton
                         Grid.Row="3"
                         Grid.Column="2"
-                        Height="35"
+                        Height="40"
                         local:CustomEventService.EventData="https://www.zyghit.cn"
                         local:CustomEventService.EventType="OpenUrl"
                         Text="{DynamicResource Setup.About.SpecialThanks.OpenWebsite}" />
@@ -295,7 +294,7 @@
                                         RenderOptions.BitmapScalingMode="HighQuality"
                                         Source="{Binding AvatarUrl}" />
                                     <local:MyTextButton
-                                        MaxWidth="90"
+
                                         Margin="0,8,0,0"
                                         HorizontalAlignment="Center"
                                         FontSize="14"
@@ -342,7 +341,7 @@
                         Text="{DynamicResource Setup.About.Legal.CopyrightText}"
                         TextWrapping="Wrap" />
                     <StackPanel
-                        Height="35"
+                        MinHeight="40"
                         Margin="0,12,0,0"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
@@ -351,7 +350,7 @@
                             ColorType="Highlight"
                             local:CustomEventService.EventData="https://github.com/NoSetViolin/PCL-XH"
                             local:CustomEventService.EventType="OpenUrl"
-                            Padding="13,0"
+
                             Text="{DynamicResource Setup.About.Legal.CommunitySource}" />
                     </StackPanel>
                 </StackPanel>
@@ -383,24 +382,24 @@
                         Text="{DynamicResource Setup.About.UpstreamLegal.CopyrightText}"
                         TextWrapping="Wrap" />
                     <StackPanel
-                        Height="35"
+                        MinHeight="40"
                         Margin="0,12,0,0"
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
                         <local:MyButton
-                            Width="160"
+
                             Margin="0,0,20,0"
                             ColorType="Highlight"
                             local:CustomEventService.EventData="https://shimo.im/docs/rGrd8pY8xWkt6ryW"
                             local:CustomEventService.EventType="OpenUrl"
-                            Padding="13,0"
+
                             Text="{DynamicResource Setup.About.UpstreamLegal.TermsAndDisclaimer}" />
                         <local:MyButton
-                            Width="120"
+
                             Margin="0,0,20,0"
                             local:CustomEventService.EventData="https://github.com/Meloong-Git/PCL"
                             local:CustomEventService.EventType="OpenUrl"
-                            Padding="13,0"
+
                             Text="{DynamicResource Setup.About.UpstreamLegal.OpenSource}" />
                     </StackPanel>
                 </StackPanel>
@@ -439,23 +438,23 @@
                                 <local:MyButton
                                     Grid.Row="1"
                                     Grid.Column="2"
-                                    MinWidth="140"
+
                                     Margin="0,7,20,18"
                                     HorizontalAlignment="Left"
                                     local:CustomEventService.EventData="{Binding WebsiteUri}"
                                     local:CustomEventService.EventType="OpenUrl"
-                                    Padding="13,0"
+
                                     Text="{DynamicResource Setup.About.Licenses.ViewWebsite}"
                                     Visibility="{Binding WebsiteUri, Converter={StaticResource NullToVisibilityConverter}}" />
                                 <local:MyButton
                                     Grid.Row="1"
                                     Grid.Column="3"
-                                    MinWidth="140"
+
                                     Margin="0,7,20,18"
                                     HorizontalAlignment="Left"
                                     local:CustomEventService.EventData="{Binding LicenseUri}"
                                     local:CustomEventService.EventType="OpenUrl"
-                                    Padding="13,0"
+
                                     Text="{DynamicResource Setup.About.Licenses.ViewLicense}"
                                     Visibility="{Binding LicenseUri, Converter={StaticResource NullToVisibilityConverter}}" />
                             </Grid>

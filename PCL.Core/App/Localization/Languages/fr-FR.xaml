@@ -1,4 +1,4 @@
-<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. --><ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xml:space="preserve">
+﻿<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. --><ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xml:space="preserve">
 
     <!-- Meta -->
 
@@ -237,7 +237,6 @@ Ce que vous pouvez essayer
     <sys:String x:Key="Crash.Suggestion.InvalidModFileName">Supprimez ou renommez le fichier de mod concerné afin que son nom ne contienne que des lettres anglaises, des chiffres, des traits d'union, des traits de soulignement et des points.</sys:String>
     <sys:String x:Key="Crash.Suggestion.JavaIncompatible">Choisissez une version Java adaptée dans les paramètres de lancement selon la version de Minecraft et les exigences des mods.</sys:String>
     <sys:String x:Key="Crash.Suggestion.JavaTooNew">Dans les paramètres de lancement, passez à une version plus ancienne de Java, puis réessayez.</sys:String>
-    <sys:String x:Key="Crash.Suggestion.LauncherOutdated">Vous utilisez une version obsolète de PCL XH. La mise à jour de PCL XH peut résoudre ce problème: Paramètres → Lanceur → Vérifier les mises à jour.</sys:String>
     <sys:String x:Key="Crash.Suggestion.MissingMixinBootstrap">Vérifiez que MixinBootstrap, le chargeur de mods et les dépendances associées sont correctement installés.</sys:String>
     <sys:String x:Key="Crash.Suggestion.ModConfigCrash">Essayez de supprimer le fichier de configuration de ce mod, puis relancez le jeu. Si nécessaire, mettez à jour ou désactivez le mod.</sys:String>
     <sys:String x:Key="Crash.Suggestion.ModLoaderIncompatible">Ouvrez les paramètres de l'instance et ajustez ou réinstallez la version du chargeur de mods.</sys:String>
@@ -287,4 +286,30 @@ Ce que vous pouvez essayer
     <sys:String x:Key="Download.Comp.Category.Energy">Énergie</sys:String>
     <sys:String x:Key="Download.Comp.Category.Entities">Entités</sys:String>
     <sys:String x:Key="Download.Comp.Category.Equipment">Équipement</sys:String>
+    <sys:String x:Key="Main.Fluent.Instances">Instances</sys:String>
+    <sys:String x:Key="Main.Fluent.Account">Account</sys:String>
+    <sys:String x:Key="Main.Fluent.PlayEyebrow">Ready for your next adventure</sys:String>
+    <sys:String x:Key="Main.Fluent.Recent">Recently played</sys:String>
+    <sys:String x:Key="Main.Fluent.AllInstances">All instances</sys:String>
+    <sys:String x:Key="Main.Fluent.Tasks">Tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.Categories">Settings categories</sys:String>
+    <sys:String x:Key="Main.Fluent.NoRecent">No play history yet. Launch a game to see your recent instances here.</sys:String>
+    <sys:String x:Key="Main.Fluent.NoTasks">No active tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.ActiveTasks">{0} active tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.SignInToPlay">Add account to play</sys:String>
+    <sys:String x:Key="Common.Action.More">Autres actions</sys:String>
+    <sys:String x:Key="Download.Comp.Filter.Options">Filtres et tri</sys:String>
+    <sys:String x:Key="Download.Comp.Source.Removed">La source CurseForge a été supprimée. Utilisez les ressources Modrinth.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source">Source du fond</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Original">Couleurs d’origine</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Landscape">Paysage aléatoire</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Anime">Anime aléatoire</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Local">Images / vidéo locales</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Shuffle">Autre image</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Loading">Chargement du fond…</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Ready">Images de {0}. Cliquez sur Autre image pour actualiser.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Success">Fond actualisé</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Failed">Impossible de charger le fond. Les couleurs d’origine sont conservées. Réessayez plus tard.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.KeptPrevious">Impossible de charger le fond. L’image précédente est conservée. Réessayez plus tard.</sys:String>
+    <sys:String x:Key="Setup.Misc.System.MaxFps.Automatic">Automatique (fréquence de l’écran)</sys:String>
 </ResourceDictionary>

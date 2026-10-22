@@ -55,6 +55,13 @@ public partial class MyCheckBox
     public MyCheckBox()
     {
         InitializeComponent();
+        KeyDown += (_, e) =>
+        {
+            if (e.Key is not (System.Windows.Input.Key.Space or System.Windows.Input.Key.Enter) || !IsEnabled || e.IsRepeat) return;
+            e.Handled = true;
+            Checkbox_MouseDown();
+            Checkbox_MouseUp();
+        };
 
         MouseLeftButtonUp += (_, _) => Checkbox_MouseUp();
         MouseLeftButtonDown += (_, _) => Checkbox_MouseDown();

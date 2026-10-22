@@ -85,7 +85,6 @@ public partial class PageDownloadInstall
 
     private void LoaderInit()
     {
-        disabledPageAnimControls.Add(BtnStart);
         PageLoaderInit(LoadMinecraft, PanLoad, PanAllBack, null, ModDownload.dlClientListLoader,
             _ => LoadMinecraft_OnFinish());
     }
@@ -171,7 +170,7 @@ public partial class PageDownloadInstall
             return;
         isInSelectPage = true;
 
-        PanInner.Margin = new Thickness(25d, 10d, 25d, 40d);
+        PanInner.Margin = new Thickness(25d, 10d, 25d, 25d);
 
         autoSelectedFabricApi = false;
         autoSelectedOptiFabric = false;
@@ -182,8 +181,6 @@ public partial class PageDownloadInstall
         PanBack.IsHitTestVisible = false;
         PanBack.ScrollToHome();
 
-        disabledPageAnimControls.Remove(BtnStart);
-        BtnStart.Show = true;
         CardOptiFine.IsSwapped = true;
         CardLiteLoader.IsSwapped = true;
         CardForge.IsSwapped = true;
@@ -291,8 +288,6 @@ public partial class PageDownloadInstall
 
         PanInner.Margin = new Thickness(25d, 10d, 25d, 25d);
 
-        disabledPageAnimControls.Add(BtnStart);
-        BtnStart.Show = false;
         ClearSelected(); // 清除已选择项
         PanMinecraft.Visibility = Visibility.Visible;
         PanSelect.IsHitTestVisible = false;

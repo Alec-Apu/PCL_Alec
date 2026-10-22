@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -26,7 +26,7 @@ public partial class PageComp
             ModBase.Log($"[Comp] 开始可视化{TypeNameSpaced}列表，已储藏 {storage.results.Count} 个结果，当前在第 {page + 1} 页");
             // 列表项
             PanProjects.Children.Clear();
-            var index = Math.Min(page * pageSize, storage.results.Count - 1);
+            var index = Math.Clamp(page * pageSize, 0, storage.results.Count);
             foreach (var result in storage.results.GetRange(index, Math.Min(storage.results.Count - index, pageSize)))
             {
                 var showQuickDownload = result.Type != ModComp.CompType.ModPack &&
@@ -38,7 +38,7 @@ public partial class PageComp
             }
             // 页码
             CardPages.Visibility =
-                storage.results.Count > 40 || storage.curseForgeOffset < storage.curseForgeTotal ||
+                storage.results.Count > pageSize ||
                 storage.modrinthOffset < storage.modrinthTotal
                     ? Visibility.Visible
                     : Visibility.Collapsed;
@@ -48,7 +48,6 @@ public partial class PageComp
             BtnPageLeft.IsEnabled = page > 0;
             BtnPageLeft.Opacity = page > 0 ? 1d : 0.2d;
             var isRightEnabled = storage.results.Count > pageSize * (page + 1) ||
-                                 storage.curseForgeOffset < storage.curseForgeTotal ||
                                  storage.modrinthOffset <
                                  storage.modrinthTotal; // 由于 WPF 的未知 bug，读取到的 IsEnabled 可能是错误的值（#3319）
             BtnPageRight.IsEnabled = isRightEnabled;
@@ -157,24 +156,6 @@ public partial class PageComp
     ///     用于 XAML 快速设置的 Tag 下拉框列表。
     /// </summary>
     public ItemCollection SearchTags => ComboSearchTag.Items;
-
-    public static readonly DependencyProperty SupportCurseForgeProperty =
-        DependencyProperty.Register("SupportCurseForge", typeof(bool), typeof(PageComp), new PropertyMetadata(true));
-
-    public bool SupportCurseForge
-    {
-        get => (bool)GetValue(SupportCurseForgeProperty);
-        set => SetValue(SupportCurseForgeProperty, value);
-    }
-
-    public static readonly DependencyProperty SupportModrinthProperty =
-        DependencyProperty.Register("SupportModrinth", typeof(bool), typeof(PageComp), new PropertyMetadata(true));
-
-    public bool SupportModrinth
-    {
-        get => (bool)GetValue(SupportModrinthProperty);
-        set => SetValue(SupportModrinthProperty, value);
-    }
 
     /// <summary>
     ///     英文前后不含空格的可读资源类型名，例如 "Mod"、"整合包"。
@@ -341,7 +322,7 @@ public partial class PageComp
             (ModComp.CompLoaderType)(PageType == ModComp.CompType.Mod || PageType == ModComp.CompType.ModPack
                 ? ModBase.Val(((MyComboBoxItem)ComboSearchLoader.SelectedItem).Tag)
                 : (double)ModComp.CompLoaderType.Any);
-        request.source = (ModComp.CompSourceType)ModBase.Val(((MyComboBoxItem)ComboSearchSource.SelectedItem).Tag);
+        request.source = ModComp.CompSourceType.Modrinth;
         request.sort = (ModComp.CompSortType)ModBase.Val(((MyComboBoxItem)ComboSearchSort.SelectedItem).Tag);
         return request;
     }
@@ -372,7 +353,6 @@ public partial class PageComp
         PanSearchBox.Text = "";
         TextSearchVersion.Text = Lang.Text("Download.Comp.Filter.Version.AllInputAvailable");
         TextSearchVersion.SelectedIndex = 0;
-        ComboSearchSource.SelectedIndex = 0;
         ComboSearchTag.SelectedIndex = 0;
         ComboSearchLoader.SelectedIndex = 0;
         ComboSearchShaderLoader.SelectedIndex = 0;

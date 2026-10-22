@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PCL.Core.App.Configuration;
 
 namespace PCL.Core.App;
@@ -118,10 +118,6 @@ public static partial class States
         /// </summary>
         [ConfigItem<bool>("UiSchematicFirstTimeHintShown", false)] public partial bool SchematicFirstTime { get; set; }
 
-        /// <summary>
-        /// 已显示的公告。
-        /// </summary>
-        [ConfigItem<string>("SystemSystemAnnouncement", "")] public partial string ShowedAnnouncements { get; set; }
 
         /// <summary>
         /// 数据包更新警告。
@@ -195,6 +191,9 @@ public static partial class States
         /// </summary>
         [ConfigItem<double>("WindowWidth", 900, ConfigSource.Local)] public partial double WindowWidth { get; set; }
 
+        /// <summary>是否已应用放大的初始窗口尺寸。</summary>
+        [ConfigItem<bool>("LargeWindowApplied", false, ConfigSource.Local)] public partial bool LargeWindowApplied { get; set; }
+
     }
 
     /// <summary>
@@ -254,10 +253,6 @@ public static partial class States
         /// </summary>
         [ConfigItem<int>("SystemSetupVersionIni", 1, ConfigSource.Local)] public partial int SetupVersionLocal { get; set; }
 
-        /// <summary>
-        /// 启动器公告。
-        /// </summary>
-        [ConfigItem<int>("SystemSystemActivity", 0, ConfigSource.Local)] public partial int AnnounceSolution { get; set; }
 
     }
 
@@ -293,6 +288,7 @@ public static partial class States
     [ConfigGroup("Instance", ConfigSource.GameInstance)] partial class InstanceStatesGroup
     {
         [ConfigItem<int>("VersionLaunchCount", 0)] public partial ArgConfig<int> LaunchCount { get; }
+        [ConfigItem<long>("VersionLastPlayedUtc", 0L)] public partial ArgConfig<long> LastPlayedUtc { get; }
         [ConfigItem<bool>("IsStar", false)] public partial ArgConfig<bool> Starred { get; }
         [ConfigItem<int>("DisplayType", 0)] public partial ArgConfig<int> CardType { get; }
         [ConfigItem<string>("Logo", "")] public partial ArgConfig<string> LogoPath { get; }

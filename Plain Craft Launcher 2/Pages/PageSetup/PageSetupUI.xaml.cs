@@ -5,6 +5,8 @@ using System.Windows.Input;
 using PCL.Core.App;
 using PCL.Core.App.Configuration;
 using PCL.Core.UI;
+using PCL.Core.UI.Theme;
+using System.Windows.Media;
 using PCL.Core.Utils;
 using PCL.Core.App.Localization;
 
@@ -13,8 +15,8 @@ namespace PCL;
 public partial class PageSetupUI
 {
     public string[] ThemeColors => Basics.IsAprilFool 
-        ? [Lang.Text("Setup.Ui.Theme.Color.SkyBlue"), Lang.Text("Setup.Ui.Theme.Color.CatBlue"), Lang.Text("Setup.Ui.Theme.Color.CrashBlue"), Lang.Text("Setup.Ui.Theme.Color.Hmcl")]
-        : [Lang.Text("Setup.Ui.Theme.Color.SkyBlue"), Lang.Text("Setup.Ui.Theme.Color.CatBlue"), Lang.Text("Setup.Ui.Theme.Color.CrashBlue")];
+        ? [Lang.Text("Setup.Ui.Theme.Color.SkyBlue"), Lang.Text("Setup.Ui.Theme.Color.CatBlue"), Lang.Text("Setup.Ui.Theme.Color.CrashBlue"), Lang.Text("Setup.Ui.Theme.Color.Hmcl"), Lang.Text("Setup.Ui.Theme.Color.Custom")]
+        : [Lang.Text("Setup.Ui.Theme.Color.SkyBlue"), Lang.Text("Setup.Ui.Theme.Color.CatBlue"), Lang.Text("Setup.Ui.Theme.Color.CrashBlue"), Lang.Text("Setup.Ui.Theme.Color.Custom")];
     
     public new bool isLoaded;
 
@@ -41,7 +43,6 @@ public partial class PageSetupUI
 
         SliderLoad();
 
-        PanLauncherHide.Visibility = Visibility.Visible;
     }
 
     public void Reload()
@@ -52,8 +53,8 @@ public partial class PageSetupUI
             SliderLauncherOpacity.Value = Config.Preference.Theme.WindowOpacity;
             CheckLauncherLogo.Checked = Config.Preference.ShowStartupLogo;
             ComboDarkMode.SelectedIndex = (int)Config.Preference.Theme.ColorMode;
-            ComboDarkColor.SelectedIndex = (int)Config.Preference.Theme.DarkColor;
-            ComboLightColor.SelectedIndex = (int)Config.Preference.Theme.LightColor;
+            ComboAccentColor.SelectedIndex = ThemeIndex(Config.Preference.Theme.LightColor);
+            RefreshAccentEditor();
             CheckShowLaunchingHint.Checked = Config.Preference.ShowLaunchingHint;
 
             // 字体设置
@@ -68,13 +69,14 @@ public partial class PageSetupUI
             CheckLockWindowSize.Checked = Config.Preference.LockWindowSize;
 
             // 背景图片
+            ComboBackgroundSource.SelectedIndex = Math.Clamp(Config.Preference.Background.WallpaperSource, 0, 3);
             SliderBackgroundOpacity.Value = Config.Preference.Background.WallpaperOpacity;
             SliderBackgroundBlur.Value = Config.Preference.Background.WallpaperBlurRadius;
             ComboBackgroundSuit.SelectedIndex = Config.Preference.Background.WallpaperSuitMode;
             CheckBackgroundColorful.Checked = Config.Preference.Background.BackgroundColorful;
             var autoPauseVideo = Config.Preference.Background.AutoPauseVideo;
             CheckAutoPauseVideo.Checked = autoPauseVideo;
-            if (ModVideoBack.IsGaming)
+            if (ModVideoBack.IsGaming && Config.Preference.Background.WallpaperSource == 3)
                 if (autoPauseVideo)
                     BtnBackgroundRefresh.IsEnabled = false;
 
@@ -101,7 +103,9 @@ public partial class PageSetupUI
             // 主页
             try
             {
-                ComboCustomPreset.SelectedIndex = Config.Preference.Homepage.SelectedPreset;
+                var preset = Config.Preference.Homepage.SelectedPreset;
+                // The removed preset occupied ID 14; ID 15 remains the Minecraft feed.
+                ComboCustomPreset.SelectedIndex = preset >= 14 ? 14 : preset;
             }
             catch
             {
@@ -128,7 +132,6 @@ public partial class PageSetupUI
             CheckHiddenSetupGameManage.Checked = uiHidden.SetupGameManage;
             CheckHiddenSetupJava.Checked = uiHidden.SetupJava;
             CheckHiddenLauncherMisc.Checked = uiHidden.SetupLauncherMisc;
-            CheckHiddenSetupUpdate.Checked = uiHidden.SetupUpdate;
             CheckHiddenSetupAbout.Checked = uiHidden.SetupAbout;
             CheckHiddenSetupFeedback.Checked = uiHidden.SetupFeedback;
             CheckHiddenSetupLog.Checked = uiHidden.SetupLog;
@@ -204,7 +207,7 @@ public partial class PageSetupUI
     {
         var sender = (MyComboBox)senderRaw;
         if (ModAnimation.AniControlEnabled == 0)
-            SetByTag(sender.Tag?.ToString(), sender.SelectedIndex);
+            SetByTag(sender.Tag?.ToString(), sender == ComboCustomPreset && sender.SelectedIndex == 14 ? 15 : sender.SelectedIndex);
     }
 
     private void CheckBoxChange(object senderRaw, bool user)
@@ -245,6 +248,7 @@ public partial class PageSetupUI
     }
 
     // 背景图片
+    private static bool _backgroundSourceChecked;
     private void BtnUIBgOpen_Click(object sender, MouseButtonEventArgs e)
     {
         ModBase.OpenExplorer(ModBase.exePath + @"PCL\Pictures\");
@@ -278,6 +282,18 @@ public partial class PageSetupUI
             CardBackground.Title = Lang.Text("Setup.Ui.Background.TitleDefault");
         }
 
+        var source = Config.Preference.Background.WallpaperSource;
+        ModAnimation.AniControlEnabled++;
+        try { ComboBackgroundSource.SelectedIndex = Math.Clamp(source, 0, 3); }
+        finally { ModAnimation.AniControlEnabled--; }
+        BtnBackgroundOpen.Visibility = source == 3 ? Visibility.Visible : Visibility.Collapsed;
+        BtnBackgroundClear.Visibility = source == 3 && show ? Visibility.Visible : Visibility.Collapsed;
+        CheckAutoPauseVideo.Visibility = source == 3 && show ? Visibility.Visible : Visibility.Collapsed;
+        BtnBackgroundRefresh.Visibility = source == 0 ? Visibility.Collapsed : Visibility.Visible;
+        BtnBackgroundRefresh.IsEnabled = !ModBackground.IsLoading && !(source == 3 && ModVideoBack.IsGaming && Config.Preference.Background.AutoPauseVideo);
+        BtnBackgroundRefresh.Text = Lang.Text(source is 1 or 2 ? "Setup.Ui.Background.Shuffle" : "Setup.Ui.Background.Refresh");
+        LabBackgroundStatus.Visibility = source is 1 or 2 ? Visibility.Visible : Visibility.Collapsed;
+        LabBackgroundStatus.Text = ModBackground.Status;
         CardBackground.TriggerForceResize();
     }
 
@@ -299,6 +315,29 @@ public partial class PageSetupUI
     /// <param name="isHint">是否显示刷新提示。</param>
     /// <param name="refresh">是否刷新图片显示。</param>
     public static void BackgroundRefresh(bool isHint, bool refresh)
+    {
+        var checkLegacy = !_backgroundSourceChecked;
+        _backgroundSourceChecked = true;
+        if (checkLegacy && Config.Preference.Background.WallpaperSourceConfig.IsDefault() &&
+            Directory.Exists(ModBase.exePath + @"PCL\Pictures\") &&
+            ModBase.EnumerateFiles(ModBase.exePath + @"PCL\Pictures\").Any(file =>
+                !file.Extension.Equals(".ini", StringComparison.OrdinalIgnoreCase) &&
+                !file.Extension.Equals(".db", StringComparison.OrdinalIgnoreCase)))
+            Config.Preference.Background.WallpaperSource = 3;
+
+        var source = Config.Preference.Background.WallpaperSource;
+        if (source == 3)
+        {
+            ModBackground.CancelPending();
+            BackgroundRefreshLocal(isHint, refresh);
+        }
+        else if (refresh)
+            ModBackground.Refresh(source, isHint);
+        else
+            ModMain.frmSetupUI?.BackgroundRefreshUI(ModMain.frmMain.ImgBack.Background is not null, 1);
+    }
+
+    private static void BackgroundRefreshLocal(bool isHint, bool refresh)
     {
         try
         {
@@ -661,8 +700,46 @@ public partial class PageSetupUI
     private void ThemeColor_Change(object senderRaw, SelectionChangedEventArgs e)
     {
         var sender = (MyComboBox)senderRaw;
-        SetByTag(sender.Tag?.ToString(), sender.SelectedIndex);
+        if (ModAnimation.AniControlEnabled != 0 || sender.SelectedIndex < 0) return;
+        var theme = sender.SelectedIndex == ThemeColors.Length - 1 ? ColorTheme.Custom : (ColorTheme)sender.SelectedIndex;
+        Config.Preference.Theme.LightColor = theme;
+        RefreshAccentEditor();
         ThemeManager.ThemeRefresh();
+    }
+
+    private static int ThemeIndex(ColorTheme theme) => theme == ColorTheme.Custom
+        ? (Basics.IsAprilFool ? 4 : 3) : (int)theme;
+
+    private bool _loadingAccent;
+
+    private void RefreshAccentEditor()
+    {
+        if (PanAccent == null) return;
+        _loadingAccent = true;
+        try
+        {
+            PanAccent.Visibility = Config.Preference.Theme.LightColor == ColorTheme.Custom ? Visibility.Visible : Visibility.Collapsed;
+            var rgb = Config.Preference.Theme.LightAccentRgb;
+            SliderAccentR.Value = (rgb >> 16) & 255;
+            SliderAccentG.Value = (rgb >> 8) & 255;
+            SliderAccentB.Value = rgb & 255;
+            UpdateAccentPreview(rgb);
+        }
+        finally { _loadingAccent = false; }
+    }
+
+    private void UpdateAccentPreview(int rgb)
+    {
+        PreviewAccent.Background = new SolidColorBrush(Color.FromRgb((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb));
+        TextAccent.Text = $"#{rgb & 0xFFFFFF:X6}   RGB  {(rgb >> 16) & 255}, {(rgb >> 8) & 255}, {rgb & 255}";
+    }
+
+    private void AccentSlider_Change(object sender, bool user)
+    {
+        if (_loadingAccent || ModAnimation.AniControlEnabled != 0) return;
+        var rgb = (SliderAccentR.Value << 16) | (SliderAccentG.Value << 8) | SliderAccentB.Value;
+        UpdateAccentPreview(rgb);
+        Config.Preference.Theme.LightAccentRgb = rgb;
     }
 
     // 赞助
@@ -730,6 +807,9 @@ public partial class PageSetupUI
             if (isAllTitleHidden)
             {
                 ModMain.frmMain.PanTitleSelect.Visibility = Visibility.Collapsed;
+                ModMain.frmMain.BtnTitleSelect1.Visibility = Visibility.Collapsed;
+                ModMain.frmMain.BtnTitleSelect2.Visibility = Visibility.Collapsed;
+                ModMain.frmMain.BtnTitleSelect3.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -770,8 +850,6 @@ public partial class PageSetupUI
                     : Visibility.Visible;
                 ModMain.frmSetupLeft.ItemJava.Visibility =
                     !HiddenForceShow && conf.SetupJava ? Visibility.Collapsed : Visibility.Visible;
-                ModMain.frmSetupLeft.ItemUpdate.Visibility =
-                    !HiddenForceShow && conf.SetupUpdate ? Visibility.Collapsed : Visibility.Visible;
                 ModMain.frmSetupLeft.ItemAbout.Visibility =
                     !HiddenForceShow && conf.SetupAbout ? Visibility.Collapsed : Visibility.Visible;
                 ModMain.frmSetupLeft.ItemFeedback.Visibility = !HiddenForceShow && conf.SetupFeedback
@@ -786,7 +864,7 @@ public partial class PageSetupUI
                         !(conf.SetupLaunch && conf.SetupJava && conf.SetupGameManage)),
                     (ModMain.frmSetupLeft.TextLauncherCategory, !(conf.SetupUi && conf.SetupLauncherLanguage && conf.SetupLauncherMisc)),
                     (ModMain.frmSetupLeft.TextAboutCategory,
-                        !(conf.SetupAbout && conf.SetupUpdate && conf.SetupFeedback && conf.SetupLog))
+                        !(conf.SetupAbout && conf.SetupFeedback && conf.SetupLog))
                 };
 
                 foreach (var category in categories)
@@ -810,8 +888,6 @@ public partial class PageSetupUI
                 if (!conf.SetupLauncherMisc)
                     setupCount += 1;
                 if (!conf.SetupJava)
-                    setupCount += 1;
-                if (!conf.SetupUpdate)
                     setupCount += 1;
                 if (!conf.SetupAbout)
                     setupCount += 1;
@@ -873,7 +949,6 @@ public partial class PageSetupUI
         CheckHiddenSetupGameManage.Checked = isChecked;
         CheckHiddenLauncherMisc.Checked = isChecked;
         CheckHiddenSetupJava.Checked = isChecked;
-        CheckHiddenSetupUpdate.Checked = isChecked;
         CheckHiddenSetupAbout.Checked = isChecked;
         CheckHiddenSetupFeedback.Checked = isChecked;
         CheckHiddenSetupLog.Checked = isChecked;
@@ -891,7 +966,6 @@ public partial class PageSetupUI
         CheckHiddenSetupGameManage.Checked = isChecked;
         CheckHiddenLauncherMisc.Checked = isChecked;
         CheckHiddenSetupJava.Checked = isChecked;
-        CheckHiddenSetupUpdate.Checked = isChecked;
         CheckHiddenSetupAbout.Checked = isChecked;
         CheckHiddenSetupFeedback.Checked = isChecked;
         CheckHiddenSetupLog.Checked = isChecked;
@@ -904,7 +978,7 @@ public partial class PageSetupUI
         var conf = Config.Preference.Hide;
         // 判断是否全部勾选
         var allChecked = conf.SetupLaunch && conf.SetupUi && conf.SetupLauncherLanguage && conf.SetupJava &&
-                         conf.SetupUpdate && conf.SetupAbout && conf.SetupFeedback &&
+                         conf.SetupAbout && conf.SetupFeedback &&
                          conf.SetupLog && conf.SetupLauncherMisc && conf.SetupGameManage;
         CheckHiddenPageSetup.Checked = allChecked;
     }

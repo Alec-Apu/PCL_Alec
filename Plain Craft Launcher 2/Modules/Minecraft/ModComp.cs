@@ -544,52 +544,7 @@ public static class ModComp
             return res;
         }
 
-        /// <summary>
-        ///     通过一堆 ID 从 CurseForge 那获取项目信息
-        /// </summary>
-        /// <param name="Ids"></param>
         /// <returns></returns>
-        public static async Task<List<CompProject>> GetListByIdsFromCurseforgeAsync(List<string> ids)
-        {
-            var res = new List<CompProject>();
-            try
-            {
-                // 使用 Task.Run 将同步的 DlModRequest 包装为异步
-                await Task.Run(() =>
-                {
-                    // 构建请求 Body，建议使用 string.Join
-                    var jsonBody = "{\"modIds\": [" + string.Join(",", ids) + "]}";
-
-                    // DlModRequest 返回 object，先强转 JsonObject，再获取 "data" 并强转为 JsonArray
-                    var response = ModDownload.DlModRequest<JsonObject>(
-                        "https://api.curseforge.com/v1/mods",
-                        "POST",
-                        jsonBody,
-                        "application/json"
-                    );
-
-                    var rawProjectsData = (JsonArray)response["data"];
-
-                    // 2. 使用 LINQ 快速转换并填充列表
-                    if (rawProjectsData is not null)
-                    {
-                        var projectList = rawProjectsData
-                            .Cast<JsonObject>()
-                            .Select(data => new CompProject(data))
-                            .ToList();
-
-                        res.AddRange(projectList);
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                ModBase.Log(ex, "Failed to get project data from CurseForge");
-            }
-
-            return res;
-        }
-
         public static List<CompProject> GetCompProjectsByIds(List<string> input)
         {
             return GetCompProjectsByIdsAsync(input).GetAwaiter().GetResult();
@@ -601,15 +556,11 @@ public static class ModComp
                 return new List<CompProject>();
 
             var modrinthIds = new List<string>();
-            var curseForgeIds = new List<string>();
             foreach (var id in input)
-                if (IsFromCurseForge(id))
-                    curseForgeIds.Add(id);
-                else
+                if (!IsFromCurseForge(id))
                     modrinthIds.Add(id);
 
             var tasks = new List<Task<List<CompProject>>>();
-            if (curseForgeIds.Any()) tasks.Add(GetListByIdsFromCurseforgeAsync(curseForgeIds));
             if (modrinthIds.Any()) tasks.Add(GetListByIdsFromModrinthAsync(modrinthIds));
 
             await Task.WhenAll(tasks.ToArray());
@@ -1639,10 +1590,7 @@ public static class ModComp
                     var title = GetControlTitle(true);
                     newItem.Title = title.Key;
 
-                    if (string.IsNullOrEmpty(title.Value))
-                        ((StackPanel)newItem.LabTitleRaw.Parent).Children.Remove(newItem.LabTitleRaw);
-                    else
-                        newItem.SubTitle = title.Value;
+                    newItem.SubTitle = title.Value;
 
                     newItem.Tags = Tags;
                     newItem.Description = Description.Replace("\r", "").Replace("\n", "");
@@ -1660,8 +1608,8 @@ public static class ModComp
 
                     if (!showMcVersionDesc && !showLoaderDesc)
                     {
-                        ((Grid)newItem.SvgIconVersion.Parent).Children.Remove(newItem.SvgIconVersion);
-                        ((Grid)newItem.LabVersion.Parent).Children.Remove(newItem.LabVersion);
+                        newItem.SvgIconVersion.Visibility = Visibility.Collapsed;
+                        newItem.LabVersion.Visibility = Visibility.Collapsed;
                         newItem.ColumnVersion1.Width = new GridLength(0);
                         newItem.ColumnVersion2.MaxWidth = 0;
                         newItem.ColumnVersion3.Width = new GridLength(0);
@@ -1685,7 +1633,7 @@ public static class ModComp
 
                     return newItem;
                 })
-                { Height = 64 };
+                { Height = 80 };
         }
 
         public MyListItem ToListItem()
@@ -1912,12 +1860,6 @@ public static class ModComp
         public string searchText;
 
         /// <summary>
-        ///     在进行中文搜索时，CurseForge 的替代搜索文本。
-        ///     由于 CurseForge API 在有任意关键词未匹配的时候就不显示结果，所以不能使用与 Modrinth 相同的算法。
-        /// </summary>
-        public string curseForgeAltSearchText;
-
-        /// <summary>
         ///     搜索结果排序方式。
         /// </summary>
         public CompSortType sort = CompSortType.Default;
@@ -1925,7 +1867,7 @@ public static class ModComp
         /// <summary>
         ///     允许的来源。
         /// </summary>
-        public CompSourceType source = CompSourceType.Any;
+        public CompSourceType source = CompSourceType.Modrinth;
 
         // 结果要求
 
@@ -1964,128 +1906,13 @@ public static class ModComp
         /// <summary>
         ///     根据加载位置记录，是否还可以继续获取内容。
         /// </summary>
-        public bool CanContinue
-        {
-            get
-            {
-                if (tag.StartsWithF("/") || !source.HasFlag(CompSourceType.CurseForge))
-                    storage.curseForgeTotal = 0;
-                if (tag.EndsWithF("/") || !source.HasFlag(CompSourceType.Modrinth))
-                    storage.modrinthTotal = 0;
-                if (storage.curseForgeTotal == -1 || storage.modrinthTotal == -1)
-                    return true;
-                return storage.curseForgeOffset < storage.curseForgeTotal ||
-                       storage.modrinthOffset < storage.modrinthTotal;
-            }
-        }
-
-        // 构造请求
-
-        /// <summary>
-        ///     获取对应的 CurseForge API 请求链接。若返回 Nothing 则为不进行 CurseForge 请求。
-        /// </summary>
-        public string GetCurseForgeAddress()
-        {
-            if (!source.HasFlag(CompSourceType.CurseForge))
-                return null;
-            if (tag.StartsWithF("/"))
-                storage.curseForgeTotal = 0;
-            if (storage.curseForgeTotal > -1 && storage.curseForgeTotal <= storage.curseForgeOffset)
-                return null;
-            // 应用筛选参数
-            var address =
-                new StringBuilder(
-                    $"https://api.curseforge.com/v1/mods/search?gameId=432&sortOrder=desc&pageSize={compPageSize}");
-            switch (type)
-            {
-                case CompType.Mod:
-                {
-                    address.Append("&classId=6");
-                    break;
-                }
-                case CompType.ModPack:
-                {
-                    address.Append("&classId=4471");
-                    break;
-                }
-                case CompType.DataPack:
-                {
-                    address.Append("&classId=6945");
-                    break;
-                }
-                case CompType.Shader:
-                {
-                    address.Append("&classId=6552");
-                    break;
-                }
-                case CompType.ResourcePack:
-                {
-                    address.Append("&classId=12");
-                    break;
-                }
-                case CompType.World:
-                {
-                    address.Append("&classId=17");
-                    break;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(tag)) address.Append($"&categoryId={tag.BeforeFirst("/")}");
-            if (modLoader != CompLoaderType.Any)
-                address.Append("&modLoaderType=").Append(((int)modLoader).ToString());
-            if (!string.IsNullOrEmpty(gameVersion))
-                address.Append("&gameVersion=").Append(gameVersion);
-            if (!string.IsNullOrEmpty(curseForgeAltSearchText ?? searchText))
-                address.Append("&searchFilter=").Append(WebUtility.UrlEncode(curseForgeAltSearchText ?? searchText));
-            if (storage.curseForgeOffset > 0)
-                address.Append("&index=").Append(storage.curseForgeOffset);
-            switch (sort)
-            {
-                case CompSortType.Relevance:
-                {
-                    address.Append("&sortField=4");
-                    break;
-                }
-                case CompSortType.Downloads:
-                {
-                    address.Append("&sortField=6");
-                    break;
-                }
-                case CompSortType.Follows:
-                {
-                    address.Append("&sortField=2");
-                    break;
-                }
-                case CompSortType.Newest:
-                {
-                    address.Append("&sortField=11");
-                    break;
-                }
-                case CompSortType.Updated:
-                {
-                    address.Append("&sortField=3");
-                    break;
-                }
-
-                default:
-                {
-                    address.Append("&sortField=2");
-                    break;
-                }
-            }
-
-            return address.ToString();
-        }
+        public bool CanContinue => storage.modrinthTotal == -1 || storage.modrinthOffset < storage.modrinthTotal;
 
         /// <summary>
         ///     获取对应的 Modrinth API 请求链接。若返回 Nothing 则为不进行 Modrinth 请求。
         /// </summary>
         public string GetModrinthAddress()
         {
-            if (!source.HasFlag(CompSourceType.Modrinth))
-                return null;
-            if (tag.EndsWithF("/"))
-                storage.modrinthTotal = 0;
             if (storage.modrinthTotal > -1 && storage.modrinthTotal <= storage.modrinthOffset)
                 return null;
             // 应用筛选参数
@@ -2129,16 +1956,15 @@ public static class ModComp
                 address += "&query=" + WebUtility.UrlEncode(searchText);
             if (storage.modrinthOffset > 0)
                 address += "&offset=" + storage.modrinthOffset;
-            // facets=[["categories:'game-mechanics'"],["categories:'forge'"],["versions:1.19.3"],["project_type:mod"]]
-            var facets = new List<string>();
-            facets.Add($"[\"project_type:{ModBase.GetStringFromEnum(type).ToLower()}\"]");
-            if (!string.IsNullOrEmpty(tag))
-                facets.Add($"[\"categories:'{tag.AfterLast("/")}'\"]");
+            var facets = new JsonArray { new JsonArray($"project_type:{ModBase.GetStringFromEnum(type).ToLowerInvariant()}") };
+            foreach (var category in (tag ?? "").Split('/', StringSplitOptions.RemoveEmptyEntries)
+                         .Where(value => !int.TryParse(value, out _)))
+                facets.Add(new JsonArray($"categories:{category}"));
             if (modLoader != CompLoaderType.Any)
-                facets.Add($"[\"categories:'{ModBase.GetStringFromEnum(modLoader).ToLower()}'\"]");
+                facets.Add(new JsonArray($"categories:{ModBase.GetStringFromEnum(modLoader).ToLowerInvariant()}"));
             if (!string.IsNullOrEmpty(gameVersion))
-                facets.Add($"[\"versions:'{gameVersion}'\"]");
-            address += "&facets=[" + string.Join(",", facets) + "]";
+                facets.Add(new JsonArray($"versions:{gameVersion}"));
+            address += "&facets=" + Uri.EscapeDataString(facets.ToJsonString());
             return address;
         }
 
@@ -2206,10 +2032,10 @@ public static class ModComp
         { "shaders", "6552" }
     };
 
-    private enum ResourceSite { None, CurseForge, Modrinth }
+    private enum ResourceSite { None, Modrinth }
 
     /// <summary>
-    /// 用 Uri 解析单个 token 是否为受支持的 CurseForge/Modrinth 资源链接。
+    /// 用 Uri 解析单个 token 是否为受支持的 Modrinth 资源链接。
     /// 成功时输出站点、分类段与 slug（query、fragment 会被自动丢弃）。
     /// </summary>
     private static bool TryParseResourceLink(string token, out ResourceSite site, out string category, out string slug)
@@ -2218,23 +2044,13 @@ public static class ModComp
         category = string.Empty;
         slug = string.Empty;
 
-        // 容忍无协议前缀（如直接粘贴 www.curseforge.com/...）：原样试，再补 https:// 试
+        // 容忍无协议前缀：原样试，再补 https:// 试
         if (!Uri.TryCreate(token, UriKind.Absolute, out var uri) &&
             !Uri.TryCreate($"https://{token}", UriKind.Absolute, out uri)) return false;
         if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps) return false;
 
         // 仅取 path 段，天然忽略 ?query 与 #fragment
         var segments = uri.AbsolutePath.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
-
-        // CurseForge: /minecraft/{category}/{slug}
-        if (IsHostOf(uri.Host, "curseforge.com"))
-        {
-            if (segments.Length < 3 || !segments[0].Equals("minecraft", StringComparison.OrdinalIgnoreCase)) return false;
-            site = ResourceSite.CurseForge;
-            category = segments[1];
-            slug = segments[2];
-            return true;
-        }
 
         // Modrinth: /{type}/{slug}
         if (IsHostOf(uri.Host, "modrinth.com"))
@@ -2264,7 +2080,7 @@ public static class ModComp
     }
 
     /// <summary>
-    /// 从单条 CurseForge / Modrinth 资源链接解析出 projectId。无法识别或获取失败时返回 null。
+    /// 从单条 Modrinth 资源链接解析出 projectId。无法识别或获取失败时返回 null。
     /// </summary>
     public static string? ResolveLinkToProjectId(string url)
     {
@@ -2275,26 +2091,6 @@ public static class ModComp
             if (token is null || !TryParseResourceLink(token, out site, out category, out slug)) return null;
         }
 
-        if (site == ResourceSite.CurseForge)
-        {
-            var encodedSlug = WebUtility.UrlEncode(slug);
-            var json = ModDownload.DlModRequest<JsonObject>(
-                $"https://api.curseforge.com/v1/mods/search?gameId=432&slug={encodedSlug}");
-            var dataArray = (JsonArray)json["data"];
-            if (!dataArray.Any()) return null;
-
-            var receivedClassId = ((JsonObject)dataArray[0])["classId"]?.ToString();
-            if (!curseForgeCategoryClassIds.TryGetValue(category, out var targetClassId) ||
-                receivedClassId == targetClassId)
-                return dataArray[0]["id"]?.ToString();
-
-            // 分类不符：带 classId 重搜。结果与首次查询语义不同，使用独立变量
-            var filteredJson = ModDownload.DlModRequest<JsonObject>(
-                $"https://api.curseforge.com/v1/mods/search?gameId=432&slug={encodedSlug}&classId={targetClassId}");
-            var filteredDatas = (JsonArray)filteredJson["data"];
-            return filteredDatas.Any() ? filteredDatas[0]["id"]?.ToString() : null;
-        }
-
         // Modrinth：slug 进 path，用 EscapeDataString
         var mr = ModDownload.DlModRequest<JsonObject>(
             $"https://api.modrinth.com/v2/project/{Uri.EscapeDataString(slug)}");
@@ -2302,7 +2098,7 @@ public static class ModComp
     }
 
     /// <summary>
-    /// 若输入文本中恰好含 1 条 CurseForge/Modrinth 资源链接，返回该链接；含 0 条或 ≥2 条时返回 null。
+    /// 若输入文本中恰好含 1 条 Modrinth 资源链接，返回该链接；含 0 条或 ≥2 条时返回 null。
     /// </summary>
     public static string? TryExtractSingleResourceLink(string? text)
     {
@@ -2325,6 +2121,8 @@ public static class ModComp
     {
         var request = task.input;
         var storage = request.storage;
+        request.source = CompSourceType.Modrinth;
+        storage.curseForgeTotal = 0;
 
         // === Issue #2942: 搜索框单条资源链接识别 ===
         var singleLink = TryExtractSingleResourceLink(request.searchText);
@@ -2477,10 +2275,7 @@ public static class ModComp
                 request.searchText = canonicalWords.Any()
                     ? string.Join(" ", canonicalWords)
                     : string.Join(" ", wordModCount.OrderByDescending(w => w.Value.Count).Take(2).Select(w => w.Key));
-                var cfSlugs = exactNameEntries.Select(r => r.item.CurseForgeSlug)
-                    .Where(s => s is not null).Distinct().ToList();
-                if (cfSlugs.Count == 1)
-                    request.curseForgeAltSearchText = cfSlugs[0];
+
             }
             else
             {
@@ -2539,12 +2334,6 @@ public static class ModComp
             if (rawFilter.Replace(" ", "").ContainsF("optifabric", true)) text = "optifabric";
         }
 
-        if (request.curseForgeAltSearchText is not null)
-        {
-            processKeywords(ref request.curseForgeAltSearchText);
-            LogWrapper.Debug("[Comp] 工程列表搜索最终文本（CurseForge）：" + request.curseForgeAltSearchText);
-        }
-
         processKeywords(ref request.searchText);
         LogWrapper.Debug("[Comp] 工程列表搜索最终文本：" + request.searchText);
         task.Progress = 0.1;
@@ -2552,6 +2341,7 @@ public static class ModComp
         #endregion
 
         var realResults = new List<CompProject>();
+        storage.errorMessage = null;
 
         #region 网络请求与结果获取 (Retry 循环)
 
@@ -2560,42 +2350,16 @@ public static class ModComp
             var rawResults = new List<CompProject>();
             Exception lastError = null;
             var resultsLock = new object();
+            var sourceErrors = new List<string>();
 
             // 1.14 以下 Forge 筛选处理
             var isOldForgeRequest = request.modLoader == CompLoaderType.Forge &&
                                     McInstanceInfo.VersionToDrop(request.gameVersion, true) < 140;
             if (isOldForgeRequest) request.modLoader = CompLoaderType.Any;
-            var curseForgeUrl = request.GetCurseForgeAddress();
             var modrinthUrl = request.GetModrinthAddress();
             if (isOldForgeRequest) request.modLoader = CompLoaderType.Forge;
 
             var tasks = new List<Task>();
-
-            // CurseForge 线程内嵌
-            if (curseForgeUrl is not null)
-                tasks.Add(Task.Run(() =>
-                {
-                    try
-                    {
-                        LogWrapper.Info("[Comp] 开始从 CurseForge 获取列表：" + curseForgeUrl);
-                        var json = ModDownload.DlModRequest<JsonObject>(curseForgeUrl);
-                        var projects = json["data"].AsArray().Select(j => new CompProject((JsonObject)j))
-                            .Where(p => !(request.type == CompType.ResourcePack && p.Tags.Contains(Lang.Text("Download.Comp.Type.DataPack"))))
-                            .ToList();
-                        lock (resultsLock)
-                        {
-                            rawResults.AddRange(projects);
-                        }
-
-                        storage.curseForgeOffset += projects.Count;
-                        storage.curseForgeTotal = json["pagination"]["totalCount"].ToObject<int>();
-                    }
-                    catch (Exception ex)
-                    {
-                        lastError = ex;
-                        LogWrapper.Error(ex, "CurseForge 获取失败");
-                    }
-                }));
 
             // Modrinth 线程内嵌
             if (modrinthUrl is not null)
@@ -2616,12 +2380,17 @@ public static class ModComp
                     }
                     catch (Exception ex)
                     {
-                        lastError = ex;
-                        LogWrapper.Error(ex, "Modrinth 获取失败");
+                        lock (resultsLock)
+                        {
+                            lastError = ex;
+                            sourceErrors.Add("Modrinth: " + ex.Message);
+                        }
+                        LogWrapper.Debug(ex, "Comp", "Modrinth 获取失败");
                     }
                 }));
 
             Task.WaitAll(tasks.ToArray());
+            storage.errorMessage = sourceErrors.Count == 0 ? null : string.Join(Environment.NewLine, sourceErrors);
             task.Progress += 0.4;
             if (task.IsAborted) return;
 
@@ -3333,48 +3102,15 @@ public static class ModComp
     /// </summary>
     public static List<CompFile> CompFilesGet(string projectId, bool fromCurseForge)
     {
-        // 1. 获取工程对象（使用 TryGetValue 提高效率并防止并发异常）
-        CompProject targetProject = null;
-        if (!compProjectCache.TryGetValue(projectId, out targetProject))
-        {
-            var url = fromCurseForge
-                ? $"https://api.curseforge.com/v1/mods/{projectId}"
-                : $"https://api.modrinth.com/v2/project/{projectId}";
-            if (fromCurseForge)
-            {
-                var json = ModDownload.DlModRequest<JsonObject>(url);
-                targetProject = new CompProject((JsonObject)json["data"]);
-            }
-            else
-            {
-                targetProject = new CompProject(ModDownload.DlModRequest<JsonObject>(url));
-            }
-            // 假设 CompProject 构造函数内已处理缓存，否则此处应添加缓存逻辑
-        }
+        if (fromCurseForge) throw new NotSupportedException(Lang.Text("Download.Comp.Source.Removed"));
+        if (!compProjectCache.TryGetValue(projectId, out var targetProject))
+            targetProject = new CompProject(ModDownload.DlModRequest<JsonObject>($"https://api.modrinth.com/v2/project/{projectId}"));
 
-        // 2. 获取并缓存文件列表
         if (!compFilesCache.ContainsKey(projectId))
         {
-            ModBase.Log("[Comp] 开始获取文件列表：" + projectId);
-            JsonArray resultJsonArray;
-            if (fromCurseForge)
-            {
-                // 注意：若 pageSize=10000 失效，需考虑分页逻辑
-                var response = ModDownload.DlModRequest<JsonObject>(
-                    $"https://api.curseforge.com/v1/mods/{projectId}/files?pageSize=10000"
-                );
-
-                resultJsonArray = (JsonArray)response["data"];
-            }
-            else
-            {
-                resultJsonArray =
-                    ModDownload.DlModRequest<JsonArray>($"https://api.modrinth.com/v2/project/{projectId}/version?include_changelog=false");
-            }
-
+            var resultJsonArray = ModDownload.DlModRequest<JsonArray>($"https://api.modrinth.com/v2/project/{projectId}/version?include_changelog=false");
             compFilesCache[projectId] = resultJsonArray.Select(a => new CompFile((JsonObject)a, targetProject.Type))
-                .Where(a => a.Available).GroupBy(a => a.Id).Select(g => g.First())
-                .ToList(); // 使用 GroupBy 实现更高效的 Distinct
+                .Where(a => a.Available).GroupBy(a => a.Id).Select(g => g.First()).ToList();
         }
 
         var currentFiles = compFilesCache[projectId];
@@ -3388,25 +3124,8 @@ public static class ModComp
         if (undoneDeps.Any())
         {
             ModBase.Log($"[Comp] {projectId} 需要补全信息的依赖项共 {undoneDeps.Count} 个");
-            JsonArray projects;
-            if (fromCurseForge)
-            {
-                // 1. 获取响应并转为 JsonObject
-                var response = ModDownload.DlModRequest<JsonObject>(
-                    "https://api.curseforge.com/v1/mods",
-                    "POST",
-                    "{\"modIds\": [" + string.Join(",", undoneDeps) + "]}",
-                    "application/json"
-                );
-
-                // 2. 提取 data 数组
-                projects = (JsonArray)response["data"];
-            }
-            else
-            {
-                projects = ModDownload.DlModRequest<JsonArray>(
-                    $"https://api.modrinth.com/v2/projects?ids=[\"{undoneDeps.Join("\",\"")}\"]");
-            }
+            var projects = ModDownload.DlModRequest<JsonArray>(
+                $"https://api.modrinth.com/v2/projects?ids=[\"{undoneDeps.Join("\",\"")}\"]");
 
             foreach (var project in projects)
                 new CompProject((JsonObject)project);

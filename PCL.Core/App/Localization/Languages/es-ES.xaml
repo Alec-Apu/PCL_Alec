@@ -1,4 +1,4 @@
-<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. -->
+﻿<!-- Formatted by xaml-lang-formatter at 2026-06-28T17:16:52. -->
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,4 +10,30 @@
     <sys:String x:Key="Meta.Code">es-ES</sys:String>
     <sys:String x:Key="Meta.Name">Español (España)</sys:String>
 
+    <sys:String x:Key="Main.Fluent.Instances">Instances</sys:String>
+    <sys:String x:Key="Main.Fluent.Account">Account</sys:String>
+    <sys:String x:Key="Main.Fluent.PlayEyebrow">Ready for your next adventure</sys:String>
+    <sys:String x:Key="Main.Fluent.Recent">Recently played</sys:String>
+    <sys:String x:Key="Main.Fluent.AllInstances">All instances</sys:String>
+    <sys:String x:Key="Main.Fluent.Tasks">Tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.Categories">Settings categories</sys:String>
+    <sys:String x:Key="Main.Fluent.NoRecent">No play history yet. Launch a game to see your recent instances here.</sys:String>
+    <sys:String x:Key="Main.Fluent.NoTasks">No active tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.ActiveTasks">{0} active tasks</sys:String>
+    <sys:String x:Key="Main.Fluent.SignInToPlay">Add account to play</sys:String>
+    <sys:String x:Key="Common.Action.More">Más acciones</sys:String>
+    <sys:String x:Key="Download.Comp.Filter.Options">Filtros y orden</sys:String>
+    <sys:String x:Key="Download.Comp.Source.Removed">Se ha eliminado la fuente CurseForge. Usa recursos de Modrinth.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source">Origen del fondo</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Original">Colores originales</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Landscape">Paisaje aleatorio</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Anime">Anime aleatorio</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Source.Local">Imágenes / vídeo locales</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Shuffle">Otra imagen</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Loading">Cargando un fondo…</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Ready">Imágenes de {0}. Pulsa Otra imagen para actualizar.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Success">Fondo actualizado</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.Failed">No se pudo cargar el fondo. Se mantienen los colores originales. Inténtalo más tarde.</sys:String>
+    <sys:String x:Key="Setup.Ui.Background.Online.KeptPrevious">No se pudo cargar el fondo. Se mantiene la imagen anterior. Inténtalo más tarde.</sys:String>
+    <sys:String x:Key="Setup.Misc.System.MaxFps.Automatic">Automático (frecuencia de la pantalla)</sys:String>
 </ResourceDictionary>

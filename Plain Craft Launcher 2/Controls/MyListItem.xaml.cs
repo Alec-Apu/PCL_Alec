@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,6 +8,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using PCL.Core.UI.Controls.SvgIcon;
+using PCL.Core.UI.Controls;
 
 namespace PCL;
 
@@ -36,6 +37,12 @@ public partial class MyListItem : IMyRadio
         {
             ContentHandler.Invoke(this, e);
             ContentHandler = null;
+        }
+
+        if (IsNavigationChip)
+        {
+            RefreshNavigationChrome();
+            return;
         }
 
         // 判断当前颜色
@@ -193,7 +200,7 @@ public partial class MyListItem : IMyRadio
                 var rect = new Border
                 {
                     Name = "RectBack",
-                    CornerRadius = new CornerRadius(IsScaleAnimationEnabled || Height > 40d ? 6 : 0),
+                    CornerRadius = new CornerRadius(14d),
                     RenderTransform = IsScaleAnimationEnabled ? new ScaleTransform(0.8d, 0.8d) : null,
                     RenderTransformOrigin = new Point(0.5d, 0.5d),
                     BorderThickness = new Thickness(ModBase.GetWPFSize(1d)),
@@ -322,6 +329,47 @@ public partial class MyListItem : IMyRadio
 
     #region 自定义属性
 
+    private Border? _navigationChrome;
+    private bool _isNavigationChip;
+    public bool IsNavigationChip
+    {
+        get => _isNavigationChip;
+        set { _isNavigationChip = value; RefreshNavigationChrome(); }
+    }
+
+    private void RefreshNavigationChrome()
+    {
+        if (!IsNavigationChip) return;
+        SetResourceReference(ForegroundProperty, "ColorBrush1");
+        Height = 44;
+        MinHeight = 44;
+        LabTitle.TextWrapping = TextWrapping.Wrap;
+        LabTitle.TextTrimming = TextTrimming.CharacterEllipsis;
+        LabTitle.MaxHeight = 36;
+        if (pathLogo is not null)
+        {
+            pathLogo.Width = 22;
+            pathLogo.Height = 22;
+            pathLogo.VerticalAlignment = VerticalAlignment.Center;
+            pathLogo.HorizontalAlignment = HorizontalAlignment.Center;
+            pathLogo.Margin = new Thickness(4, 8, 4, 8);
+        }
+        if (ToolTip is null) SetBinding(ToolTipProperty, new Binding(nameof(Title)) { Source = this });
+        if (_navigationChrome is null)
+        {
+            _navigationChrome = new LiquidGlassSurface { Material = LiquidGlassMaterial.Action, CornerRadius = new CornerRadius(20), BorderThickness = new Thickness(0), IsHitTestVisible = false };
+            _navigationChrome.SetResourceReference(Border.BackgroundProperty, "Fluent.GlassSurface");
+            SetColumnSpan(_navigationChrome, 999);
+            SetRowSpan(_navigationChrome, 999);
+            Children.Insert(0, _navigationChrome);
+        }
+        _navigationChrome.SetResourceReference(Border.BackgroundProperty, isMouseDown ? "Fluent.NavigationPressed" : IsMouseOver ? "Fluent.NavigationHover" : "Fluent.GlassSurface");
+        _navigationChrome.Visibility = Checked || IsMouseOver || IsKeyboardFocusWithin ? Visibility.Visible : Visibility.Collapsed;
+        _navigationChrome.Opacity = Checked ? 1 : .65;
+        if (_RectBack is not null) _RectBack.Visibility = Visibility.Collapsed;
+        if (rectCheck is not null) rectCheck.Visibility = Visibility.Collapsed;
+    }
+
     // Uuid
     public int Uuid = ModBase.GetUuid();
 
@@ -335,7 +383,7 @@ public partial class MyListItem : IMyRadio
         {
             field = value;
             if (_RectBack is not null)
-                RectBack.CornerRadius = new CornerRadius(value ? 6 : 0);
+                RectBack.CornerRadius = new CornerRadius(14d);
         }
     } = true;
 
@@ -360,6 +408,7 @@ public partial class MyListItem : IMyRadio
         set
         {
             field = value;
+            if (IsNavigationChip) return; // Actions are hosted separately from navigation.
             // 没有特殊按钮，移除原 Stack
             if (buttonStack is not null)
             {
@@ -479,6 +528,38 @@ public partial class MyListItem : IMyRadio
         MouseLeftButtonDown += RefreshColor;
         MouseLeftButtonUp += RefreshColor;
         Loaded += MyListItem_Loaded;
+        Loaded += (_, _) => RefreshNavigationChrome();
+        Changed += (_, _) => Dispatcher.BeginInvoke(RefreshNavigationChrome);
+        Focusable = true;
+        SetResourceReference(FocusVisualStyleProperty, "Fluent.Focus");
+        KeyDown += (_, e) =>
+        {
+            if (IsNavigationChip && Parent is Panel panel && e.Key is Key.Up or Key.Down or Key.Home or Key.End)
+            {
+                var items = panel.Children.OfType<MyListItem>().Where(item => item.IsVisible && item.IsEnabled).ToList();
+                var index = items.IndexOf(this);
+                if (index < 0) return;
+                var next = e.Key switch
+                {
+                    Key.Home => 0,
+                    Key.End => items.Count - 1,
+                    Key.Up => Math.Max(0, index - 1),
+                    _ => Math.Min(items.Count - 1, index + 1)
+                };
+                items[next].Focus();
+                if (items[next].Type == CheckType.RadioBox) items[next].SetChecked(true, true, true);
+                items[next].BringIntoView();
+                e.Handled = true;
+                return;
+            }
+            if (e.Key is not (Key.Enter or Key.Space) || !IsEnabled || e.IsRepeat) return;
+            e.Handled = true;
+            isMouseDown = true;
+            Button_MouseUp(this, new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left));
+            Button_MouseLeave(this, EventArgs.Empty);
+        };
+        GotKeyboardFocus += (_, _) => RefreshColor(this, EventArgs.Empty);
+        LostKeyboardFocus += (_, _) => RefreshColor(this, EventArgs.Empty);
     }
 
     private static void OnInfoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -872,6 +953,12 @@ public partial class MyListItem : IMyRadio
                 }
             }
 
+            if (IsNavigationChip)
+            {
+                RefreshNavigationChrome();
+                return;
+            }
+
             var customHeight = 20d; // 修改左侧神秘动画条的高度
 
             if (IsLoaded && ModAnimation.AniControlEnabled == 0 && anime) // 防止默认属性变更触发动画
@@ -1096,6 +1183,7 @@ public partial class MyListItem : IMyRadio
         if (IsMouseDirectlyOver && !(Type == CheckType.None))
         {
             isMouseDown = true;
+            Focus();
             if (buttonStack is not null)
                 buttonStack.IsHitTestVisible = false;
         }

@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:svgIcon="clr-namespace:PCL.Core.UI.Controls.SvgIcon;assembly=PCL.Core"
     x:Name="PanBack" mc:Ignorable="d" x:Class="PCL.MyExtraTextButton"
-    RenderTransformOrigin="0.5,0.5" ToolTipService.Placement="Left" Height="52" Margin="20">
+    RenderTransformOrigin="0.5,0.5" ToolTipService.Placement="Left" HorizontalAlignment="Center" Height="52" Margin="20">
     <Grid.RenderTransform>
         <ScaleTransform ScaleX="0" ScaleY="0" />
     </Grid.RenderTransform>
@@ -21,7 +21,7 @@
                 <DropShadowEffect ShadowDepth="0" BlurRadius="10" Opacity="0.2" />
             </Border.Effect>
         </Border>
-        <StackPanel Orientation="Horizontal" Margin="20,0" SnapsToDevicePixels="False" UseLayoutRounding="False">
+        <StackPanel Orientation="Horizontal" Margin="12,0" SnapsToDevicePixels="False" UseLayoutRounding="False">
             <Grid x:Name="IconHost" Width="16" Margin="2,12,0,12" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
                     <ScaleTransform />
@@ -36,7 +36,7 @@
             </Grid>
             <TextBlock x:Name="LabText" VerticalAlignment="Center" Foreground="{DynamicResource ColorBrush8}"
                        FontSize="16"
-                       Margin="12,0,0,0.8" />
+                       Margin="8,0,0,0.8" />
         </StackPanel>
     </Grid>
 </Grid>

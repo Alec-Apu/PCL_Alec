@@ -1,4 +1,4 @@
-<local:MyPageRight
+﻿<local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,38 +14,27 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="28" />
-                        <RowDefinition Height="9" />
-                        <RowDefinition Height="28" />
+                        <RowDefinition Height="44" />
                         <RowDefinition Height="5" />
-                        <RowDefinition Height="28" />
+                        <RowDefinition Height="44" />
                         <RowDefinition Height="5" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" MinHeight="28" />
                         <RowDefinition Height="8" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Misc.System.Announcement}" Margin="0,0,25,0"
-                               Grid.Row="0" />
-                    <local:MyComboBox x:Name="ComboSystemActivity" Tag="SystemSystemActivity" Grid.Column="1"
-                                      Grid.Row="0"
-                                      SelectionChanged="ComboSystemActivity_OnSelectionChanged">
-                        <local:MyComboBoxItem Content="{DynamicResource Setup.Misc.System.Announcement.All}" ToolTip="{DynamicResource Setup.Misc.System.Announcement.All.ToolTip}" />
-                        <local:MyComboBoxItem Content="{DynamicResource Setup.Misc.System.Announcement.ImportantOnly}" />
-                        <local:MyComboBoxItem Content="{DynamicResource Setup.Misc.System.Announcement.Disabled}" />
-                    </local:MyComboBox>
-                    <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Misc.System.MaxFps}"
+                    <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Misc.System.MaxFps}"
                                Margin="0,0,25,0" />
-                    <local:MySlider x:Name="SliderAniFPS" Grid.Row="2" Tag="UiAniFPS" MaxValue="59" Value="59"
+                    <local:MySlider x:Name="SliderAniFPS" Grid.Row="0" Tag="UiAniFPS" MaxValue="240" Value="240"
                                     Grid.Column="1"
                                      ToolTip="{DynamicResource Setup.Misc.System.MaxFps.ToolTip}"
                                     Change="SliderChange" />
-                    <TextBlock Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Misc.System.MaxLogLines}"
+                    <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{DynamicResource Setup.Misc.System.MaxLogLines}"
                                Margin="0,0,25,0" />
-                    <local:MySlider x:Name="SliderMaxLog" Grid.Row="4" Tag="SystemMaxLog" MaxValue="29" Value="13"
+                    <local:MySlider x:Name="SliderMaxLog" Grid.Row="2" Tag="SystemMaxLog" MaxValue="29" Value="13"
                                     Grid.Column="1"
                                      ToolTip="{DynamicResource Setup.Misc.System.MaxLogLines.ToolTip}"
                                     Change="SliderChange" />
-                    <Grid Grid.Row="6" Grid.ColumnSpan="5">
+                    <Grid Grid.Row="4" Grid.ColumnSpan="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="CheckBox" />
                             <ColumnDefinition Width="Auto" SharedSizeGroup="CheckBox" />
@@ -53,30 +42,30 @@
                             <ColumnDefinition Width="Auto" SharedSizeGroup="CheckBox" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" MinHeight="28" />
                         </Grid.RowDefinitions>
                         <local:MyCheckBox Grid.Row="0" Grid.Column="0" Text="{DynamicResource Setup.Misc.System.DisableHardwareAcceleration}" x:Name="CheckSystemDisableHardwareAcceleration" Tag="SystemDisableHardwareAcceleration" Change="CheckSystemDisableHardwareAcceleration_OnChange"/>
                         <local:MyCheckBox Grid.Row="0" Grid.Column="1" Text="{DynamicResource Setup.Misc.System.Telemetry}" x:Name="CheckSystemTelemetry" Tag="SystemTelemetry" Change="CheckBoxChange"
                           ToolTip="{DynamicResource Setup.Misc.System.Telemetry.ToolTip}"/>
                     </Grid>
-                    <Grid Grid.Row="8" Grid.ColumnSpan="5">
+                    <Grid Grid.Row="6" Grid.ColumnSpan="5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35" />
+                            <RowDefinition Height="44" />
                         </Grid.RowDefinitions>
-                        <local:MyButton Grid.Column="0" Grid.Row="0" x:Name="BtnSystemSettingExp" MinWidth="140"
-                                        Text="{DynamicResource Setup.Misc.System.ExportSettings}" Padding="13,0" Margin="0,0,20,0"
+                        <local:MyButton Grid.Column="0" Grid.Row="0" x:Name="BtnSystemSettingExp"
+                                        Text="{DynamicResource Setup.Misc.System.ExportSettings}" Margin="0,0,20,0"
                                         Click="BtnSystemSettingExp_Click" />
-                        <local:MyButton Grid.Column="1" Grid.Row="0" x:Name="BtnSystemSettingImp" MinWidth="140"
-                                        Text="{DynamicResource Setup.Misc.System.ImportSettings}" Padding="13,0" Margin="0,0,20,0"
+                        <local:MyButton Grid.Column="1" Grid.Row="0" x:Name="BtnSystemSettingImp"
+                                        Text="{DynamicResource Setup.Misc.System.ImportSettings}" Margin="0,0,20,0"
                                         Click="BtnSystemSettingImp_Click" />
-                        <local:MyButton Grid.Column="2" Grid.Row="0" x:Name="BtnSystemStopUsingPclCe" MinWidth="140"
-                                        Text="{DynamicResource Setup.Misc.System.StopUsingPclCe}" Padding="13,0" Margin="0,0,20,0"
+                        <local:MyButton Grid.Column="2" Grid.Row="0" x:Name="BtnSystemStopUsingPclCe"
+                                        Text="{DynamicResource Setup.Misc.System.StopUsingPclCe}" Margin="0,0,20,0"
                                         ColorType="Red" Click="BtnSystemStopUsingPclCe_Click" />
                     </Grid>
                 </Grid>
@@ -89,9 +78,9 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="28" />
+                        <RowDefinition Height="44" />
                         <RowDefinition Height="4" />
-                        <RowDefinition Height="28" />
+                        <RowDefinition Height="44" />
                         <RowDefinition Height="4" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -108,24 +97,24 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="0.2*" />
                         </Grid.ColumnDefinitions>
-                        <local:MyRadioBox Text="{DynamicResource Setup.Misc.Network.Proxy.None}" x:Name="RadioHttpProxyType0" Height="22"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Misc.Network.Proxy.None}" x:Name="RadioHttpProxyType0" MinHeight="28"
                                           Tag="SystemHttpProxyType/0" Grid.Column="0"
                                           Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Setup.Misc.Network.Proxy.System}" x:Name="RadioHttpProxyType1" Height="22"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Misc.Network.Proxy.System}" x:Name="RadioHttpProxyType1" MinHeight="28"
                                           Tag="SystemHttpProxyType/1" Grid.Column="1"
                                           Check="RadioBoxChange" />
-                        <local:MyRadioBox Text="{DynamicResource Setup.Misc.Network.Proxy.Custom}" x:Name="RadioHttpProxyType2" Height="22"
+                        <local:MyRadioBox Text="{DynamicResource Setup.Misc.Network.Proxy.Custom}" x:Name="RadioHttpProxyType2" MinHeight="28"
                                           Tag="SystemHttpProxyType/2" Grid.Column="2"
                                           Check="RadioBoxChange" />
                     </Grid>
                     <Grid Grid.Row="4" Grid.Column="1" x:Name="HttpProxyCustom"
                           Visibility="{Binding ElementName=RadioHttpProxyType2,Path=Checked,Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="9" />
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                             <RowDefinition Height="9" />
-                            <RowDefinition Height="28" />
+                            <RowDefinition Height="44" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -146,7 +135,7 @@
                                    HorizontalAlignment="Left" Margin="0,0,5,0" />
                         <local:MyTextBox Grid.Column="3" Grid.Row="4" HintText="{DynamicResource Setup.Misc.Network.Proxy.Optional}" Tag="SystemHttpProxyCustomPassword"
                                          x:Name="TextSystemHttpProxyCustomPassword" Margin="0,0,5,0" />
-                        <local:MyButton Text="{DynamicResource Setup.Misc.Network.Proxy.Apply}" TextPadding="3" Grid.Row="4" Grid.Column="4"
+                        <local:MyButton Text="{DynamicResource Setup.Misc.Network.Proxy.Apply}" Grid.Row="4" Grid.Column="4"
                                         x:Name="BtnApplyHttpProxy" Click="ApplyHttpProxyBtn_OnClicked" />
                     </Grid>
                 </Grid>
@@ -169,14 +158,14 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <local:MyCheckBox Grid.Column="0" Text="{DynamicResource Setup.Misc.Debug.SkipCopy}" Height="22"
+                        <local:MyCheckBox Grid.Column="0" Text="{DynamicResource Setup.Misc.Debug.SkipCopy}" MinHeight="28"
                                           x:Name="CheckDebugSkipCopy" Tag="SystemDebugSkipCopy"
                                           ToolTip="{DynamicResource Setup.Misc.Debug.SkipCopy.ToolTip}"
                                           Change="CheckBoxChange" />
-                        <local:MyCheckBox Grid.Column="1" Text="{DynamicResource Setup.Misc.Debug.Mode}" Height="22" x:Name="CheckDebugMode"
+                        <local:MyCheckBox Grid.Column="1" Text="{DynamicResource Setup.Misc.Debug.Mode}" MinHeight="28" x:Name="CheckDebugMode"
                                           Tag="SystemDebugMode" ToolTip="{DynamicResource Setup.Misc.Debug.Mode.ToolTip}"
                                           Change="CheckDebugMode_OnChange" />
-                        <local:MyCheckBox Grid.Column="2" Text="{DynamicResource Setup.Misc.Debug.Delay}" Height="22" x:Name="CheckDebugDelay"
+                        <local:MyCheckBox Grid.Column="2" Text="{DynamicResource Setup.Misc.Debug.Delay}" MinHeight="28" x:Name="CheckDebugDelay"
                                           Tag="SystemDebugDelay"
                                           ToolTip="{DynamicResource Setup.Misc.Debug.Delay.ToolTip}"
                                           Change="CheckBoxChange" />

@@ -13,7 +13,7 @@ public class MyTextBox : TextBox
     public delegate void ValidateChangedEventHandler(object sender, EventArgs e);
 
     public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register("CornerRadius",
-        typeof(CornerRadius), typeof(MyTextBox), new PropertyMetadata(new CornerRadius(3d)));
+        typeof(CornerRadius), typeof(MyTextBox), new PropertyMetadata(new CornerRadius(12d)));
 
     public static readonly DependencyProperty ValidateResultProperty = DependencyProperty.Register("ValidateResult",
         typeof(string), typeof(MyTextBox),

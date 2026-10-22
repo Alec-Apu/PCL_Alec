@@ -1,4 +1,4 @@
-using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls.Primitives;
 
 namespace PCL;
 
@@ -48,7 +48,7 @@ public class MyScrollBar : ScrollBar
             }
             else
             {
-                newOpacity = 0.5d;
+                newOpacity = 0.7d;
                 newColor = "ColorBrush4";
                 time = 180;
             }

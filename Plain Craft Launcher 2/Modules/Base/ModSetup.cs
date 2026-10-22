@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
@@ -51,6 +51,8 @@ public class ModSetup
             e => UiAutoPauseVideo((bool)e.Value!)));
 
         // UI - Background Image
+        Config.Preference.Background.WallpaperSourceConfig.Observe(new ConfigObserver(ConfigEvent.Changed,
+            _ => ModBase.RunInUi(() => PageSetupUI.BackgroundRefresh(false, true))));
         Config.Preference.Background.WallpaperOpacityConfig.Observe(new ConfigObserver(ConfigEvent.Changed,
             e => UiBackgroundOpacity((int)e.Value!)));
         Config.Preference.Background.WallpaperBlurRadiusConfig.Observe(new ConfigObserver(ConfigEvent.Changed,
@@ -463,6 +465,7 @@ public class ModSetup
     public static void UiBlurValue(int value)
     {
         System.Windows.Application.Current.Resources["BlurRadius"] = value * 1.0d;
+        FluentTheme.Refresh();
     }
 
     public static void UiBlurSamplingRate(int value)
@@ -473,6 +476,7 @@ public class ModSetup
     public static void UiBlurType(int value)
     {
         System.Windows.Application.Current.Resources["BlurType"] = (KernelType)value;
+        FluentTheme.Refresh();
     }
 
     // 顶部栏

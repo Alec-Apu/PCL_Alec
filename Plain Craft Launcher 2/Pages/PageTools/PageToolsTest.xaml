@@ -1,4 +1,4 @@
-<local:MyPageRight x:Class="PCL.PageToolsTest"
+﻿<local:MyPageRight x:Class="PCL.PageToolsTest"
                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:local="clr-namespace:PCL"
@@ -8,20 +8,20 @@
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
         <StackPanel x:Name="PanMain" Margin="25,10" Grid.IsSharedSizeScope="True">
             <local:MyCard Margin="0,15" Title="{DynamicResource Tools.Test.Title}">
-                <WrapPanel Margin="25,40,21,5" ItemHeight="50">
-                    <local:MyButton x:Name="BtnClear" MinWidth="120" Text="{DynamicResource Tools.Test.Clean.Title}"
+                <WrapPanel x:Name="UtilitiesActions" Margin="25,40,21,5">
+                    <local:MyButton x:Name="BtnClear" Text="{DynamicResource Tools.Test.Clean.Title}"
                                     ToolTip="{DynamicResource Tools.Test.Clean.ToolTip}" Margin="0,0,15,15"
                                     Click="BtnClear_Click" />
-                    <local:MyButton MinWidth="100" Text="{DynamicResource Tools.Test.Luck.Title}" Margin="0,0,15,15"
+                    <local:MyButton Text="{DynamicResource Tools.Test.Luck.Title}" Margin="0,0,15,15"
                                     Click="BtnLuck_Click" />
-                    <local:MyButton MinWidth="100" Text="{DynamicResource Tools.Test.Crash.Title}"
+                    <local:MyButton Text="{DynamicResource Tools.Test.Crash.Title}"
                                     ToolTip="{DynamicResource Tools.Test.Crash.ManualCrash}" ColorType="Red"
                                     Margin="0,0,15,15" Click="BtnCrash_Click"
                                     Visibility="Collapsed" x:Name="BtnCrash" />
-                    <local:MyButton MinWidth="120" Text="{DynamicResource Tools.Test.Shortcut.Title}"
+                    <local:MyButton Text="{DynamicResource Tools.Test.Shortcut.Title}"
                                     ToolTip="{DynamicResource Tools.Test.Shortcut.ToolTip}" Margin="0,0,15,15"
                                     Click="BtnCreateShortcut_Click" />
-                    <local:MyButton MinWidth="120" Text="{DynamicResource Tools.Test.LaunchCount.Title}"
+                    <local:MyButton Text="{DynamicResource Tools.Test.LaunchCount.Title}"
                                     Margin="0,0,15,15" Click="BtnLaunchCount_Click" />
                 </WrapPanel>
             </local:MyCard>
@@ -79,17 +79,17 @@
                     </Grid>
                     <Grid Margin="0,15,0,0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35" />
+                            <RowDefinition Height="44" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <local:MyButton x:Name="BtnDownloadStart" Grid.Column="0" Width="140"
+                        <local:MyButton x:Name="BtnDownloadStart" Grid.Column="0"
                                         Text="{DynamicResource Tools.Test.CustomDownload.Start}"
                                         ColorType="Highlight" Margin="0,0,15,0" HorizontalAlignment="Right"
                                         Click="BtnDownloadStart_Click" />
-                        <local:MyButton x:Name="BtnDownloadOpen" Grid.Column="1" Width="140"
+                        <local:MyButton x:Name="BtnDownloadOpen" Grid.Column="1"
                                         Text="{DynamicResource Common.Action.OpenFolder}"
                                         Margin="0,0,15,0" HorizontalAlignment="Left" Click="BtnDownloadOpen_Click" />
                     </Grid>
@@ -109,13 +109,13 @@
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Text="{DynamicResource Tools.Test.Skin.PlayerName}" Margin="0,0,25,0" />
                         <local:MyTextBox x:Name="TextSkinID" Grid.Column="1" MaxLength="50" />
-                        <Grid Height="35" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,14,0,0">
+                        <Grid MinHeight="40" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,14,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="Button" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <local:MyButton x:Name="BtnSkinSave" Text="{DynamicResource Tools.Test.Skin.Save}"
-                                            MinWidth="140" Padding="13,0"
+
                                             Margin="0,0,20,0" Grid.Row="1" Click="BtnSkinSave_Click" />
                         </Grid>
                     </Grid>
@@ -175,17 +175,17 @@
                     </Grid>
                     <Grid Margin="0,15,0,10">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35" />
+                            <RowDefinition Height="44" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <local:MyButton x:Name="BtnAchievementPreview" Grid.Column="0" Width="140"
+                        <local:MyButton x:Name="BtnAchievementPreview" Grid.Column="0"
                                         Text="{DynamicResource Tools.Test.Achievement.Preview}"
                                         ColorType="Highlight" Margin="0,0,15,0" HorizontalAlignment="Right"
                                         Click="BtnAchievementPreview_Click" />
-                        <local:MyButton x:Name="BtnAchievementSave" Grid.Column="1" Width="140"
+                        <local:MyButton x:Name="BtnAchievementSave" Grid.Column="1"
                                         Text="{DynamicResource Tools.Test.Achievement.Save}"
                                         Margin="0,0,15,0" HorizontalAlignment="Left" Click="BtnAchievementSave_Click" />
                     </Grid>
@@ -216,10 +216,10 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <local:MyButton x:Name="BtnSelectSkin" Grid.Column="1"
-                                        Text="{DynamicResource Tools.Test.Avatar.SelectSkin}" Width="140" Height="35"
+                                        Text="{DynamicResource Tools.Test.Avatar.SelectSkin}" Height="40"
                                         Margin="0,0,10,0" />
-                        <local:MyButton Grid.Column="2" Text="{DynamicResource Tools.Test.Avatar.Save}" Width="140"
-                                        Height="35" Click="BtnSaveHead_Click" />
+                        <local:MyButton Grid.Column="2" Text="{DynamicResource Tools.Test.Avatar.Save}"
+                                        Height="40" Click="BtnSaveHead_Click" />
                     </Grid>
                     <Border x:Name="SkinPreviewBorder" Margin="0,15,0,0" HorizontalAlignment="Center" Padding="10"
                             Visibility="Collapsed">

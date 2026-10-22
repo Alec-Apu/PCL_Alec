@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -30,6 +30,14 @@ public partial class MyIconButton
 
     public int Uuid = ModBase.GetUuid();
 
+    public string? ActionTextResourceKey { get; set; }
+
+    internal void InvokeClick()
+    {
+        if (IsEnabled) Click?.Invoke(this, EventArgs.Empty);
+    }
+
+
     protected override Size MeasureOverride(Size constraint)
     {
         var measured = base.MeasureOverride(constraint);
@@ -49,6 +57,12 @@ public partial class MyIconButton
         MouseEnter += (_, _) => RefreshAnim();
         MouseLeave += (_, _) => RefreshAnim();
         Loaded += (_, _) => RefreshAnim();
+        KeyDown += (_, e) =>
+        {
+            if (e.Key is not (Key.Space or Key.Enter) || !IsEnabled || e.IsRepeat) return;
+            e.Handled = true;
+            Click?.Invoke(this, EventArgs.Empty);
+        };
     }
 
     public string Logo

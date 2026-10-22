@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using PCL.Core.App;
 using PCL.Core.App.Configuration;
@@ -61,7 +61,6 @@ public partial class PageSetupGameManage
 
         // Mod 与整合包
         ComboDownloadTranslateV2.SelectedIndex = Config.Download.Comp.NameFormatV2;
-        ComboDownloadMod.SelectedIndex = Config.Download.Comp.CompSourceSolution;
         ComboModLocalNameStyle.SelectedIndex = Config.Download.Comp.UiCompNameSolution;
         ComboDownloadQuickBehavior.SelectedIndex = Config.Download.Comp.QuickDownloadBehavior;
         CheckDownloadIgnoreQuilt.Checked = Config.Download.Comp.IgnoreQuilt;

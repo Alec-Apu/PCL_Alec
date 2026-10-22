@@ -1,4 +1,4 @@
-<Grid
+﻿<Grid
     x:Class="PCL.MyLocalCompItem"
     x:Name="PanBack"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -74,7 +74,7 @@
             x:Name="BtnUpdate"
             Grid.Column="2"
             Width="21"
-            Height="21"
+            Height="32"
             Margin="-2,-1.6,0,0"
             SvgIcon="lucide/upload"
             Opacity="0.4"

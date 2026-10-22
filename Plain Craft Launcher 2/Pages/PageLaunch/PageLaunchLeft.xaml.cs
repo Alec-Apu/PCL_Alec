@@ -60,6 +60,46 @@ public partial class PageLaunchLeft
         PanLaunchingInfo.SizeChanged += PanLaunchingInfo_SizeChangedW;
         PanLaunchingInfo.SizeChanged += PanLaunchingInfo_SizeChangedH;
     }
+    private void HomeAccount_Click(object sender, RoutedEventArgs e) => ShowAccount();
+
+    private McProfile? _homeProfile;
+
+    private void RefreshHomePlayer()
+    {
+        HomePlayerName.Text = ProfileService.Current?.UserName ?? Lang.Text("Main.Fluent.Account");
+        var skin = ProfileService.Current is null ? null : ModMain.frmLoginProfileSkin?.Skin;
+        if (skin is not null && (!ReferenceEquals(_homeProfile, ProfileService.Current) || skin.loader is null))
+        {
+            // The account popup can stay closed: load the original skin for the home avatar too.
+            ModMain.frmLoginProfileSkin.Reload();
+        }
+        _homeProfile = ProfileService.Current;
+        HomeAvatarFallback.Visibility = skin is null ? Visibility.Visible : Visibility.Collapsed;
+        if (skin is null)
+        {
+            System.Windows.Data.BindingOperations.ClearBinding(HomeSkinBack, Image.SourceProperty);
+            System.Windows.Data.BindingOperations.ClearBinding(HomeSkinFore, Image.SourceProperty);
+            HomeSkinBack.Source = null;
+            HomeSkinFore.Source = null;
+            return;
+        }
+        HomeSkinBack.SetBinding(Image.SourceProperty, new System.Windows.Data.Binding("Source") { Source = skin.ImgBack });
+        HomeSkinFore.SetBinding(Image.SourceProperty, new System.Windows.Data.Binding("Source") { Source = skin.ImgFore });
+    }
+
+    public void ShowAccount()
+    {
+        // Own the popup from the window so it also opens while the launch page is detached.
+        if (Children.Contains(AccountPopup))
+        {
+            Children.Remove(AccountPopup);
+            ModMain.frmMain.PanForm.Children.Add(AccountPopup);
+        }
+        AccountPopup.PlacementTarget = ModMain.frmMain.AccountAnchor;
+        AccountPopup.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        AccountPopup.IsOpen = true;
+    }
+
     private static void OnLanguageChanged(PageLaunchLeft page) => ModBase.RunInUi(page.RefreshButtonsUI);
 
     public void PageLaunchLeft_Loaded(object sender, RoutedEventArgs e)
@@ -225,6 +265,12 @@ public partial class PageLaunchLeft
             ModMain.frmMain.BtnExtraApril.ShowRefresh();
         }
 
+        if (_launchButtonAction == LaunchButtonAction.Launch && ProfileService.Current is null)
+        {
+            ShowAccount();
+            return;
+        }
+
         // 实际的启动
         switch (_launchButtonAction)
         {
@@ -332,6 +378,7 @@ public partial class PageLaunchLeft
         }
 
         ExitRefresh: ;
+        RefreshAccountLaunchAction();
 
         // 功能隐藏
         ModMain.frmLaunchLeft.BtnInstance.Visibility =
@@ -365,6 +412,14 @@ public partial class PageLaunchLeft
                     userSummary: Lang.Text("Minecraft.Launch.Error.CancelProcess"));
             }
         }
+    }
+
+    private void RefreshAccountLaunchAction()
+    {
+        if (_launchButtonAction != LaunchButtonAction.Launch) return;
+        BtnLaunch.IsEnabled = true;
+        BtnLaunch.Text = ProfileService.Current is null ? Lang.Text("Main.Fluent.SignInToPlay")
+            : Lang.Text("Launch.Home.Button.Launch");
     }
 
     // 实例设置按钮
@@ -813,14 +868,13 @@ public partial class PageLaunchLeft
         else
         {
             type = PageType.Profile;
-            if (_launchButtonAction != LaunchButtonAction.Download)
-                BtnLaunch.IsEnabled = false;
+            RefreshAccountLaunchAction();
         }
 
+        RefreshAccountLaunchAction();
         // 刷新页面
-        if (pageCurrent == type)
-            return;
-        PageChange(type, anim);
+        if (pageCurrent != type) PageChange(type, anim);
+        RefreshHomePlayer();
     }
 
     #endregion

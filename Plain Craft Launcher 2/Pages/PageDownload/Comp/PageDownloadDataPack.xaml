@@ -14,7 +14,7 @@
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Storage}" Tag="/storage" />
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Magic}" Tag="6952/magic" />
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Adventure}" Tag="6948/adventure" />
-        <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.DataPack.Fantasy}" Tag="6949/" />
+
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Decoration}" Tag="/decoration" />
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Mobs}" Tag="/mobs" />
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Utility}" Tag="6953/utility" />
@@ -22,6 +22,6 @@
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Optimization}" Tag="/optimization" />
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Server}" Tag="/social" />
         <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Library}" Tag="6950/library" />
-        <local:MyComboBoxItem Content="{DynamicResource Download.Comp.Category.Mod.ModRelated}" Tag="6946/" />
+
     </local:PageComp>
 </local:MyPageRight>

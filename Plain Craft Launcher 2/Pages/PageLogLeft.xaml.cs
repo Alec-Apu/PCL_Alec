@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using PCL.Core.App;
@@ -59,6 +59,7 @@ public partial class PageLogLeft
                 var proc = item.Value.gameProcess;
                 var newItem = new MyListItem
                 {
+                    IsNavigationChip = true, Margin = new Thickness(4, 0, 4, 0),
                     IsScaleAnimationEnabled = false, Type = MyListItem.CheckType.RadioBox, MinPaddingRight = 30,
                     Title = version.Name, Info = $"{version.Info} - {Lang.Date(proc.StartTime, "T")}", Height = 40d, Tag = uuid
                 };

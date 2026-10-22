@@ -191,8 +191,7 @@ public static class ProfileUi
         ProfileService.IsCreatingProfile = true;
         var type = selected.Value switch
         {
-            0 => ModLaunch.McLoginType.Ms,
-            1 => ModLaunch.McLoginType.Auth,
+            0 => ModLaunch.McLoginType.Auth,
             _ => ModLaunch.McLoginType.Legacy
         };
         if (type == ModLaunch.McLoginType.Auth)
@@ -214,7 +213,6 @@ public static class ProfileUi
 
     private static List<IMyRadio> _GetAvailableProfileSelection() =>
         [
-            new MyListItem { Title = Lang.Text("Launch.Account.Type.Microsoft"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/shield-check" },
             new MyListItem { Title = Lang.Text("Launch.Account.Type.ThirdParty"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/network" },
             new MyListItem { Title = Lang.Text("Launch.Account.Type.Offline"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/link-2-off" }
         ];

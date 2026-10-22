@@ -300,6 +300,16 @@ public partial class PageInstanceSetup
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         HintRamTooHigh.Visibility = ramGame / ramTotal > 0.75d ? Visibility.Visible : Visibility.Collapsed;
+        // Do not keep a frame loop alive for an unchanged meter, or animate
+        // layout underneath the glass when this meter is outside the viewport.
+        if (Math.Abs(ramUsed - ColumnRamUsed.Width.Value) < .00001 &&
+            Math.Abs(ramGameActual - ColumnRamGame.Width.Value) < .00001 &&
+            Math.Abs(ramEmpty - ColumnRamEmpty.Width.Value) < .00001)
+        {
+            ModAnimation.AniStop("VersionSetup Ram Grid");
+            return;
+        }
+        showAnim &= ControlVisualHelpers.ShouldAnimate(this) && ControlVisualHelpers.IsInViewport(PanRamDisplay, PanBack);
         if (showAnim)
         {
             // 宽度动画
@@ -316,6 +326,7 @@ public partial class PageInstanceSetup
         }
         else
         {
+            ModAnimation.AniStop("VersionSetup Ram Grid");
             // 宽度设置
             ColumnRamUsed.Width = new GridLength(ramUsed, GridUnitType.Star);
             ColumnRamGame.Width = new GridLength(ramGameActual, GridUnitType.Star);

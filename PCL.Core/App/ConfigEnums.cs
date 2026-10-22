@@ -1,4 +1,4 @@
-namespace PCL.Core.App;
+﻿namespace PCL.Core.App;
 
 /// <summary>
 /// 文件下载使用的 HTTP 协议模式。
@@ -28,17 +28,8 @@ public enum ColorTheme
     SkyBlue = 0,
     CatBlue = 1,
     DeathBlue = 2,
-    HmclBlue = 3
-}
-
-/// <summary>
-/// 更新通道
-/// </summary>
-public enum UpdateChannel
-{
-    Release = 0,
-    Beta = 1,
-    Dev = 2
+    HmclBlue = 3,
+    Custom = 4
 }
 
 /// <summary>
@@ -86,17 +77,6 @@ public enum JvmPreferredIpStack
     PreferV4 = 0,
     Default = 1,
     PreferV6 = 2
-}
-
-/// <summary>
-/// 启动器更新行为
-/// </summary>
-public enum LauncherAutoUpdateBehavior
-{
-    DownloadAndInstall = 0,
-    DownloadAndAnnounce = 1,
-    AnnounceOnly = 2,
-    Disable = 3
 }
 
 public enum LauncherTitleType

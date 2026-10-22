@@ -1,4 +1,4 @@
-<local:MyPageRight
+﻿<local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,35 +9,48 @@
         <Grid x:Name="PanAllBack">
             <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                                   x:Name="PanBack">
-                <StackPanel x:Name="PanMain" Margin="25,10,25,10" Grid.IsSharedSizeScope="True"> <!-- 若显示多选模块则为 92 -->
-                    <local:MySearchBox Margin="0,15" HintText="{DynamicResource Instance.Resource.Search.Hint}" x:Name="SearchBox" />
-                    <local:MyCard Margin="0,0,0,15" x:Name="PanManage">
-                        <WrapPanel Margin="15,8,0,15">
-                            <local:MyButton x:Name="BtnManageBack" MinWidth="110" Text="{DynamicResource Instance.Resource.BackToParent}" Padding="13,7"
+                <local:MyScrollViewer.FixedHeader>
+                <StackPanel Margin="16,8,16,0">
+                    <local:MySearchBox Margin="0,0,0,8" HintText="{DynamicResource Instance.Resource.Search.Hint}" x:Name="SearchBox" />
+                    <local:MyCard Margin="0,0,0,8" x:Name="PanManage">
+                        <StackPanel>
+                        <WrapPanel Margin="12,0,0,8">
+                            <local:MyButton x:Name="BtnManageBack" Text="{DynamicResource Instance.Resource.BackToParent}" Padding="12,7,12,7"
                                             Margin="0,7,15,0" HorizontalAlignment="Left" Visibility="Collapsed" />
-                            <local:MyButton x:Name="BtnManageOpen" MinWidth="110" Text="{DynamicResource Common.Action.OpenFolder}" Padding="13,7"
-                                            Margin="0,7,15,0" HorizontalAlignment="Left" ColorType="Highlight" />
+                            <local:MyButton x:Name="BtnManageOpen" Text="{DynamicResource Common.Action.OpenFolder}" Padding="12,7,12,7"
+                                            Margin="0,7,15,0" HorizontalAlignment="Left" />
 
-                            <local:MyButton x:Name="BtnManageInstall" MinWidth="110" Text="{DynamicResource Instance.Resource.InstallFromFiles}" Padding="13,7"
+                            <local:MyButton ColorType="Highlight" x:Name="BtnManageInstall" Text="{DynamicResource Instance.Resource.InstallFromFiles}" Padding="12,7,12,7"
                                             Margin="0,7,15,0" HorizontalAlignment="Left" />
-                            <local:MyButton x:Name="BtnManageDownload" MinWidth="110" Text="{DynamicResource Instance.Resource.DownloadNew}" Padding="13,7"
+                            <local:MyButton x:Name="BtnManageDownload" Text="{DynamicResource Instance.Resource.DownloadNew}" Padding="12,7,12,7"
                                             Margin="0,7,15,0" HorizontalAlignment="Left" />
-                            <local:MyButton x:Name="BtnManageSelectAll" MinWidth="110" Text="{DynamicResource Instance.Resource.SelectAll}" Padding="13,7"
+                        </WrapPanel>
+                        <Expander Header="{DynamicResource Common.Action.More}" Foreground="{DynamicResource ColorBrush1}" Margin="12,0,12,8">
+                            <ScrollViewer MaxHeight="96" VerticalScrollBarVisibility="Auto">
+                            <WrapPanel>
+                            <local:MyButton x:Name="BtnManageSelectAll" Text="{DynamicResource Instance.Resource.SelectAll}" Padding="12,7,12,7"
                                             Margin="0,7,15,0" HorizontalAlignment="Left" />
-                            <local:MyButton x:Name="BtnManageInfoExport" MinWidth="110" Text="{DynamicResource Instance.Resource.ExportInfo}" Padding="13,7"
+                            <local:MyButton x:Name="BtnManageInfoExport" Text="{DynamicResource Instance.Resource.ExportInfo}" Padding="12,7,12,7"
                                             Margin="0,7,15,0" HorizontalAlignment="Left" ToolTip="{DynamicResource Instance.Resource.ExportInfo.ToolTip}" />
-                            <local:MyButton x:Name="BtnManageJarInJar" MinWidth="110" Text="{DynamicResource Instance.Resource.Mod.JarInJar.Entry}" Padding="13,7"
+                            <local:MyButton x:Name="BtnManageJarInJar" Text="{DynamicResource Instance.Resource.Mod.JarInJar.Entry}" Padding="12,7,12,7"
                                             Margin="0,7,15,0" HorizontalAlignment="Left" ToolTip="{DynamicResource Instance.Resource.Mod.JarInJar.Entry.ToolTip}" />
-                            <local:MyButton x:Name="BtnManageCheck" MinWidth="110" Text="{DynamicResource Instance.Resource.CheckMods}" Padding="13,7"
+                            <local:MyButton x:Name="BtnManageCheck" Text="{DynamicResource Instance.Resource.CheckMods}" Padding="12,7,12,7"
                                             Margin="0,7,15,0" HorizontalAlignment="Left"
                                             ToolTip="{DynamicResource Instance.Resource.CheckMods.ToolTip}"
                                             Visibility="Collapsed" />
-                        </WrapPanel>
+                            </WrapPanel>
+                            </ScrollViewer>
+                        </Expander>
+                        </StackPanel>
                     </local:MyCard>
-                    <local:MyCard x:Name="PanListBack" VerticalAlignment="Top" Opacity="0" Margin="0,0,0,14" Title=" "
-                                  MinHeight="55">
-                        <StackPanel x:Name="PanFilter" Margin="15,13,0,0" Orientation="Horizontal"
-                                    VerticalAlignment="Top" HorizontalAlignment="Left" Height="28">
+                        <DockPanel x:Name="ResourceFilterBar" VerticalAlignment="Top">
+                        <StackPanel Margin="0,0,0,0" DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top"
+                                    HorizontalAlignment="Right" MinHeight="32">
+                            <local:MyIconTextButton x:Name="BtnSort" Text="{DynamicResource Instance.Resource.Sort.Text}"
+                                                    SvgIcon="lucide/arrow-up-down" />
+                        </StackPanel>
+                        <WrapPanel x:Name="PanFilter" Margin="0,0,0,4" Orientation="Horizontal"
+                                    VerticalAlignment="Top" HorizontalAlignment="Stretch">
                             <local:MyRadioButton Tag="0" ColorType="Highlight" VerticalAlignment="Center" Margin="2,0"
                                                  Text="{DynamicResource Instance.Resource.Filter.All}" x:Name="BtnFilterAll" Checked="True" />
                             <local:MyRadioButton Tag="1" ColorType="Highlight" VerticalAlignment="Center" Margin="2,0"
@@ -50,13 +63,18 @@
                                                  Text="{DynamicResource Instance.Resource.Filter.Error}" x:Name="BtnFilterError" />
                             <local:MyRadioButton Tag="5" ColorType="Highlight" VerticalAlignment="Center" Margin="2,0"
                                                  Text="{DynamicResource Instance.Resource.Filter.Duplicate}" x:Name="BtnFilterDuplicate" />
-                        </StackPanel>
-                        <StackPanel Margin="0,13,15,0" Orientation="Horizontal" VerticalAlignment="Top"
-                                    HorizontalAlignment="Right" Height="28">
-                            <local:MyIconTextButton x:Name="BtnSort" Text="{DynamicResource Instance.Resource.Sort.Text}"
-                                                    SvgIcon="lucide/arrow-up-down" />
-                        </StackPanel>
-                        <StackPanel Margin="20,48,18,22" Name="PanList" VerticalAlignment="Top" />
+                        </WrapPanel>
+                        </DockPanel>
+                </StackPanel>
+                </local:MyScrollViewer.FixedHeader>
+                <StackPanel x:Name="PanMain" Margin="16,0,16,10" Grid.IsSharedSizeScope="True">
+                    <local:MyCard x:Name="PanListBack" VerticalAlignment="Top" Opacity="0" Margin="0,0,0,14" Title=""
+                                  MinHeight="55">
+                        <Grid>
+
+
+                        <StackPanel Margin="16,8,16,16" Name="PanList" VerticalAlignment="Top" />
+                        </Grid>
                     </local:MyCard>
                 </StackPanel>
             </local:MyScrollViewer>
@@ -69,14 +87,14 @@
                     <TextBlock x:Name="TxtEmptyDescription" Margin="10,10,10,0"
                                Text="{DynamicResource Instance.Resource.Empty.Description}" TextWrapping="Wrap" />
                     <WrapPanel Margin="10,20,10,5" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <local:MyButton Height="35" x:Name="BtnHintBack" MinWidth="130" Text="{DynamicResource Instance.Resource.BackToParent}" Margin="5,0"
-                                        Padding="12,0" Visibility="Collapsed" />
-                        <local:MyButton Height="35" x:Name="BtnHintInstall" MinWidth="130" Text="{DynamicResource Instance.Resource.InstallFromFiles}" Margin="5,0"
-                                        Padding="12,0" ColorType="Highlight" />
-                        <local:MyButton Height="35" x:Name="BtnHintDownload" MinWidth="130" Text="{DynamicResource Instance.Resource.DownloadNew}" Margin="5,0"
-                                        Padding="12,0" />
-                        <local:MyButton Height="35" x:Name="BtnHintOpen" MinWidth="130" Text="{DynamicResource Common.Action.OpenFolder}" Margin="5,0"
-                                        Padding="12,0" />
+                        <local:MyButton Height="40" x:Name="BtnHintBack" Text="{DynamicResource Instance.Resource.BackToParent}" Margin="5,0"
+                                        Visibility="Collapsed" />
+                        <local:MyButton Height="40" x:Name="BtnHintInstall" Text="{DynamicResource Instance.Resource.InstallFromFiles}" Margin="5,0"
+                                        ColorType="Highlight" />
+                        <local:MyButton Height="40" x:Name="BtnHintDownload" Text="{DynamicResource Instance.Resource.DownloadNew}" Margin="5,0"
+                                        />
+                        <local:MyButton Height="40" x:Name="BtnHintOpen" Text="{DynamicResource Common.Action.OpenFolder}" Margin="5,0"
+                                        />
                     </WrapPanel>
                 </StackPanel>
             </local:MyCard>
@@ -91,10 +109,10 @@
                                Text="{DynamicResource Instance.Resource.Schematic.Unavailable.Message}"
                                TextWrapping="Wrap" HorizontalAlignment="Center" />
                     <WrapPanel Margin="10,20,10,5" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <local:MyButton Height="35" x:Name="BtnSchematicDownloadMod" MinWidth="130" Text="{DynamicResource Instance.Resource.Schematic.DownloadMod}"
-                                        Margin="5,0" Padding="12,0" ColorType="Highlight" />
-                        <local:MyButton Height="35" x:Name="BtnSchematicVersionSelect" MinWidth="130" Text="{DynamicResource Instance.Resource.Mod.Disabled.SelectInstance}"
-                                        Margin="5,0" Padding="12,0" />
+                        <local:MyButton Height="40" x:Name="BtnSchematicDownloadMod" Text="{DynamicResource Instance.Resource.Schematic.DownloadMod}"
+                                        Margin="5,0" ColorType="Highlight" />
+                        <local:MyButton Height="40" x:Name="BtnSchematicVersionSelect" Text="{DynamicResource Instance.Resource.Mod.Disabled.SelectInstance}"
+                                        Margin="5,0" />
                     </WrapPanel>
                 </StackPanel>
             </local:MyCard>
@@ -111,7 +129,7 @@
             </local:MyCard.RenderTransform>
             <TextBlock x:Name="LabSelect" Text="" HorizontalAlignment="Center" VerticalAlignment="Top"
                        Margin="9" Foreground="{DynamicResource ColorBrush2}" />
-            <StackPanel Orientation="Horizontal" Margin="5,28,5,5">
+            <WrapPanel Orientation="Horizontal" Margin="5,28,5,5">
                 <local:MyIconTextButton x:Name="BtnSelectUpdate" Text="{DynamicResource Instance.Resource.Update}"
                                         LogoScale="1"
                                         SvgIcon="lucide/upload" />
@@ -133,7 +151,7 @@
                 <local:MyIconTextButton x:Name="BtnSelectCancel" Text="{DynamicResource Instance.Resource.CancelSelection}"
                                         LogoScale="0.8"
                                         SvgIcon="lucide/x" />
-            </StackPanel>
+            </WrapPanel>
         </local:MyCard>
     </Grid>
 </local:MyPageRight>

@@ -5,6 +5,9 @@ using System.Net.NetworkInformation;
 using System.Text;
 using Downloader;
 using System.Text.Json.Nodes;
+using System.Diagnostics;
+using System.IO;
+using PCL.Core.Logging;
 using PCL.Core.IO.Net;
 using PCL.Core.IO.Net.Http;
 
@@ -99,6 +102,8 @@ public static class Requester
         HttpResponseMessage? response = null;
         var request = new HttpRequestMessage(ParseMethod(param.Method), RequestSigning.SecretCdnSign(url));
         RequestSigning.SecretHeadersSign(url, ref request, param.UseBrowserUserAgent);
+        var elapsed = Stopwatch.StartNew();
+        var endpoint = request.RequestUri!.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.UriEscaped);
         try
         {
             if (!string.IsNullOrWhiteSpace(param.Accept))
@@ -123,8 +128,42 @@ public static class Requester
             using var cts = new CancellationTokenSource();
             cts.CancelAfter(param.Timeout <= 0 ? 30000 : param.Timeout);
             response = await NetworkService.GetClient().SendAsync(request, cts.Token).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                var keyPresent = request.Headers.TryGetValues("x-api-key", out var keys) && keys.Any(k => !string.IsNullOrWhiteSpace(k));
+                var headers = new[] { "Server", "CF-Ray", "X-Cache", "X-Amz-Cf-Id", "Retry-After" }
+                    .Where(name => response.Headers.Contains(name))
+                    .Select(name => name + "=" + string.Join(",", response.Headers.GetValues(name)));
+                var detail = $"HTTP {(int)response.StatusCode}; endpoint={endpoint}; elapsed={elapsed.ElapsedMilliseconds}ms; apiKeyPresent={keyPresent}; {string.Join("; ", headers)}";
+                // Capture only public resource API error bodies, never login or arbitrary response content.
+                if (request.RequestUri.Host == "api.curseforge.com" ||
+                    (request.RequestUri.Host == "mod.mcimirror.top" && request.RequestUri.AbsolutePath.StartsWith("/curseforge/", StringComparison.Ordinal)))
+                {
+                    try
+                    {
+                        using var reader = new StreamReader(await response.Content.ReadAsStreamAsync(cts.Token).ConfigureAwait(false));
+                        var buffer = new char[4096];
+                        var count = await reader.ReadBlockAsync(buffer.AsMemory(), cts.Token).ConfigureAwait(false);
+                        var body = new string(buffer, 0, count);
+                        if (keys is not null)
+                            foreach (var key in keys.Where(k => !string.IsNullOrEmpty(k)))
+                                body = body.Replace(key, "[redacted]", StringComparison.Ordinal);
+                        detail += "; body=" + body.Replace("\r", " ").Replace("\n", " ");
+                    }
+                    catch (Exception diagnosticError)
+                    {
+                        detail += "; bodyUnavailable=" + diagnosticError.GetType().Name;
+                    }
+                }
+                LogWrapper.Debug("HTTP diagnostic", detail);
+            }
             EnsureSuccess(response);
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            LogWrapper.Debug(ex, "HTTP diagnostic", $"Request failed; endpoint={endpoint}; elapsed={elapsed.ElapsedMilliseconds}ms");
+            throw;
         }
         finally
         {

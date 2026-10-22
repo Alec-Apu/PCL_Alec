@@ -1,13 +1,13 @@
-<Grid
+﻿<Grid
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="PCL.MyCheckBox"
-    FocusVisualStyle="{x:Null}"
+    FocusVisualStyle="{StaticResource Fluent.Focus}"
     MinWidth="20" x:Name="PanBack" UseLayoutRounding="False" SnapsToDevicePixels="False" MinHeight="20"
     Background="{StaticResource ColorBrushSemiTransparent}" Focusable="True" d:DesignWidth="126.4"
     d:DesignHeight="44.8">
-    <TextBlock IsHitTestVisible="False" FontSize="13" x:FieldModifier="public" x:Name="LabText" Padding="0"
+    <TextBlock IsHitTestVisible="False" FontSize="13" x:FieldModifier="public" x:Name="LabText" TextWrapping="Wrap" Padding="0"
                Margin="26,0,0,0" Foreground="{DynamicResource ColorBrush1}" HorizontalAlignment="Left"
                VerticalAlignment="Center" />
     <Border IsHitTestVisible="False" x:Name="ShapeBorder" BorderThickness="1.1" HorizontalAlignment="Left"

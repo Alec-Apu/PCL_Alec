@@ -1,9 +1,10 @@
-<Border x:Name="PanBack" x:Class="PCL.MyIconTextButton"
+﻿<Border x:Name="PanBack" x:Class="PCL.MyIconTextButton"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:svgIcon="clr-namespace:PCL.Core.UI.Controls.SvgIcon;assembly=PCL.Core"
+        Focusable="True" FocusVisualStyle="{StaticResource Fluent.Focus}" AutomationProperties.Name="{Binding Text, ElementName=PanBack}"
         HorizontalAlignment="Center" VerticalAlignment="Center" Background="{StaticResource ColorBrushSemiTransparent}"
-        CornerRadius="13.5" MinHeight="27" MaxHeight="27">
+        CornerRadius="13.5" MinHeight="32">
     <StackPanel Orientation="Horizontal">
         <Grid x:Name="LogoHost"
               Width="16" Height="16"

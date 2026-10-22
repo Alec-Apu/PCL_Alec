@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -1982,122 +1982,35 @@ public static class ModDownload
     /// </summary>
     public static T DlModRequest<T>(string url)
     {
-        var urls = new List<KeyValuePair<string, int>>();
-        var mcimUrl = DlSourceModGet(url);
-        if ((mcimUrl ?? "") != (url ?? ""))
-            switch (Config.Download.Comp.CompSourceSolution)
-            {
-                case 0:
-                {
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 5));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 10));
-                    urls.Add(new KeyValuePair<string, int>(url, 15));
-                    break;
-                }
-                case 1:
-                {
-                    urls.Add(new KeyValuePair<string, int>(url, 5));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 5));
-                    urls.Add(new KeyValuePair<string, int>(url, 15));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 10));
-                    break;
-                }
-
-                default:
-                {
-                    urls.Add(new KeyValuePair<string, int>(url, 5));
-                    urls.Add(new KeyValuePair<string, int>(url, 15));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 10));
-                    break;
-                }
-            }
-
-        var exs = "";
-        foreach (var Source in urls)
-            try
-            {
-                var json = Requester.FetchString(Source.Key, new RequestParam
-                {
-                    Timeout = Source.Value * 1000,
-                    UseBrowserUserAgent = true
-                });
-                if (typeof(T) == typeof(string)) return (T)(object)json;
-                return (T)(object)ModBase.GetJson(json);
-            }
-            catch (Exception ex)
-            {
-                // 镜像源可能随机爆炸，忽略就好
-                if (!ex.Message.ContainsF("mcimirror")) exs += ex.Message + "\r\n";
-            }
-
-        throw new Exception(exs);
+        EnsureResourceSource(url);
+        var json = Requester.FetchString(url, new RequestParam
+        {
+            Timeout = 15000, Retries = 2, UseBrowserUserAgent = true
+        });
+        return typeof(T) == typeof(string) ? (T)(object)json : (T)(object)ModBase.GetJson(json);
     }
 
-    /// <summary>
-    ///     非泛型版本的 DlModRequest，返回 string
-    ///     对可能涉及 Mod 镜像源的请求进行处理。
-    ///     调用 NetRequest，会进行重试。
-    /// </summary>
     public static string DlModRequest(string url, string method, string data, string contentType,
         bool allowMirror = false) => DlModRequest<string>(url, method, data, contentType, allowMirror);
-    
-    /// <summary>
-    ///     对可能涉及 Mod 镜像源的请求进行处理。
-    ///     调用 NetRequest，会进行重试。
-    /// </summary>
+
     public static T DlModRequest<T>(string url, string method, string data, string contentType,
         bool allowMirror = false)
     {
-        var urls = new List<KeyValuePair<string, int>>();
-        var mcimUrl = DlSourceModGet(url);
-        if ((mcimUrl ?? "") != (url ?? ""))
-            switch (allowMirror ? Config.Download.Comp.CompSourceSolution : 2)
-            {
-                case 0:
-                {
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 5));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 10));
-                    urls.Add(new KeyValuePair<string, int>(url, 15));
-                    break;
-                }
-                case 1:
-                {
-                    urls.Add(new KeyValuePair<string, int>(url, 5));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 5));
-                    urls.Add(new KeyValuePair<string, int>(url, 15));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 10));
-                    break;
-                }
+        EnsureResourceSource(url);
+        var json = Requester.Fetch(url, new FetchParam
+        {
+            Method = method, Content = data, ContentType = contentType, Timeout = 15000
+        });
+        return typeof(T) == typeof(string) ? (T)(object)json : (T)(object)ModBase.GetJson(json);
+    }
 
-                default:
-                {
-                    urls.Add(new KeyValuePair<string, int>(url, 5));
-                    urls.Add(new KeyValuePair<string, int>(url, 15));
-                    urls.Add(new KeyValuePair<string, int>(mcimUrl, 10));
-                    break;
-                }
-            }
-
-        var exs = "";
-        foreach (var Source in urls)
-            try
-            {
-                string json = Requester.Fetch(Source.Key, new FetchParam
-                {
-                    Method = method,
-                    Content = data, 
-                    ContentType = contentType,
-                    Timeout = Source.Value * 1000
-                });
-                if (typeof(T) == typeof(string)) return (T)(object)json; // 沟槽的，为什么不能写 T is string
-                return (T)(object)ModBase.GetJson(json);
-            }
-            catch (Exception ex)
-            {
-                if (!ex.Message.ContainsF("mcimirror")) exs += ex.Message + "\r\n";
-            }
-
-        throw new Exception(exs);
+    private static void EnsureResourceSource(string url)
+    {
+        var uri = new Uri(url);
+        if (uri.Host.Equals("api.curseforge.com", StringComparison.OrdinalIgnoreCase) ||
+            (uri.Host.Equals("mod.mcimirror.top", StringComparison.OrdinalIgnoreCase) &&
+             uri.AbsolutePath.StartsWith("/curseforge", StringComparison.OrdinalIgnoreCase)))
+            throw new NotSupportedException(Lang.Text("Download.Comp.Source.Removed"));
     }
 
     #endregion
@@ -2217,56 +2130,10 @@ public static class ModDownload
     /// </summary>
     /// <param name="original"></param>
     /// <returns></returns>
-    public static string DlSourceModGet(string original)
-    {
-        return original.Replace("https://api.modrinth.com", "https://mod.mcimirror.top/modrinth")
-            .Replace("https://api.curseforge.com", "https://mod.mcimirror.top/curseforge");
-    }
+    public static string DlSourceModGet(string original) => original;
 
-    /// <summary>
-    ///     Mod 下载镜像源
-    /// </summary>
-    /// <param name="original"></param>
-    /// <returns></returns>
-    public static List<string> DlSourceModDownloadGet(string original)
-    {
-        var res = new List<string>();
-        var mirrorDl = original.Replace("https://cdn.modrinth.com", "https://mod.mcimirror.top")
-            .Replace("https://edge.forgecdn.net",
-                "https://mod.mcimirror.top"); // like https://cdn.modrinth.com/data/P7dR8mSH/versions/X2hTodix/fabric-api-0.129.0%2B1.21.8.jar
-        // like https://edge.forgecdn.net/files/6767/951/jei-1.21.5-neoforge-21.4.0.27.jar
-        switch (Config.Download.Comp.CompSourceSolution)
-        {
-            case 0: // 镜像源
-            {
-                res.Add(mirrorDl);
-                res.Add(mirrorDl);
-                break;
-            }
-            case 1: // 平衡
-            {
-                res.Add(original);
-                res.Add(mirrorDl);
-                break;
-            }
-            case 2: // 官方源
-            {
-                res.Add(original);
-                res.Add(original); // 错误
-                break;
-            }
-
-            default:
-            {
-                Config.Download.Comp.CompSourceSolution = 1;
-                res.Add(original);
-                break;
-            }
-        }
-
-        res.Add(original);
-        return res;
-    }
+    /// <summary>Community resources use the official CDN directly.</summary>
+    public static List<string> DlSourceModDownloadGet(string original) => new() { original };
 
     // Loader 自动切换
     private static void DlSourceLoader<InputType, OutputType>(ModLoader.LoaderTask<InputType, OutputType> mainLoader,
@@ -2362,6 +2229,7 @@ public static class ModDownload
             if (Loader.Key.State == ModBase.LoadState.Loading)
                 Loader.Key.Abort();
     }
+
 
     #endregion
 

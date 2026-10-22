@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using PCL.Core.App;
 using PCL.Core.Minecraft.Profile;
 using PCL.Core.App.IoC;
@@ -97,11 +98,18 @@ public partial class FormMain
         HintWrapper.OnShow += HintService.HintWrapper_OnShow;
         // 加载 UI
         InitializeComponent();
+        FluentTheme.Refresh();
         Opacity = 0d;
         try
         {
-            Height = States.UI.WindowHeight;
-            Width = States.UI.WindowWidth;
+            var enlarge = !States.UI.LargeWindowApplied;
+            Height = Math.Clamp(States.UI.WindowHeight * (enlarge ? 1.5 : 1), MinHeight,
+                Math.Max(MinHeight, SystemParameters.WorkArea.Height));
+            Width = Math.Clamp(States.UI.WindowWidth * (enlarge ? 1.5 : 1), MinWidth,
+                Math.Max(MinWidth, SystemParameters.WorkArea.Width));
+            States.UI.WindowHeight = Height;
+            States.UI.WindowWidth = Width;
+            States.UI.LargeWindowApplied = true;
         }
         catch (Exception ex) // 修复 #2019
         {
@@ -110,8 +118,8 @@ public partial class FormMain
                 "读取窗口默认大小失败",
                 ModBase.LogLevel.Hint,
                 userSummary: Lang.Text("Main.Error.OperationFailed"));
-            Height = MinHeight + 100d;
-            Width = MinWidth + 100d;
+            Height = Math.Min(825d, Math.Max(MinHeight, SystemParameters.WorkArea.Height));
+            Width = Math.Min(1350d, Math.Max(MinWidth, SystemParameters.WorkArea.Width));
         }
 
         // 管理员权限下文件拖拽
@@ -136,6 +144,7 @@ public partial class FormMain
         pageLeft = ModMain.frmLaunchLeft;
         PanMainRight.Child = ModMain.frmLaunchRight;
         pageRight = ModMain.frmLaunchRight;
+        ConfigureFluentPage(pageLeft);
         ModMain.frmLaunchRight.PageState = MyPageRight.PageStates.ContentStay;
         // 调试模式提醒
         if (ModBase.modeDebug)
@@ -158,7 +167,6 @@ public partial class FormMain
         PageSetupUI.BackgroundRefresh(false, true);
         ModMusic.MusicRefreshPlay(false, true);
         // 扩展按钮
-        BtnExtraUpdateRestart.showCheck = BtnExtraUpdateRestart_ShowCheck;
         BtnExtraDownload.showCheck = BtnExtraDownload_ShowCheck;
         BtnExtraBack.showCheck = BtnExtraBack_ShowCheck;
         BtnExtraApril.showCheck = BtnExtraApril_ShowCheck;
@@ -231,7 +239,6 @@ public partial class FormMain
                 {
                     ModDownload.dlClientListMojangLoader.Start(1); // PCL 会同时根据这里的加载结果决定是否使用官方源进行下载
                     RunCountSub();
-                    UpdateManager.serverLoader.Start(1);
                     ModBase.RunInNewThread(ModMain.TryClearTaskTemp, "TryClearTaskTemp", ThreadPriority.BelowNormal);
                 }
                 catch (Exception ex)
@@ -449,8 +456,7 @@ public partial class FormMain
     ///     正常关闭程序。程序将在执行此方法后约 0.3s 退出。
     /// </summary>
     /// <param name="sendWarning">是否在还有下载任务未完成时发出警告。</param>
-    /// <param name="isUpdating">是否正在更新重启</param>
-    public void EndProgram(bool sendWarning, bool isUpdating = false)
+    public void EndProgram(bool sendWarning)
     {
         // 发出警告
         if (sendWarning && ModNet.HasDownloadingTask())
@@ -505,12 +511,12 @@ public partial class FormMain
                         Visibility = Visibility.Collapsed;
                         ShowInTaskbar = false;
                     }, 210),
-                    ModAnimation.AaCode(() => EndProgramForce(force: false, isUpdating: isUpdating), 230)
+                    ModAnimation.AaCode(() => EndProgramForce(force: false), 230)
                 }, "Form Close");
             }
             else
             {
-                EndProgramForce(force: false, isUpdating: isUpdating);
+                EndProgramForce(force: false);
             }
 
             ModBase.Log("[System] 收到关闭指令");
@@ -520,13 +526,11 @@ public partial class FormMain
     private static bool isLogShown;
 
     public static void EndProgramForce(ModBase.ProcessReturnValues returnCode = ModBase.ProcessReturnValues.Success,
-        bool force = true, bool isUpdating = false)
+        bool force = true)
     {
         // On Error Resume Next
         ModBase.isProgramEnded = true;
         ModAnimation.AniControlEnabled += 1;
-        if (UpdateManager.isUpdateWaitingRestart && !isUpdating)
-            UpdateManager.UpdateRestart(false, false);
         if (returnCode == ModBase.ProcessReturnValues.Exception)
         {
             if (!isLogShown)
@@ -587,7 +591,7 @@ public partial class FormMain
             if (PanTitle is not null)
                 PanMain.Height = Math.Max(0d, formHeight - PanTitle.ActualHeight);
             else
-                PanMain.Height = formHeight;
+                PanMain.Height = Math.Max(0d, formHeight - 50d);
 
             VideoBack.Width = formWidth;
             VideoBack.Height = formHeight;
@@ -607,6 +611,29 @@ public partial class FormMain
     }
 
     // 最小化
+    private Rect? _titleZoomRestoreBounds;
+
+    private void BtnTitleZoom_Click(object sender, RoutedEventArgs e)
+    {
+        if (_titleZoomRestoreBounds is { } saved)
+        {
+            _titleZoomRestoreBounds = null;
+            Left = saved.Left;
+            Top = saved.Top;
+            Width = saved.Width;
+            Height = saved.Height;
+        }
+        else
+        {
+            _titleZoomRestoreBounds = new Rect(Left, Top, Width, Height);
+            var area = SystemParameters.WorkArea;
+            Left = area.Left;
+            Top = area.Top;
+            Width = Math.Max(MinWidth, area.Width);
+            Height = Math.Max(MinHeight, area.Height);
+        }
+    }
+
     private void BtnTitleMin_Click(object sender, EventArgs e)
     {
         WindowState = WindowState.Minimized;
@@ -1393,7 +1420,6 @@ public partial class FormMain
         SetupAbout = 4,
         SetupLog = 5,
         SetupFeedback = 6,
-        SetupUpdate = 8,
         SetupJava = 9,
         SetupLauncherMisc = 10,
         SetupLauncherLanguage = 11,
@@ -1785,6 +1811,7 @@ public partial class FormMain
 
             pageLast = pageCurrent;
             pageCurrent = stack;
+            RefreshFluentDock();
             switch (stack.page)
             {
                 case PageType.Launch: // 启动
@@ -1814,14 +1841,14 @@ public partial class FormMain
                     {
                         ModMain.frmSetupLeft ??= new PageSetupLeft();
                         subType = ModMain.frmSetupLeft.pageID;
-                        PageChangeAnim(ModMain.frmSetupLeft, (FrameworkElement)ModMain.frmSetupLeft.PageGet(subType));
+                        PageChangeAnim(ModMain.frmSetupLeft, (MyPageRight)ModMain.frmSetupLeft.PageGet(subType));
                         break;
                     }
                 case PageType.GameLog: // 实时日志
                     {
                         if (ModMain.frmLogLeft is null)
                             ModMain.frmLogLeft = new PageLogLeft();
-                        if (ModMain.frmLogLeft is null)
+                        if (ModMain.frmLogRight is null)
                             ModMain.frmLogRight = new PageLogRight();
                         PageChangeAnim(ModMain.frmLogLeft, ModMain.frmLogRight);
                         break;
@@ -1925,6 +1952,7 @@ public partial class FormMain
             {
                 ModAnimation.AniControlEnabled += 1;
                 // 把新页面添加进容器
+                ConfigureFluentPage(pageLeft);
                 PanMainLeft.Child = pageLeft;
                 pageLeft.Opacity = 0d;
                 PanMainLeft.Background = null;
@@ -1997,38 +2025,103 @@ public partial class FormMain
 
     private void PanMainLeft_Resize(double newWidth)
     {
-        var delta = newWidth - RectLeftBackground.Width;
-        if (Math.Abs(delta) > 0.1d && ModAnimation.AniControlEnabled == 0)
+        // Inline categories no longer resize a separate sidebar background.
+        PanMainLeft.IsHitTestVisible = true;
+    }
+
+    private bool _updatingDock;
+
+    private void FluentDock_Checked(object sender, RoutedEventArgs e)
+    {
+        if (_updatingDock || !IsLoaded || sender is not RadioButton button) return;
+        var section = (PageType)int.Parse((string)button.Tag);
+        PageChange(section);
+    }
+
+    private void RefreshFluentDock()
+    {
+        if (FluentDock is null) return;
+        var destination = PCL.Core.UI.Navigation.LauncherNavigation.ResolveSection(
+            (int)pageCurrent.page, (int)(pageStack.FirstOrDefault(entry => entry.page is not (PageType.TaskManager or PageType.GameLog or PageType.HelpDetail))?.page ?? PageType.Launch));
+        _updatingDock = true;
+        try
         {
-            if (PanMain.Opacity < 0.1d)
-                PanMainLeft.IsHitTestVisible = false; // 避免左边栏指向背景未能完美覆盖左边栏
-            if (newWidth > 0d)
-                // 宽度足够，显示
-                ModAnimation.AniStart(
-                    new[]
-                    {
-                        ModAnimation.AaWidth(RectLeftBackground, newWidth - RectLeftBackground.Width, 180,
-                            ease: new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.ExtraStrong)),
-                        ModAnimation.AaOpacity(RectLeftShadow, 1d - RectLeftShadow.Opacity, 180),
-                        ModAnimation.AaCode(() => PanMainLeft.IsHitTestVisible = true, 150)
-                    }, "FrmMain LeftChange", true);
-            else
-                // 宽度不足，隐藏
-                ModAnimation.AniStart(
-                    new[]
-                    {
-                        ModAnimation.AaWidth(RectLeftBackground, -RectLeftBackground.Width, 180,
-                            ease: new ModAnimation.AniEaseOutFluent()),
-                        ModAnimation.AaOpacity(RectLeftShadow, -RectLeftShadow.Opacity, 180),
-                        ModAnimation.AaCode(() => PanMainLeft.IsHitTestVisible = true, 150)
-                    }, "FrmMain LeftChange", true);
+            foreach (var button in FluentDock.Children.OfType<RadioButton>())
+                button.IsChecked = int.Parse((string)button.Tag) == (int)destination;
         }
-        else
+        finally { _updatingDock = false; }
+        UpdateDockHighlight(true);
+    }
+
+    private LiquidDockController? _liquidDock;
+    internal LiquidDockController? LiquidDock => _liquidDock;
+
+    private void DockSurface_LayoutChanged(object sender, RoutedEventArgs e) => UpdateDockHighlight(false);
+
+    private void UpdateDockHighlight(bool animate)
+    {
+        if (DockHighlight is null || !DockSurface.IsLoaded) return;
+        _liquidDock ??= new LiquidDockController(this);
+        _liquidDock.Refresh(animate);
+    }
+
+    private readonly HashSet<MyListItem> _categoryActionSubscriptions = [];
+
+    private void ConfigureFluentPage(MyPageLeft page)
+    {
+        var launch = page is PageLaunchLeft or PageSpeedLeft;
+        // Tools has one destination and hides its category list; reclaim that column too.
+        var empty = page.GetType() == typeof(MyPageLeft) || page is PageToolsLeft;
+        CategorySurface.Visibility = launch || empty ? Visibility.Collapsed : Visibility.Visible;
+        page.HorizontalAlignment = HorizontalAlignment.Stretch;
+        page.Width = double.NaN;
+        PanMainLeft.MaxHeight = double.PositiveInfinity;
+        PanMainLeft.Visibility = empty ? Visibility.Collapsed : Visibility.Visible;
+        CategoryColumn.Width = new GridLength(launch || empty ? 0 : 192);
+        Grid.SetColumnSpan(CategoryHost, launch ? 2 : 1);
+        Grid.SetRowSpan(CategoryHost, launch ? 1 : 2);
+        Grid.SetColumn(ContentHost, launch || empty ? 0 : 1);
+        Grid.SetColumnSpan(ContentHost, launch || empty ? 2 : 1);
+        Grid.SetRow(ContentHost, launch ? 1 : 0);
+        Grid.SetRowSpan(ContentHost, launch ? 1 : 2);
+        CategoryHost.Margin = launch ? new Thickness(16, 8, 16, 0) : new Thickness(8, 8, 0, 8);
+        CategoryHost.Visibility = empty ? Visibility.Collapsed : Visibility.Visible;
+        foreach (var item in FindCategoryItems(page))
+            if (_categoryActionSubscriptions.Add(item))
+                item.Check += (_, _) => Dispatcher.BeginInvoke(() => RefreshCategoryActions(page));
+        RefreshCategoryActions(page);
+    }
+
+    private static IEnumerable<MyListItem> FindCategoryItems(DependencyObject parent)
+    {
+        foreach (var child in LogicalTreeHelper.GetChildren(parent).OfType<DependencyObject>())
         {
-            RectLeftBackground.Width = newWidth;
-            PanMainLeft.IsHitTestVisible = true;
-            ModAnimation.AniStop("FrmMain LeftChange");
+            if (child is MyListItem { IsNavigationChip: true } item) yield return item;
+            else foreach (var descendant in FindCategoryItems(child)) yield return descendant;
         }
+    }
+
+    private void RefreshCategoryActions(MyPageLeft page)
+    {
+        CategoryActions.Children.Clear();
+        var selected = FindCategoryItems(page).FirstOrDefault(item => item.Checked);
+        if (selected?.Buttons is null) return;
+        foreach (var source in selected.Buttons)
+        {
+            var action = new MyButton { Margin = new Thickness(0, 4, 4, 0) };
+            if (source.ActionTextResourceKey is { } key) action.SetResourceReference(MyButton.TextProperty, key);
+            else action.SetBinding(MyButton.TextProperty, new System.Windows.Data.Binding(nameof(ToolTip)) { Source = source });
+            action.SetBinding(IsEnabledProperty, new System.Windows.Data.Binding(nameof(IsEnabled)) { Source = source });
+            action.Click += (_, _) => source.InvokeClick();
+            CategoryActions.Children.Add(action);
+        }
+    }
+
+    private void FluentTasksHeader_Click(object sender, EventArgs e) => PageChange(PageType.TaskManager);
+
+    private void FluentAccount_Click(object sender, EventArgs e)
+    {
+        ModMain.frmLaunchLeft.ShowAccount();
     }
 
     #endregion
@@ -2078,18 +2171,7 @@ public partial class FormMain
 
     #region 附加按钮
 
-    // 更新重启
-    private void BtnExtraUpdateRestart_Click(object sender, MouseButtonEventArgs e)
-    {
-        UpdateManager.UpdateRestart(true);
-    }
-
-    private bool BtnExtraUpdateRestart_ShowCheck()
-    {
-        return UpdateManager.isUpdateWaitingRestart;
-    }
-
-    // 音乐
+    // 音乐控制
     private void BtnExtraMusic_Click(object sender, MouseButtonEventArgs e)
     {
         ModMusic.MusicControlPause();

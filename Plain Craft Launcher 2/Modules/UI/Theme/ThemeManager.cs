@@ -25,6 +25,7 @@ public static class ThemeManager
         colorGray4 = new ModBase.MyColor(AppResources["ColorObjectGray4"]);
         colorGray5 = new ModBase.MyColor(AppResources["ColorObjectGray5"]);
         colorSemiTransparent = new ModBase.MyColor(AppResources["ColorBrushSemiTransparent"]);
+        FluentTheme.Refresh();
         ThemeRefreshMain();
     }
 

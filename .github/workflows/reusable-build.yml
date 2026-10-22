@@ -38,7 +38,6 @@ jobs:
         env:
           PCL_WRITE_SECRET: '1'
           PCL_MS_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          PCL_CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           PCL_GITHUB_SHA: ${{ github.sha }}
         run: |
           dotnet publish "Plain Craft Launcher 2/Plain Craft Launcher 2.csproj" \

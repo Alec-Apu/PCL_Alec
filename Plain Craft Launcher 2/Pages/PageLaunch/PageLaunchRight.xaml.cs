@@ -25,8 +25,94 @@ public partial class PageLaunchRight : IRefreshable
             reloadTimeout = 10 * 60 * 1000
         };
         Loaded += (_, _) => Init();
+        Loaded += (_, _) => RefreshFluentSummary();
+        IsVisibleChanged += (_, _) => { if (IsVisible) RefreshFluentSummary(); };
+        ModInstanceList.mcInstanceListLoader.LoadingStateChanged += (_, _) => ModBase.RunInUi(RefreshFluentSummary);
         Loaded += (_, _) => Refresh();
         Unloaded += (_, _) => _DisposeHomepageLiveWatcher();
+    }
+
+    private void FluentInstances_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => ModMain.frmMain.PageChange(FormMain.PageType.InstanceSelect);
+    private void FluentTasks_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => ModMain.frmMain.PageChange(FormMain.PageType.TaskManager);
+
+    private int _summaryTaskCount = int.MinValue;
+    private string? _summaryLanguage;
+    private string? _summaryCulture;
+    private McInstance[] _recentInstances = Array.Empty<McInstance>();
+    private string[] _recentNames = Array.Empty<string>();
+    private string[] _recentDescriptions = Array.Empty<string>();
+    private string[] _recentPaths = Array.Empty<string>();
+
+    public void RefreshFluentTasks()
+    {
+        // This is called by the taskbar clock about every 50 ms, including while the
+        // homepage is detached. Do not build a snapshot or touch UI in that state.
+        if (!IsLoaded || !IsVisible) return;
+
+        var count = ModLoader.loaderTaskbar.Count;
+        var language = LocalizationService.CurrentLanguage.Code;
+        var culture = CultureInfo.CurrentCulture.Name;
+        if (count != _summaryTaskCount || language != _summaryLanguage || culture != _summaryCulture)
+        {
+            var summary = count == 0 ? Lang.Text("Main.Fluent.NoTasks") : Lang.Text("Main.Fluent.ActiveTasks", count);
+            if (TaskSummary.Text != summary) TaskSummary.Text = summary;
+            _summaryTaskCount = count;
+            _summaryLanguage = language;
+            _summaryCulture = culture;
+        }
+
+        var progress = count == 0 ? 0 : ModLoader.loaderTaskbarProgress;
+        if (Math.Abs(TaskProgress.Value - progress) > 0.000001) TaskProgress.Value = progress;
+        var progressVisibility = count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        if (TaskProgress.Visibility != progressVisibility) TaskProgress.Visibility = progressVisibility;
+    }
+
+    private void RefreshFluentSummary()
+    {
+        if (!IsLoaded || !IsVisible) return;
+        RefreshFluentTasks();
+        // The loader replaces the dictionary while loading; only read its completed snapshot.
+        if (ModInstanceList.mcInstanceListLoader.State == ModBase.LoadState.Loading) return;
+        var instances = ModInstanceList.mcInstanceList.Values.SelectMany(group => group)
+            .DistinctBy(instance => instance.PathInstance)
+            .Where(instance => States.Instance.LastPlayedUtc[instance.PathInstance] > 0)
+            .OrderByDescending(instance => States.Instance.LastPlayedUtc[instance.PathInstance]).Take(3).ToArray();
+
+        var unchanged = instances.Length == _recentInstances.Length;
+        for (var i = 0; unchanged && i < instances.Length; i++)
+        {
+            var instance = instances[i];
+            unchanged = ReferenceEquals(instance, _recentInstances[i])
+                && instance.Name == _recentNames[i] && instance.Desc == _recentDescriptions[i]
+                && instance.PathInstance == _recentPaths[i];
+        }
+        if (unchanged)
+        {
+            SetRecentEmpty(instances.Length == 0);
+            return;
+        }
+
+        _recentInstances = instances;
+        _recentNames = instances.Select(instance => instance.Name).ToArray();
+        _recentDescriptions = instances.Select(instance => instance.Desc).ToArray();
+        _recentPaths = instances.Select(instance => instance.PathInstance).ToArray();
+        RecentInstances.Children.Clear();
+        foreach (var instance in instances)
+        {
+            var button = new MyButton { Text = instance.Name, Height = 40, HorizontalAlignment = HorizontalAlignment.Stretch,
+                Margin = new Thickness(0, 0, 0, 8), ToolTip = instance.Name + "\n" + instance.Desc };
+            button.LabText.TextWrapping = TextWrapping.NoWrap;
+            button.LabText.TextTrimming = TextTrimming.CharacterEllipsis;
+            button.Click += (_, e) => PageSelectRight.Item_Click(new MyListItem { Tag = instance }, e);
+            RecentInstances.Children.Add(button);
+        }
+        SetRecentEmpty(instances.Length == 0);
+    }
+
+    private void SetRecentEmpty(bool empty)
+    {
+        var visibility = empty ? Visibility.Visible : Visibility.Collapsed;
+        if (RecentEmpty.Visibility != visibility) RecentEmpty.Visibility = visibility;
     }
 
     private void Init()
@@ -113,6 +199,7 @@ public partial class PageLaunchRight : IRefreshable
         {
             // 预设主页
             var preset = (int)Config.Preference.Homepage.SelectedPreset;
+            if (preset == 14) preset = 15; // Compatibility for the removed preset ID.
             switch (preset)
             {
                 case 0:
@@ -225,12 +312,6 @@ public partial class PageLaunchRight : IRefreshable
                 case 13:
                     LogWrapper.Info("[Page] 主页预设：Bangumi 番剧主页");
                     url = "https://bangumi.p.kaphia.qzz.io";
-                    content = LoadFromNetwork(url);
-                    break;
-                
-                case 14:
-                    LogWrapper.Info("[Page] 主页预设：PCL XH 公告栏");
-                    url = "https://s3.pysio.online/pcl2-ce/apiv2/pages/announce.xaml";
                     content = LoadFromNetwork(url);
                     break;
                 

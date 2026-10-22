@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -67,7 +67,7 @@ public class CacheKeys
     public static string Image(string url)
         => _Build("image", _HashSegment(url));
 
-    /// <summary>新闻/公告缓存键</summary>
+    /// <summary>新闻缓存键</summary>
     public static string News(string url)
         => _Build("news", _HashSegment(url));
     #endregion

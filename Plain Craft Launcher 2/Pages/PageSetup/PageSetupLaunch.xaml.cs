@@ -18,6 +18,8 @@ public partial class PageSetupLaunch
     {
         Loaded += PageSetupLaunch_Loaded;
         InitializeComponent();
+        // Use the same viewer for wheel scrolling, return-to-top and navigation restoration.
+        PanScroll = PanBack;
     }
 
     private void PageSetupLaunch_Loaded(object sender, RoutedEventArgs e)
@@ -263,6 +265,16 @@ public partial class PageSetupLaunch
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         HintRamTooHigh.Visibility = ramGame / ramTotal > 0.75d ? Visibility.Visible : Visibility.Collapsed;
+        // Do not keep a frame loop alive for an unchanged meter, or animate
+        // layout underneath the glass when this meter is outside the viewport.
+        if (Math.Abs(ramUsed - ColumnRamUsed.Width.Value) < .00001 &&
+            Math.Abs(ramGameActual - ColumnRamGame.Width.Value) < .00001 &&
+            Math.Abs(ramEmpty - ColumnRamEmpty.Width.Value) < .00001)
+        {
+            ModAnimation.AniStop("SetupLaunch Ram Grid");
+            return;
+        }
+        showAnim &= ControlVisualHelpers.ShouldAnimate(this) && ControlVisualHelpers.IsInViewport(PanRamDisplay, PanBack);
         if (showAnim)
         {
             // 宽度动画
@@ -279,6 +291,7 @@ public partial class PageSetupLaunch
         }
         else
         {
+            ModAnimation.AniStop("SetupLaunch Ram Grid");
             // 宽度设置
             ColumnRamUsed.Width = new GridLength(ramUsed, GridUnitType.Star);
             ColumnRamGame.Width = new GridLength(ramGameActual, GridUnitType.Star);

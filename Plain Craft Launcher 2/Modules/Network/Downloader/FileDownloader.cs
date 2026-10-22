@@ -357,12 +357,6 @@ public static class FileDownloader
 
     internal static HttpClient GetHttpClient(string url)
     {
-        if (Uri.TryCreate(url, UriKind.Absolute, out var parsedUri)
-            && parsedUri.Host is "edge.forgecdn.net" or "mediafilez.forgecdn.net" or "forgecdn.net" or "api.curseforge.com")
-        {
-            return NetworkService.GetClient(NetworkService.CurseForgeApi);
-        }
-
         return NetworkService.GetClient();
     }
 }
