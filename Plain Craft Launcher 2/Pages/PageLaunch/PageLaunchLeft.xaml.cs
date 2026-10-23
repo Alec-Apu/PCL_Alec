@@ -21,6 +21,7 @@ public partial class PageLaunchLeft
     private string _btnLaunchLanguage;
     private McInstance btnLaunchVersion;
     private bool isHeightAnimating;
+    private bool _compactHero;
     public interface ILoginPage { void Reload(); }
 
     private enum LaunchButtonAction
@@ -59,6 +60,55 @@ public partial class PageLaunchLeft
         BtnMore.Click += BtnMore_Click;
         PanLaunchingInfo.SizeChanged += PanLaunchingInfo_SizeChangedW;
         PanLaunchingInfo.SizeChanged += PanLaunchingInfo_SizeChangedH;
+        InteractionFeedback.Attach(BtnHomeAccount, AccountHoverMask, scaleTarget: AccountChip);
+        InteractionFeedback.Attach(BtnLaunch, LaunchHoverMask, pressFeedback: false);
+    }
+
+    // 810 宽度下收紧账号与主按钮，把宽度留给实例名；1280 下恢复完整尺度。
+    private void PanInput_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var compact = e.NewSize.Width < 900d;
+        if (compact == _compactHero)
+            return;
+        _compactHero = compact;
+        AccountChip.Width = compact ? 176d : 200d;
+        LaunchAction.Width = compact ? 184d : 208d;
+        LabVersion.FontSize = compact ? 26d : 30d;
+        LabVersion.LineHeight = compact ? 32d : 36d;
+    }
+
+    private void AccountPopup_Opened(object? sender, EventArgs e)
+    {
+        if (!ControlVisualHelpers.ShouldAnimate(AccountFlyout))
+        {
+            AccountFlyout.Opacity = 1d;
+            if (AccountFlyout.RenderTransform is ScaleTransform scale)
+            {
+                scale.ScaleX = 1d;
+                scale.ScaleY = 1d;
+            }
+            return;
+        }
+
+        ModAnimation.AniStart(new[]
+        {
+            ModAnimation.AaOpacity(AccountFlyout, 1d - AccountFlyout.Opacity, 140,
+                ease: new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.Weak)),
+            ModAnimation.AaScaleTransform(AccountFlyout,
+                1d - ((ScaleTransform)AccountFlyout.RenderTransform).ScaleX, 220,
+                ease: new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.Weak))
+        }, "Launch Account Flyout");
+    }
+
+    private void AccountPopup_Closed(object? sender, EventArgs e)
+    {
+        ModAnimation.AniStop("Launch Account Flyout");
+        AccountFlyout.Opacity = 0d;
+        if (AccountFlyout.RenderTransform is ScaleTransform scale)
+        {
+            scale.ScaleX = 0.94d;
+            scale.ScaleY = 0.94d;
+        }
     }
     private void HomeAccount_Click(object sender, RoutedEventArgs e) => ShowAccount();
 
@@ -276,6 +326,8 @@ public partial class PageLaunchLeft
         {
             case LaunchButtonAction.Launch:
             {
+                if (ModInstanceList.McMcInstanceSelected is null)
+                    return;
                 if (File.Exists(ModInstanceList.McMcInstanceSelected.PathInstance + ".pclignore"))
                 {
                     HintService.Hint(Lang.Text("Launch.Home.Instance.InstallingCannotLaunch"), HintType.Error);

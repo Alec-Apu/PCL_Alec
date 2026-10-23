@@ -21,7 +21,9 @@ internal static class FluentQa
         Paths.SharedData=Path.Combine(Root,"shared");
         Paths.SharedLocalData=Path.Combine(Root,"local");
         Paths.Temp=Path.Combine(Root,"temp");
-        foreach(var path in new[]{Paths.Data,Paths.SharedData,Paths.SharedLocalData,Paths.Temp})Directory.CreateDirectory(path);
+        // Legacy profile/config migration reads the real %APPDATA% folder; isolate it too.
+        Paths.OldSharedData=Path.Combine(Root,"old");
+        foreach(var path in new[]{Paths.Data,Paths.SharedData,Paths.SharedLocalData,Paths.Temp,Paths.OldSharedData})Directory.CreateDirectory(path);
         Lifecycle.When(LifecycleState.WindowCreated, () => System.Windows.Application.Current.Dispatcher.BeginInvoke(async () => await Run()));
     }
     private static IEnumerable<MyListItem> NavigationItems(System.Windows.DependencyObject root)
@@ -41,7 +43,7 @@ internal static class FluentQa
         {
             await Task.Delay(1800);
             var form=ModMain.frmMain;
-            foreach(var path in new[]{Paths.Data,Paths.SharedData,Paths.SharedLocalData,Paths.Temp,
+            foreach(var path in new[]{Paths.Data,Paths.SharedData,Paths.SharedLocalData,Paths.Temp,Paths.OldSharedData,
                 PCL.Core.App.Configuration.ConfigService.SharedConfigPath,PCL.Core.App.Configuration.ConfigService.LocalConfigPath})
                 if(!Path.GetFullPath(path).StartsWith(Path.GetFullPath(Root)+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))
                     throw new Exception("QA configuration escaped its isolated root");
@@ -529,8 +531,10 @@ internal static class FluentQa
             {
                 sizingButton.Text=label;
                 sizingHost.UpdateLayout();
-                // Current buttons are borderless; width is real text + 12px padding per side.
-                var expected=sizingButton.LabText.DesiredSize.Width+24;
+                // Current buttons are borderless; the 12px side padding lives on the label so
+                // the hover mask can fill the whole chrome. Width is real text + 12px per side.
+                var textWidth=sizingButton.LabText.DesiredSize.Width-sizingButton.LabText.Padding.Left-sizingButton.LabText.Padding.Right;
+                var expected=textWidth+24;
                 if(!double.IsNaN(sizingButton.Width) || Math.Abs(sizingButton.ActualWidth-expected)>1)
                     throw new Exception($"Button width is not text + 12px padding per side: {label}: {sizingButton.ActualWidth} vs {expected}");
                 if(label=="0%" && sizingButton.ActualWidth>=lastWidth) throw new Exception("Dynamic button text does not shrink");

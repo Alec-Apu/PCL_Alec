@@ -13,7 +13,9 @@ validation and platform-specific rendering boundaries.
 `LiquidGlassSurface` extends `Border`, so existing padding, child layout, background
 animations and hit targets remain compatible. Foreground content is drawn by WPF
 after the background lens. The shared card, button, editor, dropdown, popup and
-instance-tile implementations use this surface.
+instance-tile implementations use this surface. Ordinary `Content`, `Chrome`, `Action`
+and `Input` instances now use the lightweight material described below; the dock and
+floating popups keep the full lens pipeline.
 
 - Set the inheritable attached `BackdropSource` to a **separate background visual**.
   Never use a visual containing the glass surface. The main window registers
@@ -48,6 +50,18 @@ Compile shader changes with:
 ```
 
 The committed `.ps` is embedded in PCL.Core; ordinary builds do not need FXC.
+
+## Lightweight page material
+
+`FormMain` sets the inheritable `UseLightweightMaterial` attached property to `true`.
+When a surface requests it and uses `Content`, `Chrome`, `Action` or `Input`, the surface
+draws a rounded theme tint and border directly, without a `VisualBrush`, `BlurEffect`,
+`LiquidGlassEffect` or coordinate `LayoutUpdated` subscription. Light theme raises the
+minimum tint so text stays readable without local blur; dark theme keeps more transparency.
+`Floating` popups and both `BottomTabs`/`BottomTabIndicator` materials never enter this
+path, even when the inherited value is set. Pages can opt out locally with
+`UseLightweightMaterial="False"` if a surface genuinely needs the full lens.
+The dock continues to sample `SceneBackdrop`; it is not frozen or replaced by a snapshot.
 
 ## Layout changes
 

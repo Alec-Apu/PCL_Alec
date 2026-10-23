@@ -10,15 +10,20 @@
         <Border.RenderTransform>
             <ScaleTransform />
         </Border.RenderTransform>
-        <TextBlock TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True" TextTrimming="None"
-                   TextWrapping="Wrap" TextAlignment="Center"
-                   HorizontalAlignment="Center" x:Name="LabText" VerticalAlignment="Center"
-                   RenderTransformOrigin="0.5,0.5"
-                   Foreground="{DynamicResource ColorBrush1}" FontSize="13"
-                   IsHitTestVisible="False">
-            <TextBlock.RenderTransform>
-                <ScaleTransform />
-            </TextBlock.RenderTransform>
-        </TextBlock>
+        <Grid>
+            <!-- 轻量材质会把背景色钳制到同一透明度，所以悬浮必须用独立遮罩表达 -->
+            <Border x:Name="HoverMask" CornerRadius="{StaticResource Fluent.ButtonRadius}"
+                    Background="{DynamicResource Fluent.ActionHover}" Opacity="0" IsHitTestVisible="False" />
+            <TextBlock TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True" TextTrimming="None"
+                       TextWrapping="Wrap" TextAlignment="Center"
+                       HorizontalAlignment="Center" x:Name="LabText" VerticalAlignment="Center"
+                       RenderTransformOrigin="0.5,0.5"
+                       Foreground="{DynamicResource ColorBrush1}" FontSize="13"
+                       IsHitTestVisible="False">
+                <TextBlock.RenderTransform>
+                    <ScaleTransform />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+        </Grid>
     </glass:LiquidGlassSurface>
 </Border>

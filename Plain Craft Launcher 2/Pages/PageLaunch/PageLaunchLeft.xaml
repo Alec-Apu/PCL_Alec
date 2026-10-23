@@ -5,63 +5,117 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:local="clr-namespace:PCL"
                   mc:Ignorable="d" x:Name="PanBack"
-                  d:DesignHeight="220"
-    xmlns:glass="clr-namespace:PCL.Core.UI.Controls;assembly=PCL.Core">
-    <Grid Name="PanInput" RenderTransformOrigin="0.5,0.5" MinHeight="104" MaxWidth="1120">
+                  d:DesignHeight="148"
+                  xmlns:glass="clr-namespace:PCL.Core.UI.Controls;assembly=PCL.Core">
+    <Grid Name="PanInput" RenderTransformOrigin="0.5,0.5" MinHeight="148" MaxWidth="1120"
+          SizeChanged="PanInput_SizeChanged">
         <Grid.RenderTransform><ScaleTransform /></Grid.RenderTransform>
-        <local:ResponsiveColumnsPanel MinimumColumnWidth="360" SecondaryWidth="192" Gap="16">
-            <glass:LiquidGlassSurface Material="Content" CornerRadius="{StaticResource Fluent.CardRadius}" Background="{DynamicResource Fluent.Card}"
-                    BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1" Padding="20">
-                <Grid>
-                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                    <Button Click="HomeAccount_Click" Background="Transparent" BorderThickness="0" Padding="0"
-                            ToolTip="{DynamicResource Main.Fluent.Account}" Cursor="Hand" VerticalAlignment="Center"
-                            AutomationProperties.Name="{DynamicResource Main.Fluent.Account}">
-                        <StackPanel Width="88" Margin="0,0,20,0">
-                            <glass:LiquidGlassSurface Material="Content" Background="{DynamicResource Fluent.GlassSurface}" CornerRadius="18" Width="80" Height="80">
-                                <Grid>
-                                    <TextBlock x:Name="HomeAvatarFallback" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="32"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ColorBrushGray2}"/>
-                                    <Image x:Name="HomeSkinBack" Width="54" Height="54" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                                    <Image x:Name="HomeSkinFore" Width="63" Height="63" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+        <glass:LiquidGlassSurface Material="Chrome" CornerRadius="{StaticResource Fluent.DialogRadius}"
+                Background="{DynamicResource Fluent.Card}" BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1">
+            <Grid>
+                <Grid Margin="24,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 账号：整块可点，悬浮时铺一层材质遮罩，按下时轻微下沉 -->
+                    <Button x:Name="BtnHomeAccount" Grid.Column="0" Click="HomeAccount_Click"
+                            Background="Transparent" BorderThickness="0" Padding="0" Cursor="Hand"
+                            VerticalAlignment="Center"
+                            ToolTip="{DynamicResource Main.Fluent.Account}"
+                            AutomationProperties.Name="{DynamicResource Main.Fluent.Account}"
+                            FocusVisualStyle="{StaticResource Fluent.Focus}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent">
+                                    <ContentPresenter />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Grid x:Name="AccountChip" Width="200" Height="64" RenderTransformOrigin="0.5,0.5">
+                            <Grid.RenderTransform><ScaleTransform /></Grid.RenderTransform>
+                            <Border x:Name="AccountHoverMask" CornerRadius="{StaticResource Fluent.ButtonRadius}"
+                                    Background="{DynamicResource Fluent.ActionHover}" Opacity="0" IsHitTestVisible="False" />
+                            <Grid Margin="8,0,12,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="56" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Width="56" Height="56" VerticalAlignment="Center">
+                                    <Border CornerRadius="16" Background="{DynamicResource Fluent.GlassSurface}"
+                                            BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1" />
+                                    <TextBlock x:Name="HomeAvatarFallback" Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ColorBrushGray2}" />
+                                    <Image x:Name="HomeSkinBack" Width="38" Height="38" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                                    <Image x:Name="HomeSkinFore" Width="44" Height="44" RenderOptions.BitmapScalingMode="NearestNeighbor" />
                                 </Grid>
-                            </glass:LiquidGlassSurface>
-                            <TextBlock x:Name="HomePlayerName" Margin="0,8,0,0" TextAlignment="Center" TextTrimming="CharacterEllipsis"
-                                       Foreground="{DynamicResource ColorBrush1}" FontWeight="SemiBold"/>
-                        </StackPanel>
+                                <TextBlock x:Name="HomePlayerName" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center"
+                                           FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                                           Foreground="{DynamicResource ColorBrush1}"
+                                           ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                            </Grid>
+                        </Grid>
                     </Button>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="{DynamicResource Main.Fluent.PlayEyebrow}" FontSize="12" Foreground="{DynamicResource ColorBrushGray2}" Margin="0,0,0,8" />
-                        <TextBlock x:Name="LabVersion" Text="{DynamicResource Launch.Home.VersionList.Loading}" FontSize="24"
-                                   FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource ColorBrush1}" />
+
+                    <!-- 实例身份：页面唯一的展示级文字 -->
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource Main.Fluent.PlayEyebrow}" FontSize="12" LineHeight="16"
+                                   LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ColorBrushGray2}"
+                                   TextTrimming="CharacterEllipsis" Margin="0,0,0,4" />
+                        <TextBlock x:Name="LabVersion" Text="{DynamicResource Launch.Home.VersionList.Loading}"
+                                   FontSize="30" LineHeight="36" LineStackingStrategy="BlockLineHeight"
+                                   FontWeight="SemiBold" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxHeight="72"
+                                   Foreground="{DynamicResource ColorBrush1}" />
                         <WrapPanel Margin="0,12,0,0">
-                            <local:MyButton x:Name="BtnInstance" Height="40" Margin="0,0,8,4"
+                            <local:MyButton x:Name="BtnInstance" Height="40" Margin="0,0,8,0"
                                             Text="{DynamicResource Launch.Home.SelectInstance}" IsEnabled="False" />
-                            <local:MyButton x:Name="BtnMore" Visibility="Collapsed" Height="40" Margin="0,0,0,4"
+                            <local:MyButton x:Name="BtnMore" Visibility="Collapsed" Height="40"
                                             Text="{DynamicResource Launch.Home.InstanceSettings}" />
                         </WrapPanel>
                     </StackPanel>
+
+                    <!-- 启动：页面唯一的饱和色块 -->
+                    <Grid x:Name="LaunchAction" Grid.Column="4" Width="208" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="AprilScaleTrans" />
+                                <TranslateTransform x:Name="AprilPosTrans" />
+                            </TransformGroup>
+                        </Grid.RenderTransform>
+                        <local:MyButton x:Name="BtnLaunch" Height="52" HorizontalAlignment="Stretch"
+                                        Text="{DynamicResource Launch.Home.Button.Loading}" ColorType="Highlight" IsEnabled="False" />
+                        <Border x:Name="LaunchHoverMask" CornerRadius="{StaticResource Fluent.ButtonRadius}"
+                                Background="{DynamicResource Fluent.ActionHover}" Opacity="0" IsHitTestVisible="False" />
+                    </Grid>
                 </Grid>
-            </glass:LiquidGlassSurface>
-            <glass:LiquidGlassSurface Material="Chrome" CornerRadius="{StaticResource Fluent.CardRadius}" Background="{DynamicResource Fluent.Card}"
-                    BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1" Padding="24,16" MinWidth="164">
-                <Grid VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                    <Grid.RenderTransform><TransformGroup><ScaleTransform x:Name="AprilScaleTrans"/><TranslateTransform x:Name="AprilPosTrans"/></TransformGroup></Grid.RenderTransform>
-                    <StackPanel>
-                        <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="28" HorizontalAlignment="Center"
-                                   Foreground="{DynamicResource ColorBrush3}" Margin="0,0,0,16"/>
-                        <local:MyButton x:Name="BtnLaunch" Height="52" HorizontalAlignment="Stretch" Text="{DynamicResource Launch.Home.Button.Loading}"
-                                        ColorType="Highlight" IsEnabled="False" />
-                    </StackPanel>
-                </Grid>
-            </glass:LiquidGlassSurface>
-        </local:ResponsiveColumnsPanel>
+
+                <!-- 材质高光：浅色下是极淡的顶缘，深色下是受光边 -->
+                <Border Height="1" VerticalAlignment="Top" Margin="24,1,24,0" IsHitTestVisible="False" Opacity="0.28">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="Transparent" Offset="0" />
+                            <GradientStop Color="{DynamicResource ColorObject1}" Offset="0.5" />
+                            <GradientStop Color="Transparent" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </Grid>
+        </glass:LiquidGlassSurface>
     </Grid>
+
     <Popup x:Name="AccountPopup" Placement="Center" PlacementTarget="{Binding ElementName=PanInput}"
-           AllowsTransparency="True" StaysOpen="False" PopupAnimation="Fade">
-        <glass:LiquidGlassSurface Material="Floating" Background="{DynamicResource Fluent.Surface}" BorderBrush="{DynamicResource Fluent.Stroke}"
-                BorderThickness="1" CornerRadius="24" Padding="24" Width="350" MaxHeight="360"
-                glass:LiquidGlassSurface.UseLightweightMaterial="False">
+           AllowsTransparency="True" StaysOpen="False" PopupAnimation="None"
+           Opened="AccountPopup_Opened" Closed="AccountPopup_Closed">
+        <glass:LiquidGlassSurface x:Name="AccountFlyout" Material="Floating" Background="{DynamicResource Fluent.Surface}"
+                BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1" CornerRadius="24" Padding="24" Width="350" MaxHeight="360"
+                glass:LiquidGlassSurface.UseLightweightMaterial="False" Opacity="0" RenderTransformOrigin="1,0">
+            <glass:LiquidGlassSurface.RenderTransform>
+                <ScaleTransform ScaleX="0.94" ScaleY="0.94" />
+            </glass:LiquidGlassSurface.RenderTransform>
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource Main.Fluent.Account}" FontSize="20" FontWeight="SemiBold"
@@ -71,7 +125,8 @@
             </ScrollViewer>
         </glass:LiquidGlassSurface>
     </Popup>
-    <Grid Name="PanLaunching" MinHeight="190" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed" Opacity="0">
+
+    <Grid Name="PanLaunching" MinHeight="190" MaxWidth="1120" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed" Opacity="0">
         <Grid.RenderTransform>
             <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
         </Grid.RenderTransform>
@@ -82,25 +137,15 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <glass:LiquidGlassSurface Grid.RowSpan="5" Material="Chrome" CornerRadius="{StaticResource Fluent.DialogRadius}"
+                Background="{DynamicResource Fluent.Card}" BorderBrush="{DynamicResource Fluent.Stroke}" BorderThickness="1"
+                IsHitTestVisible="False" />
         <StackPanel Grid.Row="1" RenderTransformOrigin="0.5,0.5" Margin="0,-7,0,0">
-            <StackPanel.BitmapEffect>
-                <DropShadowBitmapEffect Color="{StaticResource ColorObjectGray2}" ShadowDepth="1.5" Direction="270"
-                                        Opacity="0.15" Softness="0.15" />
-            </StackPanel.BitmapEffect>
             <local:MyLoading x:Name="LoadLaunching" AutoRun="False" Height="50" Margin="0,10,0,5" />
             <TextBlock Name="LabLaunchingTitle" Margin="15,10,15,0" Text="{DynamicResource Launch.Status.Title.Launching}" HorizontalAlignment="Center"
-                       FontSize="20" Foreground="{DynamicResource ColorBrush3}">
-                <TextBlock.RenderTransform>
-                    <SkewTransform AngleX="-3" />
-                </TextBlock.RenderTransform>
-            </TextBlock>
+                       FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource ColorBrush1}" />
             <TextBlock Name="LabLaunchingName" Margin="40,5,40,0" FontSize="13.5" Text="Forge 1.12.2-15.8.0.1560"
-                       HorizontalAlignment="Center" Foreground="{DynamicResource ColorBrush3}"
-                       RenderTransformOrigin="0.5,0.5">
-                <TextBlock.RenderTransform>
-                    <SkewTransform AngleX="-3" />
-                </TextBlock.RenderTransform>
-            </TextBlock>
+                       HorizontalAlignment="Center" Foreground="{DynamicResource ColorBrushGray2}" />
             <Grid Height="4" Margin="30,12,30,27" SnapsToDevicePixels="True">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Name="ProgressLaunchingFinished" Width="69.28*" />
@@ -171,8 +216,8 @@
                 </Grid>
             </Grid>
         </StackPanel>
-        <local:MyButton Grid.Row="4" x:Name="BtnCancel" Height="40" Margin="20,0,20,20" VerticalAlignment="Bottom"
-                        Click="BtnCancel_Click"
+        <local:MyButton Grid.Row="4" x:Name="BtnCancel" Height="40" Margin="20,0,20,20" HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom" Click="BtnCancel_Click" Padding="20,0"
                         Text="{DynamicResource Common.Action.Cancel}" />
     </Grid>
 </local:MyPageLeft>

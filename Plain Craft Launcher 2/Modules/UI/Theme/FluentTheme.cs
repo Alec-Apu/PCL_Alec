@@ -45,6 +45,14 @@ internal static class FluentTheme
         SetBrush("Fluent.TitleBar", dark ? Colors.Black : Colors.White);
         SetBrush("Fluent.NavigationHover", dark ? Color.FromArgb(58,255,255,255) : Color.FromArgb(76,255,255,255));
         SetBrush("Fluent.NavigationPressed", dark ? Color.FromArgb(86,255,255,255) : Color.FromArgb(112,255,255,255));
+        // Neutral interaction washes survive the lightweight material's alpha clamp.
+        var highlight = SystemColors.HighlightColor;
+        SetBrush("Fluent.ActionHover", SystemParameters.HighContrast
+            ? Color.FromArgb(40, highlight.R, highlight.G, highlight.B)
+            : dark ? Color.FromArgb(28,255,255,255) : Color.FromArgb(20,0,0,0));
+        SetBrush("Fluent.ActionPressed", SystemParameters.HighContrast
+            ? Color.FromArgb(72, highlight.R, highlight.G, highlight.B)
+            : dark ? Color.FromArgb(51,255,255,255) : Color.FromArgb(41,0,0,0));
         if (app.Resources["ColorBrush3"] is SolidColorBrush accent)
         {
             var color = accent.Color;
@@ -53,13 +61,20 @@ internal static class FluentTheme
                 var value = channel / 255d;
                 return value <= 0.04045 ? value / 12.92 : Math.Pow((value + 0.055) / 1.055, 2.4);
             }
-            SetBrush("Fluent.OnAccent", 0.2126 * Linear(color.R) + 0.7152 * Linear(color.G) + 0.0722 * Linear(color.B) > 0.179
-                ? Colors.Black : Colors.White);
+            static Color Scale(Color source, double factor) => Color.FromRgb(
+                (byte)Math.Round(source.R * factor), (byte)Math.Round(source.G * factor),
+                (byte)Math.Round(source.B * factor));
+            SetBrush("Fluent.AccentFill", dark ? Scale(color, 0.72d) : color);
+            SetBrush("Fluent.AccentHover", dark ? Scale(color, 0.60d) : Scale(color, 0.82d));
+            SetBrush("Fluent.OnAccent", dark || 0.2126 * Linear(color.R) + 0.7152 * Linear(color.G) + 0.0722 * Linear(color.B) <= 0.179
+                ? Colors.White : Colors.Black);
         }
         if (SystemParameters.HighContrast)
         {
             SetBrush("ColorBrush1", SystemColors.WindowTextColor);
             SetBrush("ColorBrush3", SystemColors.HighlightColor);
+            SetBrush("Fluent.AccentFill", SystemColors.HighlightColor);
+            SetBrush("Fluent.AccentHover", SystemColors.HighlightColor);
             SetBrush("Fluent.OnAccent", SystemColors.HighlightTextColor);
         }
         // Neutral carriers preserve wallpaper colors; the shader owns the tint ceiling.

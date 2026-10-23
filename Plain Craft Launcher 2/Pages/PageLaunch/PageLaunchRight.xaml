@@ -3,41 +3,78 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:local="clr-namespace:PCL"> <!-- 不知道为啥只有这个文件不能在 XAML 设置 PanScroll -->
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
-        <StackPanel Name="PanMain" MaxWidth="1120" Margin="16,16,16,16" Grid.IsSharedSizeScope="True">
-            <local:ResponsiveColumnsPanel MinimumColumnWidth="300" Margin="0,0,0,16">
-            <local:MyCard Title="{DynamicResource Main.Fluent.Recent}" Margin="0" x:Name="RecentCard">
-                <StackPanel Margin="20,44,20,20">
-                    <StackPanel x:Name="RecentInstances" />
-                    <TextBlock x:Name="RecentEmpty" Text="{DynamicResource Main.Fluent.NoRecent}" Margin="0,0,0,12" Foreground="{DynamicResource ColorBrushGray2}" TextWrapping="Wrap"/>
-                    <local:MyButton Text="{DynamicResource Main.Fluent.AllInstances}" HorizontalAlignment="Left" Height="40" Click="FluentInstances_Click" />
-                </StackPanel>
-            </local:MyCard>
-            <local:MyCard Title="{DynamicResource Main.Fluent.Tasks}" Margin="0">
-                <Grid Margin="20,44,20,20">
-                    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-
-                    <StackPanel VerticalAlignment="Top" Margin="0,0,0,16">
-                        <TextBlock x:Name="TaskSummary" TextWrapping="Wrap"/>
-                        <ProgressBar x:Name="TaskProgress" Height="4" Maximum="1" Margin="0,12,0,0" Foreground="{DynamicResource ColorBrush3}"/>
+        <StackPanel Name="PanMain" MaxWidth="1120" Margin="16,16,16,88" Grid.IsSharedSizeScope="True">
+            <local:ResponsiveColumnsPanel MinimumColumnWidth="300" SecondaryWidth="352" Gap="16" Margin="0,0,0,16">
+                <local:MyCard Margin="0" x:Name="RecentCard" HasMouseAnimation="False">
+                    <StackPanel Margin="20,16,20,20">
+                        <Grid Height="40" Margin="0,0,0,8">
+                            <TextBlock Text="{DynamicResource Main.Fluent.Recent}" FontSize="15" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" Foreground="{DynamicResource ColorBrush1}" />
+                            <local:MyButton Text="{DynamicResource Main.Fluent.AllInstances}" Height="40" Padding="12,0"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center" Click="FluentInstances_Click" />
+                        </Grid>
+                        <StackPanel x:Name="RecentInstances" />
+                        <TextBlock x:Name="RecentEmpty" Text="{DynamicResource Main.Fluent.NoRecent}" Margin="0,4,0,0"
+                                   FontSize="12.5" LineHeight="18" LineStackingStrategy="BlockLineHeight"
+                                   Foreground="{DynamicResource ColorBrushGray2}" TextWrapping="Wrap" />
                     </StackPanel>
-                    <local:MyButton Grid.Row="1" Text="{DynamicResource Main.Fluent.Tasks}" Height="40" Click="FluentTasks_Click"/>
-                </Grid>
-            </local:MyCard>
+                </local:MyCard>
+                <local:MyCard Margin="0" x:Name="TasksCard" HasMouseAnimation="False">
+                    <Grid Margin="20,16,20,20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel>
+                            <Grid Height="40" Margin="0,0,0,8">
+                                <TextBlock Text="{DynamicResource Main.Fluent.Tasks}" FontSize="15" FontWeight="SemiBold"
+                                           VerticalAlignment="Center" Foreground="{DynamicResource ColorBrush1}" />
+                                <local:MyButton Text="{DynamicResource Common.Action.Open}" Height="40" Padding="12,0"
+                                                HorizontalAlignment="Right" VerticalAlignment="Center" Click="FluentTasks_Click" />
+                            </Grid>
+                            <TextBlock x:Name="TaskSummary" TextWrapping="Wrap" FontSize="13" LineHeight="18"
+                                       LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ColorBrushGray2}" />
+                            <ProgressBar x:Name="TaskProgress" Height="4" Maximum="1" Margin="0,12,0,0"
+                                         Foreground="{DynamicResource ColorBrushGray2}"
+                                         Background="{DynamicResource Fluent.GlassSurface}" />
+                        </StackPanel>
+                    </Grid>
+                </local:MyCard>
             </local:ResponsiveColumnsPanel>
             <StackPanel x:Name="PanCustom" />
-            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Launch.Right.CommunityHint.Title}" x:Name="PanHint">
-                <local:MyIconButton LogoScale="1.1"
-                                    SvgIcon="lucide/x"
-                                    Height="20" Width="20" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                    x:Name="BtnHintClose"
-                                    Click="BtnHintClose_Click" />
-                <StackPanel Margin="25,38,23,15">
-                    <TextBlock x:Name="LabHint1" TextWrapping="Wrap" Margin="0,0,0,2" FontSize="13.5" />
-                    <TextBlock x:Name="LabHint2" TextWrapping="Wrap" Margin="0,0,0,2" FontSize="13.5" />
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Launch.Right.CommunityHint.Title}" x:Name="PanHint"
+                          HasMouseAnimation="False">
+                <Grid Width="32" Height="32" Margin="8" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Border x:Name="HintCloseMask" CornerRadius="16" Background="{DynamicResource Fluent.ActionHover}"
+                            Opacity="0" IsHitTestVisible="False" />
+                    <Button x:Name="BtnHintClose" Click="BtnHintClose_Click" Background="Transparent" BorderThickness="0"
+                            Padding="0" Cursor="Hand" FocusVisualStyle="{StaticResource Fluent.Focus}"
+                            AutomationProperties.Name="{DynamicResource Common.Action.Close}"
+                            ToolTip="{DynamicResource Common.Action.Close}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                   Foreground="{DynamicResource ColorBrushGray2}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+                </Grid>
+                <StackPanel Margin="20,38,20,16">
+                    <TextBlock x:Name="LabHint1" TextWrapping="Wrap" Margin="0,0,0,2" FontSize="12" LineHeight="18"
+                               LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ColorBrushGray2}" />
+                    <TextBlock x:Name="LabHint2" TextWrapping="Wrap" Margin="0,0,0,2" FontSize="12" LineHeight="18"
+                               LineStackingStrategy="BlockLineHeight" Foreground="{DynamicResource ColorBrushGray2}" />
                 </StackPanel>
             </local:MyCard>
-            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Launch.Right.Log.Title}" x:Name="PanLog">
-                <TextBlock x:Name="LabLog" Margin="20,38,20,18" TextTrimming="None" TextWrapping="Wrap" />
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Launch.Right.Log.Title}" x:Name="PanLog"
+                          HasMouseAnimation="False">
+                <TextBlock x:Name="LabLog" Margin="20,38,20,18" TextTrimming="None" TextWrapping="Wrap"
+                           FontSize="12" LineHeight="18" LineStackingStrategy="BlockLineHeight"
+                           Foreground="{DynamicResource ColorBrushGray2}" />
             </local:MyCard>
         </StackPanel>
     </local:MyScrollViewer>

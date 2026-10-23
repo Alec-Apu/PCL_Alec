@@ -1,5 +1,7 @@
 # 普通玻璃卡片排查与修复（2026-10-22）
 
+> 2026-10-23 后续：普通 `Content/Chrome/Action/Input` 表面已改为轻量材质，默认不再执行本文所述的逐表面采样、模糊和着色器路径；底栏与 `Floating` 弹窗仍保留完整玻璃。当前进度、Release A/B 和限制见 `docs/HANDOFF.zh-CN.md` §2.3 与 `artifacts/liquid-glass/global-lightweight-2026-10-23/SUMMARY.md`。本文保留 2026-10-22 的玻璃卡片排查记录。
+
 默认未设置的背景来源改为 anime（UiBackgroundSource=2）。已有明确选择继续保留；旧版 Pictures 图片/视频迁移逻辑继续保留。在线图片使用已有缓存和刷新机制，首次加载失败时仍有渐变背景。
 
 ## 已定位的问题
@@ -23,4 +25,4 @@
 
 before-* 为修复前的视觉留档；在线图片每次随机变化，不能作为同图像素差异对比。before-report.txt 是早期未充分等待合成的诊断记录，包含过渡帧，不用于定量结论；正式 after-report.txt 在每次切换后等待 350 ms 再抓取。
 
-当前旧版正在使用 artifacts/liquid-glass/app，因文件锁无法覆盖；新版独立输出到 artifacts/liquid-glass/app-cards/Plain Craft Launcher 2.exe，不中断运行中的启动器。
+记录当时旧版正在使用 artifacts/liquid-glass/app，因文件锁无法覆盖；新版独立输出到 artifacts/liquid-glass/app-cards/Plain Craft Launcher 2.exe，不中断运行中的启动器。当前交付程序位于 artifacts/release-2026-10-23-global-lightweight/app/。

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -32,7 +33,7 @@ public partial class MyButton
     public new static readonly DependencyProperty PaddingProperty = DependencyProperty.Register("Padding",
         typeof(Thickness), typeof(MyButton), new PropertyMetadata(new Thickness(12, 0, 12, 0), (sender, e) =>
         {
-            if (sender is MyButton { PanFore: not null } button) button.PanFore.Padding = (Thickness)e.NewValue;
+            if (sender is MyButton { LabText: not null } button) button.LabText.Padding = (Thickness)e.NewValue;
         }));
     
     private ColorState _ColorType = ColorState.Normal; // 配色方案
@@ -52,12 +53,20 @@ public partial class MyButton
     public MyButton()
     {
         InitializeComponent();
-        PanFore.Padding = Padding;
+        LabText.Padding = Padding;
 
         MouseEnter += RefreshColor;
         MouseLeave += RefreshColor;
         Loaded += RefreshColor;
         IsEnabledChanged += (_, _) => RefreshColor();
+        IsKeyboardFocusWithinChanged += (_, _) =>
+        {
+            if (_ColorType != ColorState.Normal || HoverMask is null || !IsEnabled) return;
+            if (IsKeyboardFocusWithin && !IsMouseOver)
+                AnimateHoverMask(0.5d, animationColorIn);
+            else if (!IsMouseOver)
+                AnimateHoverMask(0d, animationColorOut);
+        };
         KeyDown += (_, e) =>
         {
             if (e.Key is not (Key.Enter or Key.Space) || !IsEnabled || e.IsRepeat) return;
@@ -133,10 +142,15 @@ public partial class MyButton
 
     private void RefreshColor(object obj = null, object e = null)
     {
+        if (!IsEnabled && HoverMask is not null)
+        {
+            ModAnimation.AniStop("MyButton Hover " + Uuid);
+            HoverMask.Opacity = 0d;
+        }
         LabText.SetResourceReference(System.Windows.Controls.TextBlock.ForegroundProperty,
             !IsEnabled ? "ColorBrushGray3" : ColorType == ColorState.Highlight ? "Fluent.OnAccent" : "ColorBrush1");
         if (ColorType == ColorState.Highlight)
-            PanFore.SetResourceReference(BackgroundProperty, "ColorBrush3");
+            PanFore.SetResourceReference(BackgroundProperty, IsEnabled ? "Fluent.AccentFill" : "Fluent.GlassSurface");
         // PanFore has no painted border by default. Animating its BorderBrush only
         // creates invisible brush work on load/hover; keep visible-border callers unchanged.
         if (PanFore.BorderThickness == new Thickness(0))
@@ -190,20 +204,25 @@ public partial class MyButton
     {
         isMouseDown = true;
         Focus();
+        if (_ColorType == ColorState.Normal)
+            SetHoverMask(true);
         ModAnimation.AniStart(
-            new[]
-            {
-                ModAnimation.AaScaleTransform(PanFore, 0.955d - ((ScaleTransform)PanFore.RenderTransform).ScaleX, 80,
-                    ease: new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.ExtraStrong)),
-                ModAnimation.AaScaleTransform(PanFore, -0.01d, 700, ease: new ModAnimation.AniEaseOutFluent())
-            }, "MyButton Scale " + Uuid);
+            ModAnimation.AaScaleTransform(PanFore, 0.97d - ((ScaleTransform)PanFore.RenderTransform).ScaleX, 90,
+                ease: new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.ExtraStrong)),
+            "MyButton Scale " + Uuid);
     }
 
     private void Button_MouseEnter()
     {
+        if (_ColorType == ColorState.Normal)
+        {
+            SetHoverMask(false);
+            AnimateHoverMask(1d, animationColorIn);
+            return;
+        }
         ModAnimation.AniStart(
             ModAnimation.AaColor(PanFore, BackgroundProperty,
-                _ColorType == ColorState.Red ? "ColorBrushRedBack" : _ColorType == ColorState.Highlight ? "ColorBrush2" : "Fluent.NavigationHover", animationColorIn),
+                _ColorType == ColorState.Red ? "ColorBrushRedBack" : "Fluent.AccentHover", animationColorIn),
             "MyButton Background " + Uuid);
     }
 
@@ -212,24 +231,53 @@ public partial class MyButton
         if (!isMouseDown)
             return;
         isMouseDown = false;
+        if (_ColorType == ColorState.Normal)
+            SetHoverMask(false);
         ModAnimation.AniStart(
-            new[]
-            {
-                ModAnimation.AaScaleTransform(PanFore, 1d - ((ScaleTransform)PanFore.RenderTransform).ScaleX, 300, 10,
-                    new ModAnimation.AniEaseOutFluent())
-            }, "MyButton Scale " + Uuid);
+            ModAnimation.AaScaleTransform(PanFore, 1d - ((ScaleTransform)PanFore.RenderTransform).ScaleX, 220,
+                ease: new ModAnimation.AniEaseOutFluent()), "MyButton Scale " + Uuid);
     }
 
     private void Button_MouseLeave()
     {
-        ModAnimation.AniStart(
-            ModAnimation.AaColor(PanFore, BackgroundProperty, _ColorType == ColorState.Highlight ? "ColorBrush3" : "Fluent.GlassSurface", animationColorOut),
-            "MyButton Background " + Uuid);
+        if (_ColorType == ColorState.Normal)
+        {
+            AnimateHoverMask(IsKeyboardFocusWithin ? 0.5d : 0d, animationColorOut);
+        }
+        else
+        {
+            ModAnimation.AniStart(
+                ModAnimation.AaColor(PanFore, BackgroundProperty,
+                    _ColorType == ColorState.Highlight ? IsEnabled ? "Fluent.AccentFill" : "Fluent.GlassSurface" : "Fluent.GlassSurface",
+                    animationColorOut),
+                "MyButton Background " + Uuid);
+        }
         if (!isMouseDown)
             return;
         isMouseDown = false;
         ModAnimation.AniStart(
-            ModAnimation.AaScaleTransform(PanFore, 1d - ((ScaleTransform)PanFore.RenderTransform).ScaleX, 800,
+            ModAnimation.AaScaleTransform(PanFore, 1d - ((ScaleTransform)PanFore.RenderTransform).ScaleX, 240,
                 ease: new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.Strong)), "MyButton Scale " + Uuid);
+    }
+
+    private void SetHoverMask(bool pressed)
+    {
+        HoverMask?.SetResourceReference(Border.BackgroundProperty,
+            pressed ? "Fluent.ActionPressed" : "Fluent.ActionHover");
+    }
+
+    private void AnimateHoverMask(double value, int time)
+    {
+        if (HoverMask is null)
+            return;
+        if (!ControlVisualHelpers.ShouldAnimate(this))
+        {
+            ModAnimation.AniStop("MyButton Hover " + Uuid);
+            HoverMask.Opacity = value;
+            return;
+        }
+        ModAnimation.AniStart(
+            ModAnimation.AaOpacity(HoverMask, value - HoverMask.Opacity, time,
+                ease: new ModAnimation.AniEaseOutFluent()), "MyButton Hover " + Uuid);
     }
 }

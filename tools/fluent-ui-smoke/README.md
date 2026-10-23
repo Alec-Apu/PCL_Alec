@@ -5,7 +5,8 @@ instructions, see [LIQUID-GLASS.md](LIQUID-GLASS.md).
 
 This optional harness compiles into an isolated launcher build. Normal builds do not include it. The test process exits after writing its report.
 It uses separate temporary configuration, profiles, cache and instance-lock directories. It does
-not sign in, install Minecraft, or launch a game.
+not sign in, install Minecraft, or launch a game. With no flag it runs the full UI smoke; adding
+one flag selects that focused diagnostic instead.
 
 From the repository root in PowerShell:
 
@@ -23,7 +24,7 @@ Checks cover six primary destinations in light/dark mode at 810x470 and 1280x800
 account-popup opening after navigation, direct category/content settings layout, switching back to the first settings category,
 vertical sidebar scrolling, separate category actions, account opening without navigation, pinned toolbar layout and nested wheel chaining, scroll restoration,
 and responsive instance tile wrapping. Each main-page capture is rendered at 1x, 1.5x and 2x density.
-The full run additionally opens all ten settings pages in Chinese and English, in both themes and window sizes.
+The full run additionally opens all nine settings categories in Chinese and English, in both themes and window sizes.
 It expands advanced cards, exercises the conditional personalization controls, and visits the entire scroll range
 with overlapping viewport steps. A missing or incorrect scroll owner fails the run. Geometry checks cover
 interactive overlaps, horizontal overflow and cropped checkbox/radio labels.
@@ -40,10 +41,10 @@ a full run. Normal builds do not read this flag or include any harness code.
 
 These raster captures do not replace real monitor DPI or high-contrast testing.
 
-Navigation unit tests:
+Navigation and bottom-tab motion unit tests:
 
 ```powershell
-dotnet test PCL.Core.Test/PCL.Core.Test.csproj -p:IsTestProject=true --filter FullyQualifiedName~LauncherNavigationTest
+dotnet test PCL.Core.Test/PCL.Core.Test.csproj -p:IsTestProject=true --filter 'FullyQualifiedName~LauncherNavigationTest|FullyQualifiedName~LiquidTabMotion'
 ```
 
 Actual Microsoft sign-in, game launch, downloads, cancellation, custom video backgrounds and OS
@@ -115,12 +116,13 @@ Add `frame-isolation.flag` to replace the matrix with the normal/no-blur/no-dock
 no-input/no-content breakdown. This deliberately changes appearance for diagnosis.
 
 Create `frame-home-only.flag` for the homepage material A/B (810/1280 DIP, fixed local
-wallpaper and scroll fixture, idle/scroll/dock drag, two alternating passes). It toggles
-only the inherited `UseLightweightMaterial` property on the Launch page roots; the dock
-stays enabled, samples `SceneBackdrop`, and must retain its full graph in every group.
-The report also proves lightweight surfaces have no effect/sampling graph or coordinate
-tracking, and saves an original/lightweight screenshot per width in the QA root. As with
-the other frame modes, these are callback intervals, not presented FPS.
+wallpaper and scroll fixture, idle/scroll/dock drag, two alternating passes). Production
+inherits `UseLightweightMaterial` from the main window; this isolated check sets it on the
+Launch page roots so only the homepage is toggled. The dock stays enabled, samples
+`SceneBackdrop`, and must retain its full graph in every group. The report also proves
+lightweight surfaces have no effect/sampling graph or coordinate tracking, and saves an
+original/lightweight screenshot per width in the QA root. As with the other frame modes,
+these are callback intervals, not presented FPS.
 
 Create `frame-pages-only.flag` to A/B the same inherited property on the main window
 across Settings Launch, Personalization, Management and About. It scrolls each page at

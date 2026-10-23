@@ -4,6 +4,12 @@
     <SolidColorBrush x:Key="Fluent.TitleBar">White</SolidColorBrush>
     <SolidColorBrush x:Key="Fluent.NavigationHover">#4CFFFFFF</SolidColorBrush>
     <SolidColorBrush x:Key="Fluent.NavigationPressed">#70FFFFFF</SolidColorBrush>
+    <!-- 中性交互遮罩：浅色用黑、深色用白，才能在轻量材质上真正可见 -->
+    <SolidColorBrush x:Key="Fluent.ActionHover">#14000000</SolidColorBrush>
+    <SolidColorBrush x:Key="Fluent.ActionPressed">#29000000</SolidColorBrush>
+    <!-- 强调色底与悬浮色：深色主题下压暗，保证白色标签的对比度 -->
+    <SolidColorBrush x:Key="Fluent.AccentFill">#1370F3</SolidColorBrush>
+    <SolidColorBrush x:Key="Fluent.AccentHover">#0B5BCB</SolidColorBrush>
     <sys:Boolean x:Key="LiquidGlass.Enabled">True</sys:Boolean>
     <sys:Double x:Key="LiquidGlass.BlurRadius">12</sys:Double>
     <KernelType x:Key="LiquidGlass.BlurKernelType">Gaussian</KernelType>

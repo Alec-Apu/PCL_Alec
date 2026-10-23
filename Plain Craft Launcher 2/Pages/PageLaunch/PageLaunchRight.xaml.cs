@@ -18,6 +18,18 @@ public partial class PageLaunchRight : IRefreshable
     public PageLaunchRight()
     {
         InitializeComponent();
+        // 卡片只是容器，不是按钮：不给它们悬浮抬升，交互全部下沉到真正的行和按钮。
+        RecentCard.MainChrome.Opacity = 0d;
+        TasksCard.MainChrome.Opacity = 0d;
+        PanHint.MainChrome.Opacity = 0d;
+        PanLog.MainChrome.Opacity = 0d;
+        PanHint.MainTextBlock.FontSize = 13d;
+        PanHint.MainTextBlock.Margin = new Thickness(20d, 12d, 0d, 0d);
+        PanHint.MainTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "ColorBrushGray2");
+        PanLog.MainTextBlock.FontSize = 13d;
+        PanLog.MainTextBlock.Margin = new Thickness(20d, 12d, 0d, 0d);
+        PanLog.MainTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "ColorBrushGray3");
+        InteractionFeedback.Attach(BtnHintClose, HintCloseMask);
         onlineLoader = new ModLoader.LoaderTask<string, int>(
             Lang.Text("Launch.Homepage.Task.Download"),
             OnlineLoaderSub)
@@ -99,12 +111,38 @@ public partial class PageLaunchRight : IRefreshable
         RecentInstances.Children.Clear();
         foreach (var instance in instances)
         {
-            var button = new MyButton { Text = instance.Name, Height = 40, HorizontalAlignment = HorizontalAlignment.Stretch,
-                Margin = new Thickness(0, 0, 0, 8), ToolTip = instance.Name + "\n" + instance.Desc };
-            button.LabText.TextWrapping = TextWrapping.NoWrap;
-            button.LabText.TextTrimming = TextTrimming.CharacterEllipsis;
-            button.Click += (_, e) => PageSelectRight.Item_Click(new MyListItem { Tag = instance }, e);
-            RecentInstances.Children.Add(button);
+            var item = new MyListItem
+            {
+                Title = instance.Name,
+                Info = instance.Desc,
+                Height = 48,
+                FontSize = 13.5,
+                Margin = new Thickness(0, 0, 0, 4),
+                Tag = instance,
+                Type = MyListItem.CheckType.Clickable,
+                ToolTip = instance.Name + "\n" + instance.Desc
+            };
+            item.PaddingLeft = 4;
+            item.MinPaddingRight = 8;
+            try
+            {
+                item.Logo = instance.Logo.EndsWith(@"PCL\Logo.png")
+                    ? instance.PathInstance + @"PCL\Logo.png"
+                    : instance.Logo;
+            }
+            catch (Exception ex)
+            {
+                ModBase.Log(ex, Lang.Text("Select.Instance.Error.IconLoad"), ModBase.LogLevel.Hint,
+                    userSummary: Lang.Text("Select.Instance.Error.IconLoad"));
+                item.Logo = "pack://application:,,,/images/Blocks/RedstoneBlock.png";
+            }
+
+            // 整行都应该是点击目标：图标不单独吞掉鼠标事件。
+            if (item.pathLogo is not null)
+                item.pathLogo.IsHitTestVisible = false;
+
+            item.Click += (_, e) => PageSelectRight.Item_Click(item, e);
+            RecentInstances.Children.Add(item);
         }
         SetRecentEmpty(instances.Length == 0);
     }

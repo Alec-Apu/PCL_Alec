@@ -1,5 +1,12 @@
 # Liquid Glass retained rendering performance
 
+> Update 2026-10-23: ordinary page `Content`/`Chrome`/`Action`/`Input` surfaces now use the
+> lightweight material by default and no longer execute the per-surface sampling, blur and
+> shader path measured below. The dock and `Floating` popups keep full glass. Current state,
+> Release A/B results and limitations are in `docs/HANDOFF.zh-CN.md` §2.3 and
+> `artifacts/liquid-glass/global-lightweight-2026-10-23/SUMMARY.md`. The numbers here remain
+> historical evidence for the full-glass path, not the current page rendering cost.
+
 2026-10-22, local WPF test instance: rendering tier 2, ps_3_0 supported,
 process/window render modes Default, DisableHardwareAcceleration=False.
 These establish hardware capability/configuration, not a GPU trace of each operation.
@@ -30,5 +37,5 @@ Source/background changes remain live through retained VisualBrushes.
 
 Raw evidence lives in artifacts/liquid-glass/perf-before.txt, perf-after.txt,
 performance-dock-report.txt, performance-glass-report.txt and performance-build.log.
-Normal executable: artifacts/liquid-glass/app/Plain Craft Launcher 2.exe.
+Normal executable for the current package: artifacts/release-2026-10-23-global-lightweight/app/Plain Craft Launcher 2.exe.
 The smoke harness is injected only into isolated builds, never the normal launcher.
