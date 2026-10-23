@@ -23,11 +23,25 @@ public sealed class MicrosoftProvider : IAuthenticateProvider
     private const string DeviceEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode";
     private const string TokenEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
 
+    /// <summary>
+    ///     PCL CE 官方发行版使用的公开 OAuth 客户端 ID（公共客户端，不包含客户端机密）。
+    ///     来源：从官方 PCL CE 发行版二进制中提取（2026-10-23）。
+    ///     复用官方应用注册可能违反其使用条款、受其速率限制或随时被撤销；
+    ///     公开发布前应替换为自己的 Microsoft Entra 应用注册。
+    /// </summary>
+    public const string DefaultClientId = "c14b0370-8d75-42f8-b329-5b60d39e319f";
+
+    /// <summary>当前构建是否具备可用的 Microsoft 登录客户端 ID。</summary>
+    public static bool IsConfigured => !string.IsNullOrWhiteSpace(ResolveClientId());
+
+    private static string ResolveClientId() =>
+        string.IsNullOrWhiteSpace(Secrets.MSOAuthClientId) ? DefaultClientId : Secrets.MSOAuthClientId;
+
     private readonly string _clientId;
 
     public MicrosoftProvider(string? clientId = null)
     {
-        _clientId = string.IsNullOrWhiteSpace(clientId) ? Secrets.MSOAuthClientId : clientId;
+        _clientId = !string.IsNullOrWhiteSpace(clientId) ? clientId : ResolveClientId();
         if (string.IsNullOrWhiteSpace(_clientId))
             throw new InvalidOperationException("Microsoft OAuth client id is not configured.");
     }

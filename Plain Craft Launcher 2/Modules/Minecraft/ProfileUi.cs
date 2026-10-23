@@ -181,19 +181,19 @@ public static class ProfileUi
 
     public static void CreateProfile()
     {
+        List<ProfileCreationOption> options = [];
         int? selected = null;
         ModBase.RunInUiWait(() =>
         {
-            selected = ModMain.MyMsgBoxSelect(_GetAvailableProfileSelection(),
+            options = _GetAvailableProfileSelection();
+            var items = new List<IMyRadio>(options.Count);
+            foreach (var option in options) items.Add(option.Item);
+            selected = ModMain.MyMsgBoxSelect(items,
                 Lang.Text("Launch.Account.Profile.Create.SelectAuthType.Title"), Lang.Text("Common.Action.Continue"), Lang.Text("Common.Action.Cancel"));
         });
-        if (selected is null) return;
+        if (selected is not { } index || index < 0 || index >= options.Count) return;
         ProfileService.IsCreatingProfile = true;
-        var type = selected.Value switch
-        {
-            0 => ModLaunch.McLoginType.Auth,
-            _ => ModLaunch.McLoginType.Legacy
-        };
+        var type = options[index].LoginType;
         if (type == ModLaunch.McLoginType.Auth)
         {
             string? server = null;
@@ -211,11 +211,35 @@ public static class ProfileUi
         ModBase.RunInUi(() => ModMain.frmLaunchLeft.RefreshPage(true, type));
     }
 
-    private static List<IMyRadio> _GetAvailableProfileSelection() =>
-        [
-            new MyListItem { Title = Lang.Text("Launch.Account.Type.ThirdParty"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/network" },
-            new MyListItem { Title = Lang.Text("Launch.Account.Type.Offline"), Type = MyListItem.CheckType.RadioBox, SvgIcon = "lucide/link-2-off" }
-        ];
+    /// <summary>
+    ///     创建档案时可选的登录方式。显式保存登录类型，避免依赖列表顺序。
+    /// </summary>
+    private readonly record struct ProfileCreationOption(ModLaunch.McLoginType LoginType, MyListItem Item);
+
+    private static List<ProfileCreationOption> _GetAvailableProfileSelection()
+    {
+        var options = new List<ProfileCreationOption>(3);
+        if (MicrosoftProvider.IsConfigured)
+            options.Add(new ProfileCreationOption(ModLaunch.McLoginType.Ms, new MyListItem
+            {
+                Title = Lang.Text("Launch.Account.Type.Microsoft"),
+                Type = MyListItem.CheckType.RadioBox,
+                SvgIcon = "lucide/shield-check"
+            }));
+        options.Add(new ProfileCreationOption(ModLaunch.McLoginType.Auth, new MyListItem
+        {
+            Title = Lang.Text("Launch.Account.Type.ThirdParty"),
+            Type = MyListItem.CheckType.RadioBox,
+            SvgIcon = "lucide/network"
+        }));
+        options.Add(new ProfileCreationOption(ModLaunch.McLoginType.Legacy, new MyListItem
+        {
+            Title = Lang.Text("Launch.Account.Type.Offline"),
+            Type = MyListItem.CheckType.RadioBox,
+            SvgIcon = "lucide/link-2-off"
+        }));
+        return options;
+    }
 
     public static void EditProfileId()
     {
