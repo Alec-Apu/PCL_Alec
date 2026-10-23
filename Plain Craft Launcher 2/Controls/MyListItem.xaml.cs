@@ -666,11 +666,13 @@ public partial class MyListItem : IMyRadio
             else if (logo.EndsWithF(".png", true) || logo.EndsWithF(".jpg", true) || logo.EndsWithF(".webp", true))
             {
                 // 位图
+                ImageBrush logoBrush = new MyBitmap(logo);
+                logoBrush.Stretch = Stretch.Uniform;
                 pathLogo = new Canvas
                 {
                     Tag = this,
                     IsHitTestVisible = LogoClickable,
-                    Background = new MyBitmap(logo),
+                    Background = logoBrush,
                     RenderTransformOrigin = new Point(0.5d, 0.5d),
                     RenderTransform = new ScaleTransform { ScaleX = LogoScale, ScaleY = LogoScale },
                     SnapsToDevicePixels = true,
