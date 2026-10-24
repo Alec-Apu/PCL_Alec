@@ -27,7 +27,7 @@ internal static class FluentTheme
             SystemParameters.StaticPropertyChanged += OnSystemPreferenceChanged;
             SystemEvents.UserPreferenceChanged += (_, _) => app.Dispatcher.BeginInvoke(Refresh);
         }
-        var transparent = !SystemParameters.HighContrast && RenderCapability.Tier >= 0x10000;
+        var transparent = !FormMain.UseClassicLayout && !SystemParameters.HighContrast && RenderCapability.Tier >= 0x10000;
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");

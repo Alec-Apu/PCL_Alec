@@ -233,6 +233,8 @@ public static partial class Config
             /// <summary>
             /// 传说中的主题选择，但是没卵用。
             /// </summary>
+            [ConfigItem<bool>("UiClassicLayout", false, ConfigSource.Local)] public partial bool ClassicLayout { get; set; }
+
             [ConfigItem<int>("UiLauncherTheme", 0, ConfigSource.Local)] public partial int ThemeSelected { get; set; }
         }
 

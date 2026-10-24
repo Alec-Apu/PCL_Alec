@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -25,6 +25,8 @@ namespace PCL;
 
 public partial class FormMain
 {
+    public static bool UseClassicLayout { get; } = Config.Preference.Theme.ClassicLayout;
+
     // 愚人节鼠标位置
     public MouseEventArgs lastMouseArg;
 
@@ -99,6 +101,7 @@ public partial class FormMain
         // 加载 UI
         InitializeComponent();
         FluentTheme.Refresh();
+        ApplyClassicShell();
         Opacity = 0d;
         try
         {
@@ -163,6 +166,7 @@ public partial class FormMain
         FormMain_SizeChanged();
         ModBase.applicationStartTick = TimeUtils.GetTimeTick();
         ModBase.frmHandle = new WindowInteropHelper(this).Handle;
+        UpdateWindowCornerRegion();
         // 读取设置
         PageSetupUI.BackgroundRefresh(false, true);
         ModMusic.MusicRefreshPlay(false, true);
@@ -571,6 +575,7 @@ public partial class FormMain
 
     private void FormMain_SizeChanged(object? sender = null, EventArgs? e = null)
     {
+        UpdateWindowCornerRegion();
         if (isSizeSaveable)
         {
             States.UI.WindowHeight = Height;
@@ -602,6 +607,23 @@ public partial class FormMain
     }
 
     // 标题栏改变大小
+    private void UpdateWindowCornerRegion()
+    {
+        var handle = new WindowInteropHelper(this).Handle;
+        if (handle == IntPtr.Zero) return;
+        var scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
+        // PanBack is inset 10 DIP. Clip the HWND to that same boundary, removing
+        // the opaque outer margin as well as the four internal corner cutouts.
+        PCL.Core.Utils.OS.WindowInterop.SetRoundedWindowRegion(handle,
+            (int)Math.Round(40 * scale), (int)Math.Round(PanBack.Margin.Left * scale));
+    }
+
+    protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
+    {
+        base.OnDpiChanged(oldDpi, newDpi);
+        UpdateWindowCornerRegion();
+    }
+
     private void PanTitle_SizeChanged(object sender, EventArgs e)
     {
         if (PanTitleMain.ColumnDefinitions[0].ActualWidth - 30 <= 0)
@@ -2067,8 +2089,54 @@ public partial class FormMain
 
     private readonly HashSet<MyListItem> _categoryActionSubscriptions = [];
 
+    // Use the retained CE navigation and the original two-column shell.
+    private void ApplyClassicShell()
+    {
+        if (!FormMain.UseClassicLayout) return;
+        PrimaryNavigation.Visibility = Visibility.Collapsed;
+        WindowControls.Visibility = Visibility.Collapsed;
+        ModernTitle.Visibility = Visibility.Collapsed;
+        ClassicWindowControls.Visibility = Visibility.Visible;
+        AccountAnchor.Margin = new Thickness(0, 0, 84, 0);
+        PanTitleLeft.Visibility = Visibility.Visible;
+        ((Panel)PanTitleSelect.Parent).Children.Remove(PanTitleSelect);
+        PanTitleMain.Children.Add(PanTitleSelect);
+        Grid.SetColumn(PanTitleSelect, 1);
+        PanTitleSelect.Visibility = Visibility.Visible;
+        PanTitle.SetResourceReference(AnimatedBackgroundGrid.BackgroundBrushProperty, "ColorBrush3");
+        TitleSurface.SetResourceReference(Border.BackgroundProperty, "ColorBrush3");
+        ShapeTitleLogo.Stroke = Brushes.White;
+        LabTitleLogo.Foreground = Brushes.White;
+        BtnTitleInner.Margin = new Thickness(12, 0, 0, 0);
+        LabTitleInner.Margin = new Thickness(47, 1, 120, 0);
+        LabTitleInner.Foreground = Brushes.White;
+    }
+
     private void ConfigureFluentPage(MyPageLeft page)
     {
+        if (FormMain.UseClassicLayout)
+        {
+            CategorySurface.Visibility = Visibility.Collapsed;
+            CategoryActions.Visibility = Visibility.Visible;
+            foreach (var item in FindCategoryItems(page))
+                if (_categoryActionSubscriptions.Add(item))
+                    item.Check += (_, _) => Dispatcher.BeginInvoke(() => RefreshCategoryActions(page));
+            RefreshCategoryActions(page);
+            CategoryHost.Background = (Brush)FindResource("ColorBrushTransparentBackground");
+            CategoryHost.Margin = new Thickness(0);
+            CategoryHost.Visibility = Visibility.Visible;
+            PanMainLeft.Visibility = Visibility.Visible;
+            page.HorizontalAlignment = HorizontalAlignment.Stretch;
+            page.Width = double.NaN;
+            CategoryColumn.Width = new GridLength(page is PageLaunchLeft ? 300 : 180);
+            Grid.SetColumnSpan(CategoryHost, 1);
+            Grid.SetRowSpan(CategoryHost, 2);
+            Grid.SetColumn(ContentHost, 1);
+            Grid.SetColumnSpan(ContentHost, 1);
+            Grid.SetRow(ContentHost, 0);
+            Grid.SetRowSpan(ContentHost, 2);
+            return;
+        }
         var launch = page is PageLaunchLeft or PageSpeedLeft;
         // Tools has one destination and hides its category list; reclaim that column too.
         var empty = page.GetType() == typeof(MyPageLeft) || page is PageToolsLeft;

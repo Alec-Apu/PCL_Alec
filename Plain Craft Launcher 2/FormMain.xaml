@@ -1,4 +1,4 @@
-<Window
+﻿<Window
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL"
@@ -127,8 +127,12 @@
                                               MouseLeftButtonDown="FormDragMove"
                                               WindowChrome.IsHitTestVisibleInChrome="True"
                                               BackgroundBrush="{DynamicResource Fluent.TitleBar}">
-                    <Border Background="{DynamicResource Fluent.TitleBar}" IsHitTestVisible="False" />
+                    <Border x:Name="TitleSurface" Background="{DynamicResource Fluent.TitleBar}" IsHitTestVisible="False" />
                     <local:MyImage x:Name="ImgTitle" Visibility="Collapsed" IsHitTestVisible="False" Stretch="UniformToFill" IsEnabled="False" RenderOptions.BitmapScalingMode="LowQuality" />
+                    <StackPanel x:Name="ClassicWindowControls" Visibility="Collapsed" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0" Panel.ZIndex="5">
+                        <local:MyIconButton Width="28" Height="28" Theme="White" SvgIcon="lucide/minus" Click="BtnTitleMin_Click" />
+                        <local:MyIconButton Width="28" Height="28" Theme="White" SvgIcon="lucide/x" Click="BtnTitleClose_Click" />
+                    </StackPanel>
                     <StackPanel x:Name="WindowControls" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="14,0,0,0" Panel.ZIndex="4">
                         <Button x:Name="BtnTitleClose" Style="{StaticResource Fluent.TrafficLight}" Click="BtnTitleClose_Click" AutomationProperties.Name="关闭窗口">
                             <Path Data="M0,0 L5,5 M5,0 L0,5" Stroke="#99000000" StrokeThickness="1" Width="5" Height="5" />
@@ -140,7 +144,7 @@
                             <Path Data="M0,3 L0,0 L3,0 M3,6 L6,6 L6,3" Stroke="#99000000" StrokeThickness="1" Width="6" Height="6" />
                         </Button>
                     </StackPanel>
-                    <TextBlock Visibility="{Binding Visibility, ElementName=PanTitleMain}" Text="{Binding Title, ElementName=WindMain}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="190,0" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ColorBrush1}" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" />
+                    <TextBlock x:Name="ModernTitle" Visibility="{Binding Visibility, ElementName=PanTitleMain}" Text="{Binding Title, ElementName=WindMain}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="190,0" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource ColorBrush1}" IsHitTestVisible="False" TextTrimming="CharacterEllipsis" />
                     <local:MyIconButton x:Name="BtnTitleHelp" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,94,0" Theme="Color" Visibility="Collapsed" Click="BtnTitleHelp_Click"
                                         SvgIcon="lucide/circle-help" />
                     <local:MyIconButton x:Name="AccountAnchor" HorizontalAlignment="Right" Width="32" Height="32" Margin="0,0,14,0"

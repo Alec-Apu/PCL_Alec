@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 
@@ -6,6 +6,33 @@ namespace PCL.Core.Utils.OS;
 
 public static partial class WindowInterop
 {
+    [LibraryImport("gdi32.dll")]
+    private static partial IntPtr CreateRoundRectRgn(int left, int top, int right, int bottom,
+        int ellipseWidth, int ellipseHeight);
+
+    [LibraryImport("user32.dll")]
+    private static partial int SetWindowRgn(IntPtr window, IntPtr region,
+        [MarshalAs(UnmanagedType.Bool)] bool redraw);
+
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool DeleteObject(IntPtr value);
+
+    /// <summary>Clip the native window too, so opaque WPF backgrounds cannot fill its corners.</summary>
+    public static void SetRoundedWindowRegion(IntPtr window, int diameter, int inset = 0)
+    {
+        if (window == IntPtr.Zero) return;
+        var bounds = GetWindowRectangle(window).ToWindowBounds();
+        if (bounds.Width <= inset * 2 || bounds.Height <= inset * 2) return;
+        var region = CreateRoundRectRgn(inset, inset, bounds.Width - inset + 1, bounds.Height - inset + 1, diameter, diameter);
+        if (region == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastWin32Error());
+        // Windows owns the region after a successful call; only release it on failure.
+        if (SetWindowRgn(window, region, true) == 0)
+        {
+            DeleteObject(region);
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+    }
     // ReSharper disable InconsistentNaming UnusedMember.Local
 
     // DWM 外边缘结构定义

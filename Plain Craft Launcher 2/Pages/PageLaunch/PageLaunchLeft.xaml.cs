@@ -50,6 +50,7 @@ public partial class PageLaunchLeft
     public PageLaunchLeft()
     {
         InitializeComponent();
+        if (FormMain.UseClassicLayout) BuildClassicLayout();
         Loaded += PageLaunchLeft_Loaded;
         WeakLanguageChanged.Add(this, OnLanguageChanged);
         // Handles
@@ -64,9 +65,62 @@ public partial class PageLaunchLeft
         InteractionFeedback.Attach(BtnLaunch, LaunchHoverMask, pressFeedback: false);
     }
 
+    private void BuildClassicLayout()
+    {
+        // Keep the current login/launch controls and handlers, arranged like the CE page.
+        static void Detach(FrameworkElement element)
+        {
+            if (element.Parent is Panel panel) panel.Children.Remove(element);
+        }
+        Detach(PanLogin);
+        Detach(BtnLaunch);
+        Detach(LabVersion);
+        Detach(BtnInstance);
+        Detach(BtnMore);
+        PanInput.Children.Clear();
+        PanInput.MinHeight = 0;
+        PanInput.MaxWidth = double.PositiveInfinity;
+        PanInput.Margin = new Thickness(20, 0, 20, 20);
+        PanInput.RowDefinitions.Add(new RowDefinition());
+        PanInput.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        PanInput.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        PanLogin.VerticalAlignment = VerticalAlignment.Center;
+        PanInput.Children.Add(PanLogin);
+        var launch = new Grid { Margin = new Thickness(0, 12, 0, 0) };
+        Grid.SetRow(launch, 1);
+        BtnLaunch.Height = 54;
+        BtnLaunch.Padding = new Thickness(20, 0, 20, 15);
+        BtnLaunch.Margin = new Thickness(0);
+        launch.Children.Add(BtnLaunch);
+        LabVersion.FontSize = 11;
+        LabVersion.LineHeight = double.NaN;
+        LabVersion.MaxHeight = double.PositiveInfinity;
+        LabVersion.VerticalAlignment = VerticalAlignment.Bottom;
+        LabVersion.HorizontalAlignment = HorizontalAlignment.Center;
+        LabVersion.Margin = new Thickness(15, 0, 15, 8);
+        LabVersion.IsHitTestVisible = false;
+        LabVersion.SetResourceReference(TextBlock.ForegroundProperty, "ColorBrushGray3");
+        launch.Children.Add(LabVersion);
+        PanInput.Children.Add(launch);
+        var actions = new Grid { Margin = new Thickness(0, 10, 0, 0) };
+        actions.ColumnDefinitions.Add(new ColumnDefinition());
+        actions.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        Grid.SetRow(actions, 2);
+        BtnInstance.Height = BtnMore.Height = 35;
+        BtnInstance.Margin = new Thickness(0);
+        BtnMore.Margin = new Thickness(10, 0, 0, 0);
+        Grid.SetColumn(BtnInstance, 0);
+        Grid.SetColumn(BtnMore, 1);
+        actions.Children.Add(BtnInstance);
+        actions.Children.Add(BtnMore);
+        PanInput.Children.Add(actions);
+        PanLaunching.MaxWidth = 300;
+    }
+
     // 810 宽度下收紧账号与主按钮，把宽度留给实例名；1280 下恢复完整尺度。
     private void PanInput_SizeChanged(object sender, SizeChangedEventArgs e)
     {
+        if (FormMain.UseClassicLayout) return;
         var compact = e.NewSize.Width < 900d;
         if (compact == _compactHero)
             return;
@@ -139,6 +193,11 @@ public partial class PageLaunchLeft
 
     public void ShowAccount()
     {
+        if (FormMain.UseClassicLayout)
+        {
+            ModMain.frmMain.PageChange(FormMain.PageType.Launch);
+            return;
+        }
         // Own the popup from the window so it also opens while the launch page is detached.
         if (Children.Contains(AccountPopup))
         {

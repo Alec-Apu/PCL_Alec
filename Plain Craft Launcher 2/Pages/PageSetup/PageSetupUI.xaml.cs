@@ -52,7 +52,7 @@ public partial class PageSetupUI
             // 启动器
             SliderLauncherOpacity.Value = Config.Preference.Theme.WindowOpacity;
             CheckLauncherLogo.Checked = Config.Preference.ShowStartupLogo;
-            ComboDarkMode.SelectedIndex = (int)Config.Preference.Theme.ColorMode;
+            ComboDarkMode.SelectedIndex = Config.Preference.Theme.ClassicLayout ? 3 : (int)Config.Preference.Theme.ColorMode;
             ComboAccentColor.SelectedIndex = ThemeIndex(Config.Preference.Theme.LightColor);
             RefreshAccentEditor();
             CheckShowLaunchingHint.Checked = Config.Preference.ShowLaunchingHint;
@@ -206,6 +206,15 @@ public partial class PageSetupUI
     private void ComboChange(object senderRaw, SelectionChangedEventArgs e)
     {
         var sender = (MyComboBox)senderRaw;
+        if (ModAnimation.AniControlEnabled == 0 && sender == ComboDarkMode)
+        {
+            var classic = sender.SelectedIndex == 3;
+            var changed = Config.Preference.Theme.ClassicLayout != classic;
+            Config.Preference.Theme.ClassicLayout = classic;
+            if (!classic) SetByTag("UiDarkMode", sender.SelectedIndex);
+            if (changed) HintService.Hint("界面布局已保存，重新启动启动器后生效。", HintType.Info);
+            return;
+        }
         if (ModAnimation.AniControlEnabled == 0)
             SetByTag(sender.Tag?.ToString(), sender == ComboCustomPreset && sender.SelectedIndex == 14 ? 15 : sender.SelectedIndex);
     }
