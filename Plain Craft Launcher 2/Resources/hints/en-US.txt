@@ -1,5 +1,5 @@
 
-PCL XH is a personal version based on the PCL community edition developed by PCL-Community.
+PCL Ap is a personal version based on the PCL community edition developed by PCL-Community.
 
 Create a hints.txt file in the PCL folder to customize the "Did You Know" content. Make sure the encoding is UTF-8!
 
@@ -979,60 +979,60 @@ It is possible for a village to generate on the border of two or more biomes but
 
 The original inhabitants of villages were pigmen, whose later design concepts were used for piglins.
 
-PCL XH is based on the PCL community edition and has no affiliation with LTCat(龙腾猫跃).
+PCL Ap is based on the PCL community edition and has no affiliation with LTCat(龙腾猫跃).
 
-PCL XH supports importing HMCL archives.
+PCL Ap supports importing HMCL archives.
 
-The upstream community edition of PCL XH is developed by PCL-Community.
+The upstream community edition of PCL Ap is developed by PCL-Community.
 
-PCL XH is a personal version based on the PCL community edition.
+PCL Ap is a personal version based on the PCL community edition.
 
 Your Minecraft downloads are so fast thanks to bangbang93's BMCLAPI!
 
-PCL XH can directly update the Minecraft game and mod loaders from the "Instance Settings - Modify" tab.
+PCL Ap can directly update the Minecraft game and mod loaders from the "Instance Settings - Modify" tab.
 
-PCL XH supports Gaussian blur.
+PCL Ap supports Gaussian blur.
 
-PCL XH supports dynamic backgrounds.
+PCL Ap supports dynamic backgrounds.
 
 According to official edition statistics, 94.5% of users clicked on the "Do not click" button (don't even think about it; this community edition doesn't have that).
 
-PCL XH has implemented some of the official PCL's toolbox features, such as memory optimization, daily luck, game cache cleaning, high-speed download, and more community-developed tools.
+PCL Ap has implemented some of the official PCL's toolbox features, such as memory optimization, daily luck, game cache cleaning, high-speed download, and more community-developed tools.
 
-PCL XH supports log viewing and exporting, making it easy for users to submit detailed logs when reporting bugs.
+PCL Ap supports log viewing and exporting, making it easy for users to submit detailed logs when reporting bugs.
 
-PCL XH supports using Mirror酱 to accelerate updates.
+PCL Ap supports using Mirror酱 to accelerate updates.
 
-PCL XH supports dark mode, so your eyes won't be blinded when sneaking in some Minecraft gaming at night.
+PCL Ap supports dark mode, so your eyes won't be blinded when sneaking in some Minecraft gaming at night.
 
-PCL XH supports all drag-and-drop operations from the official version; you can directly drag and drop modpacks or mods to install.
+PCL Ap supports all drag-and-drop operations from the official version; you can directly drag and drop modpacks or mods to install.
 
-PCL XH has its own user group, but you need to be able to open GitHub to know the group number.
+PCL Ap has its own user group, but you need to be able to open GitHub to know the group number.
 
 When the game crashes, never just send a screenshot! Always send the log!! Without the log, even God wouldn't know how to fix it!!!
 
 Alt+F4 closes the window, it's not diamonds or a gift pack!
 
-Most of the PCL XH development team are students, so updates might be a bit slow.
+Most of the PCL Ap development team are students, so updates might be a bit slow.
 
-PCL XH supports checking server status in "Instance Settings - Server" or "Tools - Toolbox - Peek at Server", so you can see if your favorite server is online without entering the game.
+PCL Ap supports checking server status in "Instance Settings - Server" or "Tools - Toolbox - Peek at Server", so you can see if your favorite server is online without entering the game.
 
-PCL XH allows save backups in "Instance Settings - Saves - Details - Backup".
+PCL Ap allows save backups in "Instance Settings - Saves - Details - Backup".
 
-PCL XH allows modifying save game difficulty, command permission, and difficulty lock in "Instance Settings - Saves - Details".
+PCL Ap allows modifying save game difficulty, command permission, and difficulty lock in "Instance Settings - Saves - Details".
 
-PCL XH supports translating mod descriptions.
+PCL Ap supports translating mod descriptions.
 
 
-PCL XH can upgrade a game instance's Authlib during installation to fix Minecraft 1.16.5's multiplayer issues.
+PCL Ap can upgrade a game instance's Authlib during installation to fix Minecraft 1.16.5's multiplayer issues.
 
 Press F12 to temporarily re-display hidden settings.
 
-PCL XH supports changing fonts.
+PCL Ap supports changing fonts.
 
-PCL XH supports changing the game's process priority. With proper settings, the game won't compete for CPU while idling, nor will other programs compete while you play.
+PCL Ap supports changing the game's process priority. With proper settings, the game won't compete for CPU while idling, nor will other programs compete while you play.
 
-Do not run PCL XH as administrator unless necessary; this causes various permission issues and breaks system-level interactions such as drag-and-drop!
+Do not run PCL Ap as administrator unless necessary; this causes various permission issues and breaks system-level interactions such as drag-and-drop!
 
 Hover your mouse over some text in the settings to see a detailed explanation of that setting.
 

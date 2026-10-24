@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -72,7 +72,7 @@ public static class ModBase
     /// <summary>
     ///     程序内嵌图片文件夹路径，以“/”结尾。
     /// </summary>
-    public static readonly string pathImage = "pack://application:,,,/Plain Craft Launcher 2;component/Images/";
+    public static readonly string pathImage = "pack://application:,,,/PCL Ap;component/Images/";
 
     /// <summary>
     ///     当前程序的语言。
@@ -3550,7 +3550,7 @@ public static class ModBase
                                  Lang.Text("Common.Action.OpenFolder"),
                                  Lang.Text("Setup.Feedback.Reminder.NotNeeded")) ==
                              1)) OpenExplorer(exePath + @"PCL\Log\");
-        OpenWebsite("https://github.com/NoSetViolin/PCL-XH/issues/");
+        OpenWebsite("https://github.com/Alec-Apu/PCL_Alec/issues/");
     }
 
     /// <summary>

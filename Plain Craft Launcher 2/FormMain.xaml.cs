@@ -48,7 +48,7 @@ public partial class FormMain
                 changelog = Lang.Text("Main.UpdateLog.Empty");
             if (ModMain.MyMsgBoxMarkdown(changelog,
                     Lang.Text("Main.UpdateLog.Title", ModBase.versionBranchName, ModBase.versionBaseName), Lang.Text("Common.Action.Confirm"), Lang.Text("Main.UpdateLog.FullChangelog")) ==
-                2) ModBase.OpenWebsite("https://github.com/NoSetViolin/PCL-XH/releases");
+                2) ModBase.OpenWebsite("https://github.com/Alec-Apu/PCL_Alec/releases");
         }, "UpdateLog Output");
     }
 
@@ -536,7 +536,7 @@ public partial class FormMain
             if (!isLogShown)
             {
                 ModBase.FeedbackInfo();
-                ModBase.Log("请在 https://github.com/NoSetViolin/PCL-XH/issues 提交错误报告，以便于社区解决此问题！（这也有可能是原版 PCL 的问题）");
+                ModBase.Log("请在 https://github.com/Alec-Apu/PCL_Alec/issues 提交错误报告，以便于社区解决此问题！（这也有可能是原版 PCL 的问题）");
                 isLogShown = true;
                 ModBase.ShellOnly(LogWrapper.CurrentLogger.CurrentLogFiles.Last());
             }

@@ -435,7 +435,7 @@ public class ModSetup
                     Lang.Text("Setup.Ui.Homepage.NetUpdate.Hint");
                 CustomEventService.SetEventType(ModMain.frmSetupUI.HintCustom, EventType.OpenUrl);
                 CustomEventService.SetEventData(ModMain.frmSetupUI.HintCustom,
-                    "https://github.com/NoSetViolin/PCL-XH/discussions");
+                    "https://github.com/Alec-Apu/PCL_Alec/discussions");
                 break;
             }
             case 3: // 预设

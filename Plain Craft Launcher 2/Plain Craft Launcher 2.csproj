@@ -4,6 +4,8 @@
         <TargetFramework>net10.0-windows</TargetFramework>
         <OutputType>WinExe</OutputType>
         <RootNamespace>PCL</RootNamespace>
+        <AssemblyName>PCL Ap</AssemblyName>
+        <Company>Alec-Apu</Company>
         <MyType>Custom</MyType>
         <IsWebBootstrapper>false</IsWebBootstrapper>
         <StartupObject>PCL.Program</StartupObject>
@@ -24,9 +26,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Images\icon.ico</ApplicationIcon>
-        <AssemblyTitle>PCL XH</AssemblyTitle>
+        <AssemblyTitle>PCL Ap</AssemblyTitle>
         <Description>Minecraft 启动器 (作者: 龙腾猫跃; 经社区二次开发版本)</Description>
-        <Product>PCL XH</Product>
+        <Product>PCL Ap</Product>
         <Copyright>Copyright © 龙腾猫跃 2016. All Rights Reserved.</Copyright>
         <AssemblyVersion>2.15.1.0</AssemblyVersion>
         <FileVersion>2.15.1.0</FileVersion>

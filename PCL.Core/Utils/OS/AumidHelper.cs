@@ -4,19 +4,19 @@ namespace PCL.Core.Utils.OS;
 
 public static class AumidHelper
 {
-    public const string Aumid = "PCLCommunity.PCLCE";
+    public const string Aumid = "Ap.PCLAp";
     
     public static bool HasAumid()
     {
         using var key = Registry.CurrentUser.OpenSubKey(string.Concat(@"Software\Classes\AppUserModelId\", Aumid));
-        return key?.GetValue("DisplayName") is "PCL XH";
+        return key?.GetValue("DisplayName") is "PCL Ap";
     }
     
     public static void RegisterAumid()
     {
         // .NET 8 在正常情况下不可能返回 null，如果炸了不应该包住而是让他炸下去
         using var key = Registry.CurrentUser.CreateSubKey(string.Concat(@"Software\Classes\AppUserModelId\", Aumid));
-        key.SetValue("DisplayName", "PCL XH");
+        key.SetValue("DisplayName", "PCL Ap");
         key.SetValue("IconUri", IconHelper.GetIconPath());
         key.SetValue("IconBackgroundColor", "FFDDDD");
     }

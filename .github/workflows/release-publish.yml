@@ -90,12 +90,12 @@ jobs:
 
       - name: Rename binaries
         run: |
-          mv "./artifact/Plain Craft Launcher 2.exe" "PCL2_CE_${{ matrix.configuration }}_${{ matrix.architecture }}.exe"
+          mv "./artifact/PCL Ap.exe" "PCL_Ap_${{ matrix.configuration }}_${{ matrix.architecture }}.exe"
 
       - name: Sign the binary
         uses: sigstore/gh-action-sigstore-python@790bc6befb9d733738f18d8f895854b453640ec9 # v3.5.0
         with:
-          inputs: PCL2_CE_${{ matrix.configuration }}_${{ matrix.architecture }}.exe
+          inputs: PCL_Ap_${{ matrix.configuration }}_${{ matrix.architecture }}.exe
           verify: true
           verify-cert-identity: ${{ github.server_url }}/${{ github.workflow_ref }}
           verify-oidc-issuer: https://token.actions.githubusercontent.com
@@ -106,8 +106,8 @@ jobs:
           draft: true
           tag_name: v${{ inputs.version }}
           files: |
-            PCL2_CE_${{ matrix.configuration }}_${{ matrix.architecture }}.exe
-            PCL2_CE_${{ matrix.configuration }}_${{ matrix.architecture }}.exe.sigstore.json
+            PCL_Ap_${{ matrix.configuration }}_${{ matrix.architecture }}.exe
+            PCL_Ap_${{ matrix.configuration }}_${{ matrix.architecture }}.exe.sigstore.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

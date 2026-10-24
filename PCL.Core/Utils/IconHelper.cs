@@ -9,7 +9,7 @@ public static class IconHelper
 {
     public static string GetIconPath()
     {
-        var paths = Path.Combine(Paths.Temp, "icon.png");
+        var paths = Path.Combine(Paths.Temp, "PCL-Ap.png");
         if (!File.Exists(paths))
         {
             CreateIcon();
@@ -23,6 +23,6 @@ public static class IconHelper
         using var icon = Icon.ExtractAssociatedIcon(Basics.ExecutablePath) ??
                          throw new InvalidOperationException("无法提取程序图标。");
         using var bitmap = icon.ToBitmap();
-        bitmap.Save(Path.Combine(Paths.Temp, "icon.png"));
+        bitmap.Save(Path.Combine(Paths.Temp, "PCL-Ap.png"));
     }
 }

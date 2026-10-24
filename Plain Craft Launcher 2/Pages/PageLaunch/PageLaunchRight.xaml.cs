@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Globalization;
 using System.Reflection;
 using System.Windows;
@@ -174,7 +174,7 @@ public partial class PageLaunchRight : IRefreshable
         if (string.IsNullOrWhiteSpace(input))
             return;
         input = new string(input.Where(char.IsAsciiLetter).ToArray()).ToLower();
-        if (input.Contains("pclcommunity"))
+        if (input == "ap")
         {
             ModAnimation.AniDispose(PanHint, true);
             States.Hint.CEMessage = false;
@@ -445,7 +445,7 @@ public partial class PageLaunchRight : IRefreshable
     {
         try
         {
-            var uri = new Uri($"pack://application:,,,/Plain Craft Launcher 2;component/Resources/hints/{langCode}.txt", UriKind.Absolute);
+            var uri = new Uri($"pack://application:,,,/PCL Ap;component/Resources/hints/{langCode}.txt", UriKind.Absolute);
             using var stream = Application.GetResourceStream(uri)?.Stream;
             if (stream is null) return null;
             using var reader = new StreamReader(stream);
@@ -604,7 +604,7 @@ public partial class PageLaunchRight : IRefreshable
                 while (content.Contains("xmlns"))
                     content = content.RegexReplace("xmlns[^\"']*(\"|')[^\"']*(\"|')", "").Replace("xmlns", "");
                 content =
-                    $"<StackPanel xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:sys=\"clr-namespace:System;assembly=System.Runtime\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:local=\"clr-namespace:PCL;assembly=Plain Craft Launcher 2\">{content}</StackPanel>";
+                    $"<StackPanel xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:sys=\"clr-namespace:System;assembly=System.Runtime\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:local=\"clr-namespace:PCL;assembly=PCL Ap\">{content}</StackPanel>";
                 ModBase.Log($"[Page] 实例化：加载主页 UI 开始，最终内容长度：{content.Count()}");
                 PanCustom.Children.Add((UIElement)ModBase.GetObjectFromXML(content, out var sanitizeResult));
                 _ShowSanitizeHints(sanitizeResult);
@@ -968,7 +968,7 @@ public partial class PageLaunchRight : IRefreshable
             content = content.RegexReplace("xmlns[^\"']*(\"|')[^\"']*(\"|')", "").Replace("xmlns", "");
 
         var wrapped =
-            $"<StackPanel xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:sys=\"clr-namespace:System;assembly=System.Runtime\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:local=\"clr-namespace:PCL;assembly=Plain Craft Launcher 2\">{content}</StackPanel>";
+            $"<StackPanel xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:sys=\"clr-namespace:System;assembly=System.Runtime\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:local=\"clr-namespace:PCL;assembly=PCL Ap\">{content}</StackPanel>";
 
         if (ModBase.GetObjectFromXML(wrapped) is not Panel parsedPanel) return;
 

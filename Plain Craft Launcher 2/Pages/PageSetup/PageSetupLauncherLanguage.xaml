@@ -1,4 +1,4 @@
-﻿<local:MyPageRight
+<local:MyPageRight
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:PCL"
@@ -115,7 +115,7 @@
                                         FontSize="42"
                                         FontWeight="Bold"
                                         Foreground="{DynamicResource ColorBrush1}"
-                                        Text="PCL XH"
+                                        Text="PCL Ap"
                                         TextWrapping="Wrap" />
 
                                     <TextBlock
@@ -177,7 +177,7 @@
                             Text="{DynamicResource Setup.Language.Banner.SubmitPullRequest}"
                             SvgIcon="lucide/git-pull-request-arrow"
                             local:CustomEventService.EventType="OpenUrl"
-                            local:CustomEventService.EventData="https://github.com/NoSetViolin/PCL-XH/pulls" />
+                            local:CustomEventService.EventData="https://github.com/Alec-Apu/PCL_Alec/pulls" />
                     </StackPanel>
                 </StackPanel>
             </local:MyCard>

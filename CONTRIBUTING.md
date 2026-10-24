@@ -10,7 +10,7 @@ Wiki 页面:
 
 ## 开始之前
 
-查看 [Issues](https://github.com/NoSetViolin/PCL-XH/issues) 寻找可以参与的任务，或创建新 Issue 讨论您的想法。
+查看 [Issues](https://github.com/Alec-Apu/PCL_Alec/issues) 寻找可以参与的任务，或创建新 Issue 讨论您的想法。
 
 ## 贡献流程
 

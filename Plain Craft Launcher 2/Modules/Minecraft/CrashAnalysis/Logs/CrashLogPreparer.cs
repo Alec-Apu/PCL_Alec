@@ -26,7 +26,7 @@ internal sealed class CrashLogPreparer(CrashAnalysisContext context)
         "PCL2 启动器日志.txt",
         "PCL 启动器日志.txt",
         "PCL CE 启动器日志.txt",
-        "PCL XH 启动器日志.txt",
+        "PCL Ap 启动器日志.txt",
         "log1.txt",
         "log-ce1.log"
     };
@@ -195,7 +195,7 @@ internal sealed class CrashLogPreparer(CrashAnalysisContext context)
                      "log-ce1.log",
                      "游戏崩溃前的输出.txt",
                      "PCL CE 启动器日志.txt",
-                     "PCL XH 启动器日志.txt",
+                     "PCL Ap 启动器日志.txt",
                      "PCL2 启动器日志.txt",
                      "PCL 启动器日志.txt"
                  })
