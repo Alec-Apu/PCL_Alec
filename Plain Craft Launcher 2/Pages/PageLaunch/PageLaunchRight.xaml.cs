@@ -179,7 +179,7 @@ public partial class PageLaunchRight : IRefreshable
         if (string.IsNullOrWhiteSpace(input))
             return;
         input = new string(input.Where(char.IsAsciiLetter).ToArray()).ToLower();
-        if (input == "ap")
+        if (input == "alec")
         {
             ModAnimation.AniDispose(PanHint, true);
             States.Hint.CEMessage = false;

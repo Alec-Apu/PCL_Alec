@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -17,7 +17,25 @@ public class MyPageRight : AdornerDecorator
             // the declared scroll owner from the page's own namescope after loading.
             if (GetValue(PanScrollProperty) is null && FindName("PanBack") is MyScrollViewer scroll)
                 PanScroll = scroll;
+            // Run after page Loaded handlers populate their scroll content.
+            Dispatcher.BeginInvoke(new Action(EnsureNavigationClearance),
+                System.Windows.Threading.DispatcherPriority.Loaded);
         };
+    }
+
+    /// <summary>Leave scrollable space beneath the floating primary navigation.</summary>
+    private void EnsureNavigationClearance()
+    {
+        if (FormMain.UseClassicLayout) return;
+        if (GetValue(PanScrollProperty) is not MyScrollViewer scroll ||
+            scroll.Content is not FrameworkElement content) return;
+
+        // Navigation is 64 DIP tall, inset 16 DIP from the bottom. Keep an
+        // additional 20 DIP gap; use a minimum so repeated loading never adds up.
+        var margin = content.Margin;
+        if (margin.Bottom < 100)
+            content.SetCurrentValue(MarginProperty,
+                new Thickness(margin.Left, margin.Top, margin.Right, 100));
     }
 
     // 当前状态

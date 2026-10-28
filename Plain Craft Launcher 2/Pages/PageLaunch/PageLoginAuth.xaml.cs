@@ -54,7 +54,10 @@ public partial class PageLoginAuth
 
     private void Reload()
     {
-        _authServerUrl = draggedAuthServer ?? "";
+        // Opening a modal server dialog closes/reopens the account popup. Loaded
+        // may run again without a new handoff; retain this login attempt's server.
+        if (string.IsNullOrWhiteSpace(draggedAuthServer)) return;
+        _authServerUrl = draggedAuthServer.Trim();
         var knownOAuthSupport = draggedAuthServerOAuthSupported;
         draggedAuthServer = null;
         draggedAuthServerOAuthSupported = null;
@@ -390,7 +393,13 @@ public partial class PageLoginAuth
 
     private void BtnWebsite_Click(object sender, EventArgs e)
     {
-        var websiteUri = new UriBuilder(new Uri(_authServerUrl))
+        if (!Uri.TryCreate(_authServerUrl, UriKind.Absolute, out var serverUri) ||
+            (serverUri.Scheme != Uri.UriSchemeHttps && serverUri.Scheme != Uri.UriSchemeHttp))
+        {
+            HintService.Hint(Lang.Text("Launch.Account.Auth.InvalidServer"), HintType.Error);
+            return;
+        }
+        var websiteUri = new UriBuilder(serverUri)
         {
             Path = "/",
             Query = "",

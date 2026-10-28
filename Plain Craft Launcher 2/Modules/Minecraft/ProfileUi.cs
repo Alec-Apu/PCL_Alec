@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -208,7 +208,13 @@ public static class ProfileUi
                 PageLoginAuth.IsOAuthSupportedAsync(server).GetAwaiter().GetResult();
             PageLoginAuth.draggedAuthServer = server;
         }
-        ModBase.RunInUi(() => ModMain.frmLaunchLeft.RefreshPage(true, type));
+        ModBase.RunInUi(() =>
+        {
+            ModMain.frmLaunchLeft.RefreshPage(true, type);
+            // Modal account/server selection dismisses the non-sticky flyout.
+            // Reopen it so the credential page is loaded and usable.
+            ModMain.frmLaunchLeft.ShowAccount();
+        });
     }
 
     /// <summary>
