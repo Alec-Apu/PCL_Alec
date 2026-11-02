@@ -41,7 +41,6 @@
                                 <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Theme.Light}" />
                                 <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Theme.Dark}" />
                                 <local:MyComboBoxItem Content="{DynamicResource Setup.Ui.Theme.FollowSystem}" /> <!-- default -->
-                            <local:MyComboBoxItem Content="pclce原版ui" />
                             </local:MyComboBox>
                             </Grid>
                             <Grid MinHeight="40">

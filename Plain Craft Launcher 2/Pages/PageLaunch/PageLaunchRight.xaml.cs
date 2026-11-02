@@ -18,11 +18,7 @@ public partial class PageLaunchRight : IRefreshable
     public PageLaunchRight()
     {
         InitializeComponent();
-        if (FormMain.UseClassicLayout)
-        {
-            ((UIElement)RecentCard.Parent).Visibility = Visibility.Collapsed;
-            PanMain.Margin = new Thickness(25, 10, 25, 10);
-        }
+
         // 卡片只是容器，不是按钮：不给它们悬浮抬升，交互全部下沉到真正的行和按钮。
         RecentCard.MainChrome.Opacity = 0d;
         TasksCard.MainChrome.Opacity = 0d;

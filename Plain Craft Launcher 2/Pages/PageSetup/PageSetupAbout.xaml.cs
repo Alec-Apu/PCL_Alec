@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +10,8 @@ namespace PCL;
 
 public partial class PageSetupAbout
 {
+    private async void CheckLanUpdate_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => await LanUpdate.CheckAsync(true);
+
     // 彩蛋
     private int clickCount;
 

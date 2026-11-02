@@ -13,7 +13,7 @@
         </Grid.Resources>
         <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                               x:Name="PanBack">
-            <StackPanel Margin="25,10,25,65">
+            <StackPanel Margin="25,10,25,160">
                 <local:MyHint Margin="0,15,0,0" Text="{DynamicResource Instance.Export.ModrinthWarning}" Theme="Yellow"
                               x:Name="HintOptiFine" />
                 <local:MyCard Margin="0,15">
@@ -284,7 +284,8 @@
                 </local:MyCard>
             </StackPanel>
         </local:MyScrollViewer>
-        <local:MyExtraTextButton HorizontalAlignment="Center" VerticalAlignment="Bottom"
+        <local:MyExtraTextButton Margin="0,0,0,84" Panel.ZIndex="1"
+                                 HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                  x:Name="BtnExport" Text="{DynamicResource Instance.Export.StartExport}"
                                  LogoScale="1.1"
                                  SvgIcon="lucide/package" />

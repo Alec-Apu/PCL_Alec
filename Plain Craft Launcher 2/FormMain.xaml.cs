@@ -25,7 +25,7 @@ namespace PCL;
 
 public partial class FormMain
 {
-    public static bool UseClassicLayout { get; } = Config.Preference.Theme.ClassicLayout;
+
 
     // 愚人节鼠标位置
     public MouseEventArgs lastMouseArg;
@@ -101,7 +101,8 @@ public partial class FormMain
         // 加载 UI
         InitializeComponent();
         FluentTheme.Refresh();
-        ApplyClassicShell();
+        // Retire the former classic layout preference for existing installations.
+        Config.Preference.Theme.ClassicLayout = false;
         Opacity = 0d;
         try
         {
@@ -201,6 +202,7 @@ public partial class FormMain
         // MinHeight = 50
         // MinWidth = 50
         // #End If
+        _ = LanUpdate.CheckAsync();
         Topmost = false;
         if (ModMain.frmStart is not null)
             ModMain.frmStart.Close(new TimeSpan(0, 0, 0, 0, (int)Math.Round(400d / ModAnimation.aniSpeed)));
@@ -2089,54 +2091,11 @@ public partial class FormMain
 
     private readonly HashSet<MyListItem> _categoryActionSubscriptions = [];
 
-    // Use the retained CE navigation and the original two-column shell.
-    private void ApplyClassicShell()
-    {
-        if (!FormMain.UseClassicLayout) return;
-        PrimaryNavigation.Visibility = Visibility.Collapsed;
-        WindowControls.Visibility = Visibility.Collapsed;
-        ModernTitle.Visibility = Visibility.Collapsed;
-        ClassicWindowControls.Visibility = Visibility.Visible;
-        AccountAnchor.Margin = new Thickness(0, 0, 84, 0);
-        PanTitleLeft.Visibility = Visibility.Visible;
-        ((Panel)PanTitleSelect.Parent).Children.Remove(PanTitleSelect);
-        PanTitleMain.Children.Add(PanTitleSelect);
-        Grid.SetColumn(PanTitleSelect, 1);
-        PanTitleSelect.Visibility = Visibility.Visible;
-        PanTitle.SetResourceReference(AnimatedBackgroundGrid.BackgroundBrushProperty, "ColorBrush3");
-        TitleSurface.SetResourceReference(Border.BackgroundProperty, "ColorBrush3");
-        ShapeTitleLogo.Stroke = Brushes.White;
-        LabTitleLogo.Foreground = Brushes.White;
-        BtnTitleInner.Margin = new Thickness(12, 0, 0, 0);
-        LabTitleInner.Margin = new Thickness(47, 1, 120, 0);
-        LabTitleInner.Foreground = Brushes.White;
-    }
+
 
     private void ConfigureFluentPage(MyPageLeft page)
     {
-        if (FormMain.UseClassicLayout)
-        {
-            CategorySurface.Visibility = Visibility.Collapsed;
-            CategoryActions.Visibility = Visibility.Visible;
-            foreach (var item in FindCategoryItems(page))
-                if (_categoryActionSubscriptions.Add(item))
-                    item.Check += (_, _) => Dispatcher.BeginInvoke(() => RefreshCategoryActions(page));
-            RefreshCategoryActions(page);
-            CategoryHost.Background = (Brush)FindResource("ColorBrushTransparentBackground");
-            CategoryHost.Margin = new Thickness(0);
-            CategoryHost.Visibility = Visibility.Visible;
-            PanMainLeft.Visibility = Visibility.Visible;
-            page.HorizontalAlignment = HorizontalAlignment.Stretch;
-            page.Width = double.NaN;
-            CategoryColumn.Width = new GridLength(page is PageLaunchLeft ? 300 : 180);
-            Grid.SetColumnSpan(CategoryHost, 1);
-            Grid.SetRowSpan(CategoryHost, 2);
-            Grid.SetColumn(ContentHost, 1);
-            Grid.SetColumnSpan(ContentHost, 1);
-            Grid.SetRow(ContentHost, 0);
-            Grid.SetRowSpan(ContentHost, 2);
-            return;
-        }
+
         var launch = page is PageLaunchLeft or PageSpeedLeft;
         // Tools has one destination and hides its category list; reclaim that column too.
         var empty = page.GetType() == typeof(MyPageLeft) || page is PageToolsLeft;

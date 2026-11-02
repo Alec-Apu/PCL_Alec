@@ -17,6 +17,7 @@
             x:Name="PanMain"
             Margin="25,10,25,100"
             Grid.IsSharedSizeScope="True">
+            <local:MyButton Text="检查在线更新" Height="40" HorizontalAlignment="Right" Margin="0,10,0,0" Click="CheckLanUpdate_Click" />
             <local:MyCard Margin="0,15" Title="{DynamicResource Setup.About.Title}">
                 <Grid Margin="21,40,21,16">
                     <Grid.RowDefinitions>

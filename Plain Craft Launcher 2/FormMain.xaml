@@ -263,9 +263,9 @@
                         </StackPanel>
                 </Grid>
                 <StackPanel x:Name="PanHint" UseLayoutRounding="True"
-                            SnapsToDevicePixels="True" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                            Margin="0,0,0,20"
-                            Grid.Row="0" Grid.RowSpan="2" Panel.ZIndex="1" />
+                            SnapsToDevicePixels="True" HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Margin="0,16,0,0"
+                            Grid.Row="1" Panel.ZIndex="1" />
                 <StackPanel x:Name="PanExtraButtons" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Row="1" Margin="15,15,15,8">
                     <local:MyExtraButton x:Name="BtnExtraBack" HorizontalAlignment="Right" VerticalAlignment="Center"
                                          Click="BtnExtraBack_Click"

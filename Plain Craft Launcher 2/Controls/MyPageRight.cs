@@ -26,7 +26,6 @@ public class MyPageRight : AdornerDecorator
     /// <summary>Leave scrollable space beneath the floating primary navigation.</summary>
     private void EnsureNavigationClearance()
     {
-        if (FormMain.UseClassicLayout) return;
         if (GetValue(PanScrollProperty) is not MyScrollViewer scroll ||
             scroll.Content is not FrameworkElement content) return;
 

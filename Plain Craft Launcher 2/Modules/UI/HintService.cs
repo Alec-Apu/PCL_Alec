@@ -41,12 +41,6 @@ public static class HintService
     {
         try
         {
-            ModMain.frmMain!.PanHint.HorizontalAlignment = HorizontalAlignment.Right;
-            ModMain.frmMain.PanHint.VerticalAlignment = VerticalAlignment.Bottom;
-
-            var extraHeight = ModMain.frmMain.PanExtraButtons.ActualHeight;
-            ModMain.frmMain.PanHint.Margin = new Thickness(0, 0, 0, extraHeight > 0 ? extraHeight + 20 : 20);
-
             if (!HintWaiting.Any())
                 return;
 
