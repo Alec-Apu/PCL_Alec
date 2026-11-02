@@ -10,8 +10,14 @@ namespace PCL;
 
 internal static class LanUpdate
 {
-    internal const int Revision = 3;
-    private const string ManifestUrl = "https://github.com/Alec-Apu/PCL_Alec/releases/latest/download/latest.json";
+    internal const int Revision = 7;
+    private const string OnlineManifestUrl = "https://github.com/Alec-Apu/PCL_Alec/releases/latest/download/latest.json";
+    private const string LanManifestUrl = "http://192.168.5.7:19997/latest.json";
+#if PCL_ADMIN
+    internal static bool IsAdminBuild => true;
+#else
+    internal static bool IsAdminBuild => false;
+#endif
     private const string PublicKey = """
 -----BEGIN PUBLIC KEY-----
 MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAw7u6/k2sGS03PYO1G5G6
@@ -29,13 +35,17 @@ jDtVeWzOeGExWJwJNNniy+JUW1vN0kIuRLvc2Hx04TiclMFTIkpGQAkMXbzZA+i+
     private sealed record Envelope(string Payload, string Signature);
     private sealed record Release(int Revision, string Url, string Sha256, string Notes);
 
-    internal static async Task CheckAsync(bool manual = false)
+    internal static async Task CheckAsync(bool manual = false, bool? useLan = null)
     {
+        var lan = useLan ?? IsAdminBuild;
+        if (lan && !IsAdminBuild) return;
+        var manifestUrl = lan ? LanManifestUrl : OnlineManifestUrl;
+        var channel = lan ? "内网" : "在线";
         if (Interlocked.Exchange(ref _checking, 1) != 0) return;
         try
         {
-            using var client = new HttpClient(new HttpClientHandler()) { Timeout = TimeSpan.FromSeconds(20) };
-            var envelope = JsonSerializer.Deserialize<Envelope>(await client.GetStringAsync(ManifestUrl))
+            using var client = new HttpClient(new HttpClientHandler { UseProxy = !lan }) { Timeout = TimeSpan.FromSeconds(20) };
+            var envelope = JsonSerializer.Deserialize<Envelope>(await client.GetStringAsync(manifestUrl))
                 ?? throw new InvalidDataException("更新信息为空");
             var payload = Convert.FromBase64String(envelope.Payload);
             using var rsa = RSA.Create();
@@ -45,10 +55,10 @@ jDtVeWzOeGExWJwJNNniy+JUW1vN0kIuRLvc2Hx04TiclMFTIkpGQAkMXbzZA+i+
             var release = JsonSerializer.Deserialize<Release>(payload) ?? throw new InvalidDataException("更新信息无效");
             if (release.Revision <= Revision)
             {
-                if (manual) HintService.Hint("当前已是最新版本。", HintType.Success);
+                if (manual) HintService.Hint($"当前已是最新{channel}版本（{Revision}）。", HintType.Success);
                 return;
             }
-            if (ModMain.MyMsgBox($"发现在线更新（版本 {release.Revision}）\n\n{release.Notes}\n\n下载完成后启动器将自动重启。", "PCL Ap 在线更新", "立即更新", "稍后") != 1) return;
+            if (ModMain.MyMsgBox($"发现{channel}更新（版本 {release.Revision}）\n\n{release.Notes}\n\n下载完成后启动器将自动重启。", $"PCL Ap {channel}更新", "立即更新", "稍后") != 1) return;
             if (ModNet.HasDownloadingTask())
             {
                 HintService.Hint("请等待下载任务完成，再检查更新。", HintType.Info);
@@ -57,8 +67,8 @@ jDtVeWzOeGExWJwJNNniy+JUW1vN0kIuRLvc2Hx04TiclMFTIkpGQAkMXbzZA+i+
             var temp = Path.Combine(Path.GetTempPath(), "PCL-Ap-Update", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(temp);
             var archive = Path.Combine(temp, "update.zip");
-            HintService.Hint("正在下载在线更新……");
-            using (var download = new HttpClient(new HttpClientHandler()) { Timeout = TimeSpan.FromMinutes(5) })
+            HintService.Hint($"正在下载{channel}更新……");
+            using (var download = new HttpClient(new HttpClientHandler { UseProxy = !lan }) { Timeout = TimeSpan.FromMinutes(5) })
             using (var response = await download.GetAsync(release.Url, HttpCompletionOption.ResponseHeadersRead))
             {
                 response.EnsureSuccessStatusCode();
@@ -101,7 +111,7 @@ jDtVeWzOeGExWJwJNNniy+JUW1vN0kIuRLvc2Hx04TiclMFTIkpGQAkMXbzZA+i+
         catch (Exception ex)
         {
             ModBase.Log(ex, "[Update] 在线更新检查失败", ModBase.LogLevel.Debug);
-            if (manual) HintService.Hint("在线更新失败：" + ex.Message, HintType.Error);
+            if (manual) HintService.Hint(channel + "更新失败：" + ex.Message, HintType.Error);
         }
         finally { Interlocked.Exchange(ref _checking, 0); }
     }

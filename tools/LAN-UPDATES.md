@@ -43,3 +43,6 @@ python tools/publish-lan-update.py 'D:\pcl-release' --key 'D:\codex-pcl-alec\rel
 
 已验证内网下载、签名/篡改拒绝、隔离目录文件替换、失败回滚及配置保留。
 尚未在用户正式安装目录执行跨版本自更新；首次真实升级时需再确认自动重启结果。
+
+## 发布顺序（用户要求）
+每次修改并编译验证后，先递增版本并发布到内网供用户测试。用户明确确认后，才推送 GitHub 源码和发布 GitHub Release。内网测试构建使用内网更新地址；GitHub 公开构建使用 GitHub 更新地址，分别编译。

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <TargetFramework>net10.0-windows</TargetFramework>
@@ -121,4 +121,7 @@
     <ItemGroup>
         <Content Include="LICENCE" />
     </ItemGroup>
+    <PropertyGroup Condition="'$(AdminBuild)' == 'true'">
+        <DefineConstants>$(DefineConstants);PCL_ADMIN</DefineConstants>
+    </PropertyGroup>
 </Project>

@@ -10,7 +10,8 @@ namespace PCL;
 
 public partial class PageSetupAbout
 {
-    private async void CheckLanUpdate_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => await LanUpdate.CheckAsync(true);
+    private async void CheckLanUpdate_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => await LanUpdate.CheckAsync(true, true);
+    private async void CheckOnlineUpdate_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) => await LanUpdate.CheckAsync(true, false);
 
     // 彩蛋
     private int clickCount;
@@ -20,6 +21,7 @@ public partial class PageSetupAbout
     public PageSetupAbout()
     {
         InitializeComponent();
+        BtnAdminLanUpdate.Visibility = LanUpdate.IsAdminBuild ? Visibility.Visible : Visibility.Collapsed;
         // Register the actual scroll owner directly. The metadata DataContext and
         // offscreen scene brush can leave the root ElementName binding unresolved.
         PanScroll = PanBack;
